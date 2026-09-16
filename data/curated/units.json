@@ -1,0 +1,1460 @@
+[
+  {
+    "id": "ranger",
+    "name": "Ranger",
+    "factions": [
+      "usa",
+      "usa_air",
+      "usa_laser",
+      "usa_super"
+    ],
+    "domain": "infantry",
+    "roles": [
+      "anti_infantry",
+      "garrison_clear",
+      "scout"
+    ],
+    "cost": 225,
+    "tier": "early",
+    "answers": {
+      "infantry_swarm": 1,
+      "early_rush": 1
+    },
+    "note": "Cheap bodies that clear garrisons and hold ground until real units arrive.",
+    "source": "curated",
+    "wikiPage": "Ranger"
+  },
+  {
+    "id": "missile_defender",
+    "name": "Missile Defender",
+    "factions": [
+      "usa",
+      "usa_air",
+      "usa_laser",
+      "usa_super"
+    ],
+    "domain": "infantry",
+    "roles": [
+      "anti_vehicle",
+      "anti_air"
+    ],
+    "cost": 300,
+    "tier": "early",
+    "answers": {
+      "armor": 2,
+      "air": 2,
+      "early_rush": 2
+    },
+    "note": "The USA answer to an early tank push and to low-flying aircraft, especially garrisoned.",
+    "source": "curated",
+    "wikiPage": "Missile_Defender"
+  },
+  {
+    "id": "pathfinder",
+    "name": "Pathfinder",
+    "factions": [
+      "usa",
+      "usa_air",
+      "usa_laser",
+      "usa_super"
+    ],
+    "domain": "infantry",
+    "roles": [
+      "anti_infantry",
+      "stealth",
+      "scout"
+    ],
+    "cost": 400,
+    "tier": "mid",
+    "answers": {
+      "infantry_swarm": 3
+    },
+    "note": "One-shots infantry from outside their range; the cleanest answer to a horde.",
+    "source": "curated",
+    "wikiPage": "Pathfinder"
+  },
+  {
+    "id": "colonel_burton",
+    "name": "Colonel Burton",
+    "factions": [
+      "usa",
+      "usa_air",
+      "usa_laser",
+      "usa_super"
+    ],
+    "domain": "infantry",
+    "roles": [
+      "hero",
+      "anti_structure",
+      "stealth"
+    ],
+    "cost": 1500,
+    "tier": "mid",
+    "answers": {
+      "base_defense": 3,
+      "superweapon": 3,
+      "economy": 2
+    },
+    "note": "Walks in unseen and demolishes superweapons, power grids and defence lines.",
+    "source": "curated",
+    "wikiPage": "Colonel_Burton"
+  },
+  {
+    "id": "humvee",
+    "name": "Humvee",
+    "factions": [
+      "usa",
+      "usa_air",
+      "usa_laser",
+      "usa_super"
+    ],
+    "domain": "ground",
+    "roles": [
+      "anti_infantry",
+      "transport",
+      "scout"
+    ],
+    "cost": 700,
+    "tier": "early",
+    "answers": {
+      "infantry_swarm": 2,
+      "early_rush": 2
+    },
+    "note": "Fast, carries infantry that fire from inside, and is the USA's early map presence.",
+    "source": "curated",
+    "wikiPage": "Humvee"
+  },
+  {
+    "id": "sentry_drone",
+    "name": "Sentry Drone",
+    "factions": [
+      "usa",
+      "usa_air",
+      "usa_laser",
+      "usa_super"
+    ],
+    "domain": "ground",
+    "roles": [
+      "scout",
+      "detector",
+      "anti_infantry"
+    ],
+    "cost": 800,
+    "tier": "early",
+    "answers": {
+      "stealth": 3,
+      "infantry_swarm": 1
+    },
+    "note": "The USA stealth detector. Nothing else you own reliably sees a stealthed army.",
+    "source": "curated",
+    "wikiPage": "Sentry_drone"
+  },
+  {
+    "id": "crusader",
+    "name": "Crusader Tank",
+    "factions": [
+      "usa",
+      "usa_super"
+    ],
+    "domain": "ground",
+    "roles": [
+      "anti_vehicle"
+    ],
+    "cost": 900,
+    "tier": "mid",
+    "answers": {
+      "armor": 2
+    },
+    "note": "The standard USA main battle tank; good in numbers with drone support.",
+    "source": "curated",
+    "wikiPage": "Crusader_Tank"
+  },
+  {
+    "id": "paladin",
+    "name": "Paladin Tank",
+    "factions": [
+      "usa",
+      "usa_super"
+    ],
+    "domain": "ground",
+    "roles": [
+      "anti_vehicle",
+      "defense"
+    ],
+    "cost": 1200,
+    "tier": "late",
+    "answers": {
+      "armor": 3
+    },
+    "note": "Crusader with a point defence laser that eats incoming rockets and missiles.",
+    "source": "curated",
+    "wikiPage": "Paladin_Tank"
+  },
+  {
+    "id": "laser_crusader",
+    "name": "Laser Crusader",
+    "factions": [
+      "usa_laser"
+    ],
+    "domain": "ground",
+    "roles": [
+      "anti_vehicle"
+    ],
+    "cost": 900,
+    "tier": "mid",
+    "answers": {
+      "armor": 3
+    },
+    "note": "Hitscan damage with no shell travel time \u2014 it does not miss moving targets.",
+    "source": "curated",
+    "wikiPage": "Laser_Crusader"
+  },
+  {
+    "id": "tomahawk",
+    "name": "Tomahawk Launcher",
+    "factions": [
+      "usa",
+      "usa_laser",
+      "usa_super"
+    ],
+    "domain": "ground",
+    "roles": [
+      "artillery",
+      "anti_structure"
+    ],
+    "cost": 1200,
+    "tier": "mid",
+    "answers": {
+      "base_defense": 3,
+      "artillery": 2,
+      "stealth": 1
+    },
+    "note": "Out-ranges essentially every static defence in the game. Siege from outside the envelope.",
+    "source": "curated",
+    "wikiPage": "Tomahawk_Launcher"
+  },
+  {
+    "id": "microwave_tank",
+    "name": "Microwave Tank",
+    "factions": [
+      "usa",
+      "usa_laser",
+      "usa_super"
+    ],
+    "domain": "ground",
+    "roles": [
+      "support",
+      "garrison_clear",
+      "anti_structure"
+    ],
+    "cost": 1200,
+    "tier": "mid",
+    "answers": {
+      "base_defense": 2,
+      "infantry_swarm": 3
+    },
+    "note": "Disables buildings and cooks garrisoned infantry without damaging the structure.",
+    "source": "curated",
+    "wikiPage": "Microwave_Tank"
+  },
+  {
+    "id": "avenger",
+    "name": "Avenger",
+    "factions": [
+      "usa",
+      "usa_air",
+      "usa_laser",
+      "usa_super"
+    ],
+    "domain": "ground",
+    "roles": [
+      "anti_air",
+      "support"
+    ],
+    "cost": 1800,
+    "tier": "late",
+    "answers": {
+      "air": 3
+    },
+    "note": "Mobile anti-air that also blanks enemy missiles aimed at the units around it.",
+    "source": "curated",
+    "wikiPage": "Avenger"
+  },
+  {
+    "id": "raptor",
+    "name": "Raptor",
+    "factions": [
+      "usa",
+      "usa_laser",
+      "usa_super"
+    ],
+    "domain": "air",
+    "roles": [
+      "aircraft",
+      "anti_vehicle"
+    ],
+    "cost": 1200,
+    "tier": "mid",
+    "answers": {
+      "armor": 3,
+      "artillery": 3
+    },
+    "note": "Fast strike aircraft; the fastest way to kill artillery and a tank ball.",
+    "source": "curated",
+    "wikiPage": "Raptor"
+  },
+  {
+    "id": "king_raptor",
+    "name": "King Raptor",
+    "factions": [
+      "usa_air"
+    ],
+    "domain": "air",
+    "roles": [
+      "aircraft",
+      "anti_vehicle"
+    ],
+    "cost": 1400,
+    "tier": "mid",
+    "answers": {
+      "armor": 3,
+      "artillery": 3,
+      "air": 2
+    },
+    "note": "Granger's upgraded Raptor: tougher, harder hitting, and able to contest other aircraft.",
+    "source": "curated",
+    "wikiPage": "King_Raptor"
+  },
+  {
+    "id": "comanche",
+    "name": "Comanche",
+    "factions": [
+      "usa",
+      "usa_laser",
+      "usa_super"
+    ],
+    "domain": "air",
+    "roles": [
+      "aircraft",
+      "anti_infantry",
+      "anti_vehicle"
+    ],
+    "cost": 1500,
+    "tier": "mid",
+    "answers": {
+      "infantry_swarm": 3,
+      "armor": 2,
+      "economy": 3
+    },
+    "note": "Hovers over supply lines and deletes workers, dozers and infantry. Never trade it into AA.",
+    "source": "curated",
+    "wikiPage": "Comanche"
+  },
+  {
+    "id": "stealth_comanche",
+    "name": "Stealth Comanche",
+    "factions": [
+      "usa_air"
+    ],
+    "domain": "air",
+    "roles": [
+      "aircraft",
+      "anti_infantry",
+      "anti_vehicle",
+      "stealth"
+    ],
+    "cost": 1500,
+    "tier": "mid",
+    "answers": {
+      "infantry_swarm": 3,
+      "armor": 2,
+      "economy": 3
+    },
+    "note": "Arrives over the economy without ever appearing on radar.",
+    "source": "curated",
+    "wikiPage": "Comanche"
+  },
+  {
+    "id": "stealth_fighter",
+    "name": "Stealth Fighter",
+    "factions": [
+      "usa",
+      "usa_air",
+      "usa_laser",
+      "usa_super"
+    ],
+    "domain": "air",
+    "roles": [
+      "aircraft",
+      "anti_structure",
+      "stealth"
+    ],
+    "cost": 1600,
+    "tier": "late",
+    "answers": {
+      "base_defense": 3,
+      "superweapon": 2
+    },
+    "note": "Flies through an air defence net that cannot see it and removes a key building.",
+    "source": "curated",
+    "wikiPage": "Stealth_Fighter"
+  },
+  {
+    "id": "aurora",
+    "name": "Aurora Bomber",
+    "factions": [
+      "usa",
+      "usa_laser",
+      "usa_super"
+    ],
+    "domain": "air",
+    "roles": [
+      "aircraft",
+      "anti_structure"
+    ],
+    "cost": 2000,
+    "tier": "late",
+    "answers": {
+      "base_defense": 3,
+      "superweapon": 3,
+      "infantry_swarm": 2
+    },
+    "note": "Invulnerable on the approach; it will land its bomb on whatever you point it at.",
+    "source": "curated",
+    "wikiPage": "Aurora_Bomber"
+  },
+  {
+    "id": "aurora_alpha",
+    "name": "Aurora Alpha",
+    "factions": [
+      "usa_air"
+    ],
+    "domain": "air",
+    "roles": [
+      "aircraft",
+      "anti_structure"
+    ],
+    "cost": 2400,
+    "tier": "late",
+    "answers": {
+      "base_defense": 3,
+      "superweapon": 3,
+      "infantry_swarm": 3
+    },
+    "note": "Aurora with a bigger blast \u2014 deletes a superweapon or a production cluster per run.",
+    "source": "curated",
+    "wikiPage": "Aurora_Alpha"
+  },
+  {
+    "id": "patriot",
+    "name": "Patriot Battery",
+    "factions": [
+      "usa",
+      "usa_laser",
+      "usa_super"
+    ],
+    "domain": "ground",
+    "roles": [
+      "defense",
+      "anti_air",
+      "anti_vehicle"
+    ],
+    "cost": 1000,
+    "tier": "early",
+    "answers": {
+      "air": 2,
+      "armor": 1,
+      "early_rush": 2
+    },
+    "note": "The base-defence backbone: cheap, covers both air and ground approaches.",
+    "source": "curated",
+    "wikiPage": "Patriot_Battery"
+  },
+  {
+    "id": "emp_patriot",
+    "name": "EMP Patriot",
+    "factions": [
+      "usa_super"
+    ],
+    "domain": "ground",
+    "roles": [
+      "defense",
+      "anti_vehicle"
+    ],
+    "cost": 1000,
+    "tier": "early",
+    "answers": {
+      "armor": 3,
+      "early_rush": 2
+    },
+    "note": "Strands enemy vehicles motionless inside your defensive envelope.",
+    "source": "curated",
+    "wikiPage": "EMP_Patriot"
+  },
+  {
+    "id": "laser_turret",
+    "name": "Laser Turret",
+    "factions": [
+      "usa_laser"
+    ],
+    "domain": "ground",
+    "roles": [
+      "defense",
+      "anti_air",
+      "anti_vehicle"
+    ],
+    "cost": 1000,
+    "tier": "early",
+    "answers": {
+      "air": 2,
+      "armor": 2,
+      "early_rush": 2
+    },
+    "note": "Best damage per credit of any static defence \u2014 as long as the power stays on.",
+    "source": "curated",
+    "wikiPage": "Laser_Turret"
+  },
+  {
+    "id": "firebase",
+    "name": "Firebase",
+    "factions": [
+      "usa",
+      "usa_laser",
+      "usa_super"
+    ],
+    "domain": "ground",
+    "roles": [
+      "defense",
+      "anti_infantry"
+    ],
+    "cost": 800,
+    "tier": "early",
+    "answers": {
+      "infantry_swarm": 2,
+      "early_rush": 2
+    },
+    "note": "Garrison it with Missile Defenders and it covers armour and air at once.",
+    "source": "curated",
+    "wikiPage": "Firebase"
+  },
+  {
+    "id": "red_guard",
+    "name": "Red Guard",
+    "factions": [
+      "china",
+      "china_tank",
+      "china_infantry",
+      "china_nuke"
+    ],
+    "domain": "infantry",
+    "roles": [
+      "anti_infantry",
+      "garrison_clear"
+    ],
+    "cost": 300,
+    "tier": "early",
+    "answers": {
+      "infantry_swarm": 2,
+      "early_rush": 1
+    },
+    "note": "Comes in pairs and benefits from the horde bonus; the cheapest ground you can hold.",
+    "source": "curated",
+    "wikiPage": "Red_Guard"
+  },
+  {
+    "id": "tank_hunter",
+    "name": "Tank Hunter",
+    "factions": [
+      "china",
+      "china_tank",
+      "china_infantry",
+      "china_nuke"
+    ],
+    "domain": "infantry",
+    "roles": [
+      "anti_vehicle",
+      "anti_air"
+    ],
+    "cost": 300,
+    "tier": "early",
+    "answers": {
+      "armor": 3,
+      "air": 1,
+      "early_rush": 2
+    },
+    "note": "Garrisoned Tank Hunters break any early armour push at a fraction of its cost.",
+    "source": "curated",
+    "wikiPage": "Tank_Hunter"
+  },
+  {
+    "id": "minigunner",
+    "name": "Minigunner",
+    "factions": [
+      "china_infantry"
+    ],
+    "domain": "infantry",
+    "roles": [
+      "anti_infantry",
+      "garrison_clear"
+    ],
+    "cost": 400,
+    "tier": "early",
+    "answers": {
+      "infantry_swarm": 3
+    },
+    "note": "Shin Fai's dedicated infantry killer, veteran from the moment it is built.",
+    "source": "curated",
+    "wikiPage": "Minigunner"
+  },
+  {
+    "id": "hacker",
+    "name": "Hacker",
+    "factions": [
+      "china",
+      "china_tank",
+      "china_infantry",
+      "china_nuke"
+    ],
+    "domain": "infantry",
+    "roles": [
+      "economy",
+      "support"
+    ],
+    "cost": 625,
+    "tier": "early",
+    "answers": {
+      "economy": 3
+    },
+    "note": "Generates credits from inside the base and can disable enemy buildings.",
+    "source": "curated",
+    "wikiPage": "Hacker"
+  },
+  {
+    "id": "black_lotus",
+    "name": "Black Lotus",
+    "factions": [
+      "china",
+      "china_tank",
+      "china_infantry",
+      "china_nuke"
+    ],
+    "domain": "infantry",
+    "roles": [
+      "hero",
+      "capture",
+      "stealth",
+      "support"
+    ],
+    "cost": 1500,
+    "tier": "mid",
+    "answers": {
+      "economy": 3,
+      "base_defense": 2,
+      "armor": 2
+    },
+    "note": "Captures buildings, steals credits outright and disables vehicles from range.",
+    "source": "curated",
+    "wikiPage": "Black_Lotus"
+  },
+  {
+    "id": "battlemaster",
+    "name": "Battlemaster",
+    "factions": [
+      "china",
+      "china_tank",
+      "china_infantry",
+      "china_nuke"
+    ],
+    "domain": "ground",
+    "roles": [
+      "anti_vehicle"
+    ],
+    "cost": 700,
+    "tier": "early",
+    "answers": {
+      "armor": 2,
+      "early_rush": 2
+    },
+    "note": "Cheap enough to mass; five together trigger the horde bonus and punch well above cost.",
+    "source": "curated",
+    "wikiPage": "Battlemaster_Tank"
+  },
+  {
+    "id": "overlord",
+    "name": "Overlord",
+    "factions": [
+      "china",
+      "china_infantry",
+      "china_nuke"
+    ],
+    "domain": "ground",
+    "roles": [
+      "anti_vehicle",
+      "anti_infantry",
+      "defense"
+    ],
+    "cost": 2000,
+    "tier": "late",
+    "answers": {
+      "armor": 3,
+      "infantry_swarm": 2,
+      "early_rush": 3
+    },
+    "note": "The toughest ground unit in the game, and it carries a Gattling or Propaganda tower on top.",
+    "source": "curated",
+    "wikiPage": "Overlord_Tank"
+  },
+  {
+    "id": "emperor_overlord",
+    "name": "Emperor Overlord",
+    "factions": [
+      "china_tank"
+    ],
+    "domain": "ground",
+    "roles": [
+      "anti_vehicle",
+      "anti_infantry",
+      "defense",
+      "support"
+    ],
+    "cost": 2400,
+    "tier": "late",
+    "answers": {
+      "armor": 3,
+      "infantry_swarm": 2,
+      "early_rush": 3
+    },
+    "note": "Overlord with a built-in propaganda aura that heals everything around it.",
+    "source": "curated",
+    "wikiPage": "Emperor_Overlord"
+  },
+  {
+    "id": "gattling_tank",
+    "name": "Gattling Tank",
+    "factions": [
+      "china",
+      "china_tank",
+      "china_infantry",
+      "china_nuke"
+    ],
+    "domain": "ground",
+    "roles": [
+      "anti_air",
+      "anti_infantry"
+    ],
+    "cost": 800,
+    "tier": "early",
+    "answers": {
+      "air": 3,
+      "infantry_swarm": 3
+    },
+    "note": "The single best answer China has to aircraft and to infantry hordes.",
+    "source": "curated",
+    "wikiPage": "Gattling_Tank"
+  },
+  {
+    "id": "dragon_tank",
+    "name": "Dragon Tank",
+    "factions": [
+      "china",
+      "china_infantry",
+      "china_nuke"
+    ],
+    "domain": "ground",
+    "roles": [
+      "garrison_clear",
+      "anti_infantry"
+    ],
+    "cost": 800,
+    "tier": "mid",
+    "answers": {
+      "infantry_swarm": 3,
+      "stealth": 1,
+      "base_defense": 1
+    },
+    "note": "Flame clears garrisons, erases infantry, and burns stealthed units out of cover.",
+    "source": "curated",
+    "wikiPage": "Dragon_Tank"
+  },
+  {
+    "id": "inferno_cannon",
+    "name": "Inferno Cannon",
+    "factions": [
+      "china",
+      "china_infantry",
+      "china_nuke"
+    ],
+    "domain": "ground",
+    "roles": [
+      "artillery",
+      "anti_infantry"
+    ],
+    "cost": 1200,
+    "tier": "mid",
+    "answers": {
+      "infantry_swarm": 3,
+      "base_defense": 2
+    },
+    "note": "Incendiary artillery; a line of them removes an infantry army before it closes.",
+    "source": "curated",
+    "wikiPage": "Inferno_Cannon"
+  },
+  {
+    "id": "nuke_cannon",
+    "name": "Nuke Cannon",
+    "factions": [
+      "china",
+      "china_nuke"
+    ],
+    "domain": "ground",
+    "roles": [
+      "artillery",
+      "anti_structure"
+    ],
+    "cost": 1600,
+    "tier": "late",
+    "answers": {
+      "base_defense": 3,
+      "infantry_swarm": 3,
+      "artillery": 2
+    },
+    "note": "Siege artillery that out-ranges base defences and flattens clustered armies.",
+    "source": "curated",
+    "wikiPage": "Nuke_Cannon"
+  },
+  {
+    "id": "troop_crawler",
+    "name": "Troop Crawler",
+    "factions": [
+      "china",
+      "china_tank",
+      "china_infantry",
+      "china_nuke"
+    ],
+    "domain": "ground",
+    "roles": [
+      "transport",
+      "detector",
+      "support"
+    ],
+    "cost": 900,
+    "tier": "early",
+    "answers": {
+      "stealth": 2,
+      "infantry_swarm": 1
+    },
+    "note": "Moves a horde safely and sees stealthed units while it does.",
+    "source": "curated",
+    "wikiPage": "Troop_Crawler"
+  },
+  {
+    "id": "listening_outpost",
+    "name": "Listening Outpost",
+    "factions": [
+      "china",
+      "china_tank",
+      "china_infantry",
+      "china_nuke"
+    ],
+    "domain": "ground",
+    "roles": [
+      "scout",
+      "detector",
+      "stealth"
+    ],
+    "cost": 500,
+    "tier": "early",
+    "answers": {
+      "stealth": 3
+    },
+    "note": "China's proper stealth detector: cheap, stealthed itself, wide detection radius.",
+    "source": "curated",
+    "wikiPage": "Listening_Outpost"
+  },
+  {
+    "id": "mig",
+    "name": "MiG",
+    "factions": [
+      "china",
+      "china_tank",
+      "china_infantry",
+      "china_nuke"
+    ],
+    "domain": "air",
+    "roles": [
+      "aircraft",
+      "anti_vehicle",
+      "anti_structure"
+    ],
+    "cost": 1200,
+    "tier": "mid",
+    "answers": {
+      "armor": 3,
+      "artillery": 3,
+      "base_defense": 2
+    },
+    "note": "Napalm strike aircraft; the Chinese answer to artillery and massed armour.",
+    "source": "curated",
+    "wikiPage": "MiG"
+  },
+  {
+    "id": "helix",
+    "name": "Helix",
+    "factions": [
+      "china",
+      "china_tank",
+      "china_infantry",
+      "china_nuke"
+    ],
+    "domain": "air",
+    "roles": [
+      "aircraft",
+      "transport",
+      "anti_infantry",
+      "anti_structure"
+    ],
+    "cost": 2000,
+    "tier": "late",
+    "answers": {
+      "infantry_swarm": 3,
+      "base_defense": 2
+    },
+    "note": "Flying gunship and transport in one; upgrades bolt guns, napalm or a bunker onto it.",
+    "source": "curated",
+    "wikiPage": "Helix"
+  },
+  {
+    "id": "gattling_cannon",
+    "name": "Gattling Cannon",
+    "factions": [
+      "china",
+      "china_tank",
+      "china_infantry",
+      "china_nuke"
+    ],
+    "domain": "ground",
+    "roles": [
+      "defense",
+      "anti_air",
+      "anti_infantry"
+    ],
+    "cost": 1000,
+    "tier": "early",
+    "answers": {
+      "air": 3,
+      "infantry_swarm": 3,
+      "early_rush": 2
+    },
+    "note": "One building that answers both aircraft and infantry; put it on the approach early.",
+    "source": "curated",
+    "wikiPage": "Gattling_Cannon"
+  },
+  {
+    "id": "bunker",
+    "name": "Bunker",
+    "factions": [
+      "china",
+      "china_tank",
+      "china_infantry",
+      "china_nuke"
+    ],
+    "domain": "ground",
+    "roles": [
+      "defense",
+      "anti_infantry"
+    ],
+    "cost": 400,
+    "tier": "early",
+    "answers": {
+      "early_rush": 2,
+      "infantry_swarm": 1,
+      "armor": 1
+    },
+    "note": "Fill it with Tank Hunters and it stops an early armour push cold.",
+    "source": "curated",
+    "wikiPage": "Bunker"
+  },
+  {
+    "id": "rebel",
+    "name": "Rebel",
+    "factions": [
+      "gla",
+      "gla_toxin",
+      "gla_stealth",
+      "gla_demo"
+    ],
+    "domain": "infantry",
+    "roles": [
+      "anti_infantry",
+      "scout",
+      "capture"
+    ],
+    "cost": 225,
+    "tier": "early",
+    "answers": {
+      "infantry_swarm": 1,
+      "early_rush": 1,
+      "economy": 1
+    },
+    "note": "Dirt cheap, can capture buildings, and with Camo Netting it scouts unseen.",
+    "source": "curated",
+    "wikiPage": "Rebel"
+  },
+  {
+    "id": "rpg_trooper",
+    "name": "RPG Trooper",
+    "factions": [
+      "gla",
+      "gla_toxin",
+      "gla_stealth",
+      "gla_demo"
+    ],
+    "domain": "infantry",
+    "roles": [
+      "anti_vehicle",
+      "anti_air"
+    ],
+    "cost": 300,
+    "tier": "early",
+    "answers": {
+      "armor": 3,
+      "air": 1,
+      "early_rush": 2
+    },
+    "note": "The GLA answer to armour. In numbers, and in garrisons, it beats tanks on cost.",
+    "source": "curated",
+    "wikiPage": "RPG_Trooper"
+  },
+  {
+    "id": "terrorist",
+    "name": "Terrorist",
+    "factions": [
+      "gla",
+      "gla_toxin",
+      "gla_stealth",
+      "gla_demo"
+    ],
+    "domain": "infantry",
+    "roles": [
+      "suicide",
+      "anti_vehicle",
+      "anti_structure"
+    ],
+    "cost": 200,
+    "tier": "early",
+    "answers": {
+      "armor": 3,
+      "base_defense": 1
+    },
+    "note": "The cheapest tank kill in the game. It only has to reach the target once.",
+    "source": "curated",
+    "wikiPage": "Terrorist"
+  },
+  {
+    "id": "hijacker",
+    "name": "Hijacker",
+    "factions": [
+      "gla",
+      "gla_stealth",
+      "gla_demo"
+    ],
+    "domain": "infantry",
+    "roles": [
+      "capture",
+      "stealth"
+    ],
+    "cost": 800,
+    "tier": "mid",
+    "answers": {
+      "armor": 3
+    },
+    "note": "Takes an enemy vehicle intact. Against an expensive army this is pure profit.",
+    "source": "curated",
+    "wikiPage": "Hijacker"
+  },
+  {
+    "id": "saboteur",
+    "name": "Saboteur",
+    "factions": [
+      "gla",
+      "gla_toxin",
+      "gla_stealth",
+      "gla_demo"
+    ],
+    "domain": "infantry",
+    "roles": [
+      "capture",
+      "stealth",
+      "support"
+    ],
+    "cost": 300,
+    "tier": "mid",
+    "answers": {
+      "economy": 2,
+      "base_defense": 2,
+      "superweapon": 2
+    },
+    "note": "Sneaks into a building to steal credits, reset a superweapon timer or cut power.",
+    "source": "curated",
+    "wikiPage": "Saboteur"
+  },
+  {
+    "id": "jarmen_kell",
+    "name": "Jarmen Kell",
+    "factions": [
+      "gla",
+      "gla_toxin",
+      "gla_stealth",
+      "gla_demo"
+    ],
+    "domain": "infantry",
+    "roles": [
+      "hero",
+      "anti_infantry",
+      "stealth"
+    ],
+    "cost": 1500,
+    "tier": "mid",
+    "answers": {
+      "armor": 3,
+      "infantry_swarm": 2
+    },
+    "note": "Snipes vehicle crews from stealth; your infantry then walk into the empty tanks.",
+    "source": "curated",
+    "wikiPage": "Jarmen_Kell"
+  },
+  {
+    "id": "angry_mob",
+    "name": "Angry Mob",
+    "factions": [
+      "gla",
+      "gla_toxin",
+      "gla_demo"
+    ],
+    "domain": "infantry",
+    "roles": [
+      "anti_infantry",
+      "garrison_clear"
+    ],
+    "cost": 600,
+    "tier": "mid",
+    "answers": {
+      "infantry_swarm": 2,
+      "base_defense": 1
+    },
+    "note": "A crowd that keeps replacing itself; good at swamping a position cheaply.",
+    "source": "curated",
+    "wikiPage": "Angry_Mob"
+  },
+  {
+    "id": "technical",
+    "name": "Technical",
+    "factions": [
+      "gla",
+      "gla_toxin",
+      "gla_stealth",
+      "gla_demo"
+    ],
+    "domain": "ground",
+    "roles": [
+      "anti_infantry",
+      "scout",
+      "transport"
+    ],
+    "cost": 500,
+    "tier": "early",
+    "answers": {
+      "infantry_swarm": 2,
+      "early_rush": 2
+    },
+    "note": "The GLA's early map control; fast, disposable, and upgrades itself off salvage.",
+    "source": "curated",
+    "wikiPage": "Technical"
+  },
+  {
+    "id": "scorpion",
+    "name": "Scorpion Tank",
+    "factions": [
+      "gla",
+      "gla_toxin",
+      "gla_stealth",
+      "gla_demo"
+    ],
+    "domain": "ground",
+    "roles": [
+      "anti_vehicle"
+    ],
+    "cost": 600,
+    "tier": "early",
+    "answers": {
+      "armor": 2,
+      "early_rush": 2
+    },
+    "note": "Cheap armour that wins on numbers rather than on any single engagement.",
+    "source": "curated",
+    "wikiPage": "Scorpion_Tank"
+  },
+  {
+    "id": "marauder",
+    "name": "Marauder Tank",
+    "factions": [
+      "gla",
+      "gla_stealth",
+      "gla_demo"
+    ],
+    "domain": "ground",
+    "roles": [
+      "anti_vehicle"
+    ],
+    "cost": 900,
+    "tier": "mid",
+    "answers": {
+      "armor": 3
+    },
+    "note": "Salvage upgrades turn it into a genuine main battle tank as the game runs on.",
+    "source": "curated",
+    "wikiPage": "Marauder_Tank"
+  },
+  {
+    "id": "quad_cannon",
+    "name": "Quad Cannon",
+    "factions": [
+      "gla",
+      "gla_toxin",
+      "gla_stealth",
+      "gla_demo"
+    ],
+    "domain": "ground",
+    "roles": [
+      "anti_air",
+      "anti_infantry"
+    ],
+    "cost": 700,
+    "tier": "early",
+    "answers": {
+      "air": 3,
+      "infantry_swarm": 3
+    },
+    "note": "The only real anti-air the GLA has. Build it before you think you need it.",
+    "source": "curated",
+    "wikiPage": "Quad_Cannon"
+  },
+  {
+    "id": "rocket_buggy",
+    "name": "Rocket Buggy",
+    "factions": [
+      "gla",
+      "gla_toxin",
+      "gla_stealth",
+      "gla_demo"
+    ],
+    "domain": "ground",
+    "roles": [
+      "artillery",
+      "anti_vehicle"
+    ],
+    "cost": 900,
+    "tier": "mid",
+    "answers": {
+      "armor": 2,
+      "base_defense": 2,
+      "artillery": 2
+    },
+    "note": "Fast artillery that fires and withdraws before anything slow can answer it.",
+    "source": "curated",
+    "wikiPage": "Rocket_Buggy"
+  },
+  {
+    "id": "toxin_tractor",
+    "name": "Toxin Tractor",
+    "factions": [
+      "gla",
+      "gla_toxin"
+    ],
+    "domain": "ground",
+    "roles": [
+      "garrison_clear",
+      "anti_infantry"
+    ],
+    "cost": 700,
+    "tier": "early",
+    "answers": {
+      "infantry_swarm": 3,
+      "base_defense": 1
+    },
+    "note": "Clears garrisons and infantry instantly, and poisons the ground they stood on.",
+    "source": "curated",
+    "wikiPage": "Toxin_Tractor"
+  },
+  {
+    "id": "battle_bus",
+    "name": "Battle Bus",
+    "factions": [
+      "gla",
+      "gla_stealth",
+      "gla_demo"
+    ],
+    "domain": "ground",
+    "roles": [
+      "transport",
+      "anti_infantry",
+      "defense"
+    ],
+    "cost": 800,
+    "tier": "mid",
+    "answers": {
+      "infantry_swarm": 2,
+      "early_rush": 2
+    },
+    "note": "Rolling bunker: infantry fire from inside, and it becomes a wreck that keeps fighting.",
+    "source": "curated",
+    "wikiPage": "Combat_Bus"
+  },
+  {
+    "id": "scud_launcher",
+    "name": "SCUD Launcher",
+    "factions": [
+      "gla",
+      "gla_toxin",
+      "gla_stealth",
+      "gla_demo"
+    ],
+    "domain": "ground",
+    "roles": [
+      "artillery",
+      "anti_structure"
+    ],
+    "cost": 1200,
+    "tier": "mid",
+    "answers": {
+      "base_defense": 3,
+      "infantry_swarm": 2,
+      "artillery": 2
+    },
+    "note": "Long-range siege that out-ranges most defences; toxin warheads deny the ground after.",
+    "source": "curated",
+    "wikiPage": "SCUD_Launcher"
+  },
+  {
+    "id": "bomb_truck",
+    "name": "Bomb Truck",
+    "factions": [
+      "gla",
+      "gla_toxin",
+      "gla_stealth",
+      "gla_demo"
+    ],
+    "domain": "ground",
+    "roles": [
+      "suicide",
+      "anti_structure",
+      "stealth"
+    ],
+    "cost": 1200,
+    "tier": "mid",
+    "answers": {
+      "base_defense": 3,
+      "superweapon": 3
+    },
+    "note": "Disguises itself as an enemy vehicle and drives into whatever matters most.",
+    "source": "curated",
+    "wikiPage": "Bomb_Truck"
+  },
+  {
+    "id": "radar_van",
+    "name": "Radar Van",
+    "factions": [
+      "gla",
+      "gla_toxin",
+      "gla_stealth",
+      "gla_demo"
+    ],
+    "domain": "ground",
+    "roles": [
+      "scout",
+      "detector",
+      "support"
+    ],
+    "cost": 800,
+    "tier": "mid",
+    "answers": {
+      "stealth": 3
+    },
+    "note": "The GLA detector, and its radar scan reveals what the enemy is actually building.",
+    "source": "curated",
+    "wikiPage": "Radar_Van"
+  },
+  {
+    "id": "stinger_site",
+    "name": "Stinger Site",
+    "factions": [
+      "gla",
+      "gla_toxin",
+      "gla_stealth",
+      "gla_demo"
+    ],
+    "domain": "ground",
+    "roles": [
+      "defense",
+      "anti_air",
+      "anti_vehicle"
+    ],
+    "cost": 800,
+    "tier": "early",
+    "answers": {
+      "air": 3,
+      "armor": 1,
+      "early_rush": 1
+    },
+    "note": "Three-man anti-air nest; the GLA's only serious answer to sustained air pressure.",
+    "source": "curated",
+    "wikiPage": "Stinger_Site"
+  },
+  {
+    "id": "tunnel_network",
+    "name": "Tunnel Network",
+    "factions": [
+      "gla",
+      "gla_toxin",
+      "gla_stealth",
+      "gla_demo"
+    ],
+    "domain": "ground",
+    "roles": [
+      "transport",
+      "defense",
+      "support"
+    ],
+    "cost": 800,
+    "tier": "early",
+    "answers": {
+      "early_rush": 2,
+      "base_defense": 1
+    },
+    "note": "Moves the army across the map instantly and heals whatever sits inside it.",
+    "source": "curated",
+    "wikiPage": "Tunnel_Network"
+  },
+  {
+    "id": "demo_trap",
+    "name": "Demolition Trap",
+    "factions": [
+      "gla",
+      "gla_demo"
+    ],
+    "domain": "ground",
+    "roles": [
+      "defense",
+      "suicide"
+    ],
+    "cost": 600,
+    "tier": "early",
+    "answers": {
+      "early_rush": 3,
+      "armor": 2
+    },
+    "note": "Buried charge on a chokepoint or a supply pile; it pays for itself the first time.",
+    "source": "curated",
+    "wikiPage": "Demo_Trap"
+  }
+]

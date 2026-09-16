@@ -1,0 +1,1209 @@
+<title>Battle Lineup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+  :root {
+    --ground:    #EBE7D9;
+    --surface:   #F7F4EC;
+    --surface-2: #E1DBC8;
+    --ink:       #1E2018;
+    --ink-soft:  #55584A;
+    --ink-faint: #82856F;
+    --line:      #C7C1AB;
+    --line-soft: #DBD5C2;
+    --accent:    #A85B18;
+    --accent-2:  #8A4B14;
+    --usa:       #3F6E9E;
+    --china:     #A93226;
+    --gla:       #6B7830;
+    --crit:      #A8382C;
+    --warn:      #B27E1B;
+    --ok:        #55784A;
+
+    --step--1: 0.78rem;
+    --step-0:  0.95rem;
+    --step-1:  1.15rem;
+    --step-2:  1.55rem;
+    --step-3:  2.3rem;
+
+    --display: "Barlow Condensed", "Oswald", "Arial Narrow", sans-serif;
+    --body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:    #14160E;
+      --surface:   #1C1F15;
+      --surface-2: #262A1C;
+      --ink:       #E9E5D5;
+      --ink-soft:  #A2A48E;
+      --ink-faint: #7C7F6A;
+      --line:      #383D2A;
+      --line-soft: #2B3020;
+      --accent:    #DE9142;
+      --accent-2:  #EFB673;
+      --usa:       #77A3CD;
+      --china:     #DB6A60;
+      --gla:       #A7B55A;
+      --crit:      #DB6A60;
+      --warn:      #E0B04A;
+      --ok:        #8FB87F;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:    #14160E;
+    --surface:   #1C1F15;
+    --surface-2: #262A1C;
+    --ink:       #E9E5D5;
+    --ink-soft:  #A2A48E;
+    --ink-faint: #7C7F6A;
+    --line:      #383D2A;
+    --line-soft: #2B3020;
+    --accent:    #DE9142;
+    --accent-2:  #EFB673;
+    --usa:       #77A3CD;
+    --china:     #DB6A60;
+    --gla:       #A7B55A;
+    --crit:      #DB6A60;
+    --warn:      #E0B04A;
+    --ok:        #8FB87F;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: var(--step-0);
+    line-height: 1.55;
+    margin: 0;
+    padding-block: 0 3rem;
+    padding-inline: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .shell { max-width: 1180px; margin-inline: auto; }
+
+  /* ---------- masthead ---------- */
+  .masthead {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+    padding-block: 1.6rem 1rem;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 1.5rem;
+  }
+  .wordmark {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: var(--step-3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 0.95;
+    margin: 0;
+  }
+  .wordmark span { color: var(--accent); }
+  .masthead p {
+    margin: 0.15rem 0 0;
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+    letter-spacing: 0.02em;
+  }
+  .stamp {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-faint);
+    border: 1px solid var(--line);
+    padding: 0.3rem 0.55rem;
+    white-space: nowrap;
+  }
+
+  /* ---------- layout ---------- */
+  .board {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    gap: 2rem;
+    align-items: start;
+  }
+  @media (max-width: 860px) {
+    .board { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+    .rail { position: static; }
+  }
+
+  .rail { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 1rem); display: grid; gap: 1.4rem; }
+
+  /* ---------- controls ---------- */
+  .field > legend,
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding: 0;
+    margin-bottom: 0.5rem;
+  }
+  .field { border: 0; padding: 0; margin: 0; }
+
+  .side-group + .side-group { margin-top: 0.5rem; }
+  .side-label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    color: var(--ink-faint);
+    margin-bottom: 0.25rem;
+  }
+
+  .chips { display: grid; gap: 3px; }
+
+  .chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    background: var(--surface);
+    border: 1px solid var(--line-soft);
+    border-left: 3px solid var(--sidecolor, var(--line));
+    padding: 0.28rem 0.5rem;
+    cursor: pointer;
+    transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+  }
+  .chip:hover { background: var(--surface-2); color: var(--ink); }
+  .chip[aria-pressed="true"] {
+    background: var(--ink);
+    color: var(--ground);
+    border-color: var(--ink);
+    border-left-color: var(--sidecolor, var(--accent));
+    font-weight: 600;
+  }
+  .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .chip .chip-sub { margin-left: auto; font-family: var(--mono); font-size: 0.62rem; opacity: 0.65; }
+
+  .chip-any { --sidecolor: var(--accent); font-style: italic; }
+
+  .segmented { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; }
+  .seg {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: var(--surface);
+    border: 1px solid var(--line-soft);
+    padding: 0.4rem 0.2rem;
+    cursor: pointer;
+  }
+  .seg:hover { background: var(--surface-2); color: var(--ink); }
+  .seg[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+  .seg:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+
+  select, .ghost-btn {
+    width: 100%;
+    font: inherit;
+    font-size: var(--step--1);
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 0.4rem 0.5rem;
+  }
+  .ghost-btn {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: var(--ink-soft);
+  }
+  .ghost-btn:hover { background: var(--surface-2); color: var(--ink); }
+  select:focus-visible, .ghost-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  /* ---------- briefing ---------- */
+  .briefing { display: grid; gap: 1.75rem; min-width: 0; }
+
+  .matchup {
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--accent);
+    background: var(--surface);
+    padding: 1.1rem 1.2rem;
+  }
+  .versus {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.4rem 0.8rem;
+    font-family: var(--display);
+    font-size: var(--step-2);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+  .versus .vs { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.2em; color: var(--ink-faint); text-transform: uppercase; }
+  .army-you { color: var(--accent-2); }
+  .army-them { color: var(--crit); }
+  .commanders {
+    display: flex; flex-wrap: wrap; gap: 0.2rem 1.2rem;
+    font-size: var(--step--1); color: var(--ink-soft); margin-top: 0.35rem;
+  }
+  .commanders b { font-weight: 600; color: var(--ink); }
+  .headline { margin: 0.8rem 0 0; font-size: var(--step-1); line-height: 1.4; text-wrap: balance; }
+
+  .conditions { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.8rem; }
+  .tag {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid var(--line);
+    padding: 0.2rem 0.45rem;
+    color: var(--ink-soft);
+  }
+  .tag-diff-easy   { border-color: var(--ok);    color: var(--ok); }
+  .tag-diff-medium { border-color: var(--warn);  color: var(--warn); }
+  .tag-diff-hard,
+  .tag-diff-brutal { border-color: var(--crit);  color: var(--crit); }
+
+  section.panel { min-width: 0; }
+  .panel > h2 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: var(--step-1);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 0 0 0.7rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+  .panel > h2 .count {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    margin-left: auto;
+  }
+
+  /* threat meters */
+  .meters { display: grid; gap: 0.4rem; }
+  .meter { display: grid; grid-template-columns: minmax(96px, 8.5rem) minmax(0, 1fr) 2.4rem; gap: 0.6rem; align-items: center; }
+  .meter-name { font-size: var(--step--1); color: var(--ink-soft); }
+  .meter-track { height: 8px; background: var(--surface-2); border: 1px solid var(--line-soft); }
+  .meter-fill { height: 100%; background: var(--ok); }
+  .meter-fill.is-warn { background: var(--warn); }
+  .meter-fill.is-crit { background: var(--crit); }
+  .meter-val { font-family: var(--mono); font-size: 0.7rem; color: var(--ink-faint); text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* build order */
+  ol.steps { list-style: none; counter-reset: step; margin: 0; padding: 0; display: grid; gap: 0.35rem; }
+  ol.steps li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 1.8rem minmax(0, 1fr);
+    gap: 0.5rem;
+    align-items: baseline;
+    padding: 0.35rem 0;
+    border-bottom: 1px dashed var(--line-soft);
+  }
+  ol.steps li::before {
+    content: counter(step, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  ol.steps li.is-priority { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+  ol.steps li.is-priority::before { color: var(--crit); }
+
+  /* counters */
+  .counter-grid { display: grid; gap: 0.9rem; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); }
+  .counter {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    padding: 0.7rem 0.8rem;
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+  }
+  .counter-head { display: flex; align-items: baseline; gap: 0.5rem; }
+  .counter-head h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .counter-head .pressure { margin-left: auto; font-family: var(--mono); font-size: 0.68rem; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+  .units { display: grid; gap: 0.4rem; margin: 0; padding: 0; list-style: none; }
+  .unit { display: grid; gap: 0.1rem; }
+  .unit-name { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem; font-weight: 600; font-size: var(--step--1); }
+  .unit-cost { font-family: var(--mono); font-size: 0.65rem; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .unit-tier { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
+  .unit-why { font-size: var(--step--1); color: var(--ink-soft); line-height: 1.4; }
+  .counter-guide { font-size: var(--step--1); color: var(--ink-soft); border-top: 1px dashed var(--line-soft); padding-top: 0.45rem; font-style: italic; }
+
+  /* timeline */
+  .phases { display: grid; gap: 0.9rem; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+  .phase { border-left: 2px solid var(--accent); padding-left: 0.7rem; }
+  .phase h3 { font-family: var(--display); font-weight: 600; font-size: 1.05rem; letter-spacing: 0.06em; text-transform: uppercase; margin: 0; }
+  .phase .window { font-family: var(--mono); font-size: 0.68rem; color: var(--ink-faint); display: block; margin-bottom: 0.35rem; }
+  .phase ul { margin: 0; padding-left: 1rem; display: grid; gap: 0.3rem; }
+  .phase li { font-size: var(--step--1); color: var(--ink-soft); }
+
+  /* advice lists */
+  .split { display: grid; gap: 1.75rem; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); }
+  ul.advice { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.45rem; }
+  ul.advice li { display: grid; grid-template-columns: 1.1rem minmax(0, 1fr); gap: 0.4rem; font-size: var(--step--1); color: var(--ink-soft); }
+  ul.advice li::before { content: "▸"; color: var(--accent); font-size: 0.75rem; line-height: 1.7; }
+  ul.advice.is-danger li::before { content: "✕"; color: var(--crit); }
+  ul.advice.is-watch li::before { content: "!"; color: var(--warn); font-family: var(--mono); font-weight: 700; }
+
+  /* lineup ranking */
+  .ranking { display: grid; gap: 2px; margin-top: 0.7rem; }
+  .rank-row { display: grid; grid-template-columns: 2.4rem minmax(48px, 9rem) minmax(0, 1fr); gap: 0.6rem; align-items: center; font-size: var(--step--1); }
+  .rank-score { font-family: var(--mono); font-size: 0.7rem; color: var(--ink-faint); text-align: right; font-variant-numeric: tabular-nums; }
+  .rank-row.is-pick .rank-score { color: var(--accent); }
+  .rank-bar { height: 6px; background: var(--surface-2); border: 1px solid var(--line-soft); }
+  .rank-bar > i { display: block; height: 100%; background: var(--accent); }
+  .rank-row.is-pick .rank-name { font-weight: 600; color: var(--ink); }
+  .rank-name { color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .colophon {
+    margin-top: 2.5rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 1.2rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+
+<div class="shell">
+  <header class="masthead">
+    <div>
+      <h1 class="wordmark">Battle <span>Lineup</span></h1>
+      <p>Command &amp; Conquer: Generals &mdash; Zero Hour &middot; skirmish planner</p>
+    </div>
+    <div class="stamp" id="stamp">12 armies &middot; 61 units</div>
+  </header>
+
+  <div class="board">
+    <form class="rail" id="controls" autocomplete="off">
+      <fieldset class="field">
+        <legend>Your army</legend>
+        <div id="you-chips"></div>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend>Enemy army</legend>
+        <div id="enemy-chips"></div>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend>Difficulty</legend>
+        <div class="segmented" id="difficulty"></div>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend>Map</legend>
+        <select id="map-select"></select>
+      </fieldset>
+
+      <button type="button" class="ghost-btn" id="reroll">Reroll unset picks</button>
+    </form>
+
+    <main class="briefing" id="briefing"></main>
+  </div>
+
+  <footer class="colophon" id="colophon"></footer>
+</div>
+
+<script>
+/* --- engine/rng.js --- */
+/** Deterministic PRNG so the same seed always yields the same suggestion. */
+function mulberry32(seed) {
+    let a = seed >>> 0;
+    return () => {
+        a = (a + 0x6d2b79f5) >>> 0;
+        let t = a;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+}
+function pick(items, rand) {
+    if (!items.length)
+        return undefined;
+    return items[Math.floor(rand() * items.length)];
+}
+
+/* --- engine/threat.js --- */
+const AXES = [
+    'air', 'armor', 'infantry_swarm', 'artillery', 'stealth',
+    'superweapon', 'economy', 'base_defense', 'early_rush', 'chemical',
+];
+const AXIS_LABEL = {
+    air: 'Air power',
+    armor: 'Heavy armour',
+    infantry_swarm: 'Infantry hordes',
+    artillery: 'Artillery / siege',
+    stealth: 'Stealth',
+    superweapon: 'Superweapons',
+    economy: 'Economy snowball',
+    base_defense: 'Base defences',
+    early_rush: 'Early aggression',
+    chemical: 'Toxins / fire',
+};
+/**
+ * How the skirmish AI's behaviour scales with difficulty.
+ *
+ * These are behavioural multipliers, not stat changes: a harder AI expands
+ * sooner, attacks sooner and reaches its tech faster, so the axes that matter
+ * in a plan shift even though the army list is identical.
+ */
+const DIFFICULTY_SCALE = {
+    easy: { all: 0.75, early_rush: 0.4, economy: 0.7, superweapon: 0.6 },
+    medium: { all: 1.0 },
+    hard: { all: 1.15, early_rush: 1.35, economy: 1.3, superweapon: 1.2 },
+    brutal: { all: 1.3, early_rush: 1.6, economy: 1.5, superweapon: 1.35 },
+};
+const DIFFICULTY_NOTE = {
+    easy: 'The AI will not rush you and rarely expands. You can afford a greedy opening and tech straight to what you actually want to play with.',
+    medium: 'The AI expands once and attacks in waves. Hold your first defensive line, then out-tech it.',
+    hard: 'The AI attacks early, expands aggressively and keeps producing while it fights. You need a defensive structure up before you tech.',
+    brutal: 'Assume constant pressure and a faster economy than yours. Deny expansions early or you will simply be out-produced.',
+};
+/**
+ * Profiles keep headroom above 3 on purpose.
+ *
+ * An axis already at 3 still gets worse on a harder AI, and clamping it to 3
+ * would silently erase that ordering. Consumers that display pressure
+ * normalise back to the 0-3 scale themselves.
+ */
+const PRESSURE_CEILING = 4.5;
+function clamp(n, lo = 0, hi = PRESSURE_CEILING) {
+    return Math.max(lo, Math.min(hi, n));
+}
+/** Squash a raw pressure value back onto the 0-3 scale used in the UI. */
+function displayPressure(value) {
+    return Math.round(Math.min(3, value) * 10) / 10;
+}
+/**
+ * The pressure an enemy army will actually apply, given who they are, how hard
+ * the AI is set, and what the map lets them do.
+ */
+function enemyThreatProfile(enemy, difficulty, map) {
+    const scale = DIFFICULTY_SCALE[difficulty];
+    const out = {};
+    for (const axis of AXES) {
+        const base = enemy.threat[axis] ?? 0;
+        const axisScale = scale[axis] ?? scale.all;
+        out[axis] = base * axisScale;
+    }
+    if (map) {
+        // Open ground rewards manoeuvre and long range; boxed-in maps reward siege.
+        const open = (map.openness - 1.5) / 1.5; // -1 .. +1
+        const choke = (map.chokepoints - 1.5) / 1.5;
+        const supply = (map.supplyDensity - 1.5) / 1.5;
+        out.armor += open * 0.4 * (enemy.threat.armor > 0 ? 1 : 0);
+        out.air += open * 0.3 * (enemy.threat.air > 0 ? 1 : 0);
+        out.artillery += choke * 0.5 * (enemy.threat.artillery > 0 ? 1 : 0);
+        out.base_defense += choke * 0.5;
+        out.stealth += choke * 0.3 * (enemy.threat.stealth > 0 ? 1 : 0);
+        out.early_rush -= supply * 0.4; // rich supply means longer games
+        out.superweapon += supply * 0.5 * (enemy.threat.superweapon > 0 ? 1 : 0);
+        out.economy += supply * 0.3;
+    }
+    for (const axis of AXES)
+        out[axis] = clamp(out[axis]);
+    return out;
+}
+/** Axes sorted by how much they matter, strongest first. */
+function rankedAxes(profile, minimum = 1.2) {
+    return AXES.filter((a) => profile[a] >= minimum).sort((a, b) => profile[b] - profile[a]);
+}
+
+/* --- engine/counters.js --- */
+const AXIS_GUIDANCE = {
+    air: 'Keep anti-air inside the army ball, not just in the base. Aircraft pick off stragglers first.',
+    armor: 'Anti-tank infantry in garrisons and buildings trade far better than tank-for-tank.',
+    infantry_swarm: 'Area damage beats target count. Flame, toxin, artillery and strafing runs all scale where single-target fire does not.',
+    artillery: 'Artillery cannot defend itself. Anything fast that reaches it kills it — aircraft most reliably.',
+    stealth: 'A detector must travel with the army, not sit in the base. Without one you are fighting blind.',
+    superweapon: 'Spread your base so no single shot takes two buildings, and kill the launcher rather than racing it.',
+    economy: 'Raid supply lines. Killing workers and dozers costs them more than killing their army does.',
+    base_defense: 'Out-range it or go over it. Walking into a defensive envelope is how armies disappear.',
+    early_rush: 'Get one defensive structure and a handful of cheap units up before you tech. Surviving is the whole plan.',
+    chemical: 'Go mechanised. Toxins and fire do very little to vehicles and nothing to aircraft.',
+};
+/** Score how well a single unit answers an axis, favouring cheap and early. */
+function unitScore(unit, axis) {
+    const answer = unit.answers[axis] ?? 0;
+    if (answer <= 0)
+        return 0;
+    const tierBonus = unit.tier === 'early' ? 0.4 : unit.tier === 'mid' ? 0.2 : 0;
+    const costPenalty = Math.min(0.6, unit.cost / 4000);
+    return answer + tierBonus - costPenalty;
+}
+/**
+ * For each axis the enemy actually pressures, the units in your roster that
+ * answer it, best first.
+ */
+function recommendCounters(you, roster, profile, maxAxes = 5) {
+    const axes = rankedAxes(profile).slice(0, maxAxes);
+    return axes.map((axis) => {
+        const units = roster
+            .map((u) => ({ unit: u, score: unitScore(u, axis) }))
+            .filter((x) => x.score > 0)
+            .sort((a, b) => b.score - a.score || a.unit.cost - b.unit.cost)
+            .slice(0, 3)
+            .map(({ unit }) => ({ name: unit.name, cost: unit.cost, tier: unit.tier, why: unit.note }));
+        const guidance = units.length
+            ? AXIS_GUIDANCE[axis]
+            : `${you.name} has no clean answer to this in its roster — avoid the engagement, or deny it at the source by raiding their production.`;
+        return { axis, pressure: displayPressure(profile[axis]), units, guidance };
+    });
+}
+/** How well an army covers a given axis, 0-3. Used for lineup scoring. */
+function coverage(roster, axis) {
+    let best = 0;
+    let depth = 0;
+    for (const u of roster) {
+        const a = u.answers[axis] ?? 0;
+        if (a > best)
+            best = a;
+        if (a >= 2)
+            depth++;
+    }
+    // Having several real answers matters, but with diminishing returns.
+    return Math.min(3, best + Math.min(0.75, depth * 0.25));
+}
+
+/* --- engine/lineup.js --- */
+/**
+ * Map a raw score onto 0-100.
+ *
+ * The bounds come from sampling every army against every army at every
+ * difficulty: raw scores land between roughly 16 and 63, so this stretches
+ * that band across the full range instead of saturating at the top.
+ * See test/lineup.test.ts, which fails if the spread collapses again.
+ */
+const RAW_FLOOR = 14;
+const RAW_CEILING = 66;
+function calibrate(raw) {
+    const pct = ((raw - RAW_FLOOR) / (RAW_CEILING - RAW_FLOOR)) * 100;
+    return Math.max(0, Math.min(100, Math.round(pct)));
+}
+/**
+ * Score one army against an enemy on three counts:
+ *
+ *  - defense: can you answer what they actually throw at you
+ *  - offense: does what you throw land on something they are soft against
+ *  - risk:    do they pressure the axes you are structurally exposed on
+ */
+function scoreFaction(you, roster, enemy, profile) {
+    let defense = 0;
+    let offense = 0;
+    let risk = 0;
+    let bestCounterAxis = AXES[0];
+    let bestCounterValue = -Infinity;
+    let worstRiskAxis = AXES[0];
+    let worstRiskValue = -Infinity;
+    for (const axis of AXES) {
+        const pressure = profile[axis];
+        const cover = coverage(roster, axis);
+        const d = pressure * cover;
+        defense += d;
+        if (pressure >= 1 && d > bestCounterValue) {
+            bestCounterValue = d;
+            bestCounterAxis = axis;
+        }
+        offense += (you.threat[axis] ?? 0) * (enemy.vulnerability[axis] ?? 0);
+        const r = pressure * (you.vulnerability[axis] ?? 0);
+        risk += r;
+        if (r > worstRiskValue) {
+            worstRiskValue = r;
+            worstRiskAxis = axis;
+        }
+    }
+    // Weighted so that "can I survive them" counts for more than "can I hurt them".
+    const raw = defense * 1.0 + offense * 0.8 - risk * 1.1;
+    const score = calibrate(raw);
+    const why = bestCounterValue > 0
+        ? `Answers their ${AXIS_LABEL[bestCounterAxis].toLowerCase()} well; most exposed to ${AXIS_LABEL[worstRiskAxis].toLowerCase()}.`
+        : `Little overlap with their strengths; most exposed to ${AXIS_LABEL[worstRiskAxis].toLowerCase()}.`;
+    return { faction: you, score, raw, why, detail: { defense, offense, risk } };
+}
+function rankLineups(candidates, rosterFor, enemy, profile) {
+    return candidates
+        .map((f) => scoreFaction(f, rosterFor(f.id), enemy, profile))
+        .sort((a, b) => b.score - a.score);
+}
+
+/* --- engine/plan.js --- */
+const DO_NOT = {
+    air: 'Do not move your army without anti-air inside it. Their aircraft will take it apart one unit at a time.',
+    armor: 'Do not meet their armour head-on in open ground. Fight from garrisons, chokepoints or out of range.',
+    infantry_swarm: 'Do not trade expensive units one-for-one against cheap infantry. You will run out of credits first.',
+    artillery: 'Do not let your army sit still inside artillery range. Spread out, or close the distance and kill the guns.',
+    stealth: 'Do not advance through unscouted ground. Without a detector attached to the army you are walking into whatever is already there.',
+    superweapon: 'Do not cluster your production. One superweapon shot should never be able to cost you two buildings.',
+    economy: 'Do not settle into a long game while they out-mine you. Contest a supply pile or raid the one they are on.',
+    base_defense: 'Do not push into their defensive envelope without out-ranging it first. That is how whole armies vanish.',
+    early_rush: 'Do not tech greedily. One defensive structure and a few cheap units first, every time.',
+    chemical: 'Do not lean on infantry or garrisoned buildings. Both evaporate against toxins and fire.',
+};
+const PHASE_WINDOWS = {
+    easy: ['0–7 min', '7–16 min', '16 min+'],
+    medium: ['0–6 min', '6–14 min', '14 min+'],
+    hard: ['0–4 min', '4–11 min', '11 min+'],
+    brutal: ['0–3 min', '3–9 min', '9 min+'],
+};
+function hasRole(u, role) {
+    return u.roles.includes(role);
+}
+/** Cheapest, earliest unit in the roster that satisfies a predicate. */
+function pickUnit(roster, pred) {
+    const tierRank = { early: 0, mid: 1, late: 2 };
+    return roster
+        .filter(pred)
+        .sort((a, b) => tierRank[a.tier] - tierRank[b.tier] || a.cost - b.cost)[0];
+}
+function bestAgainst(roster, axis) {
+    return roster
+        .filter((u) => (u.answers[axis] ?? 0) >= 2)
+        .sort((a, b) => (b.answers[axis] ?? 0) - (a.answers[axis] ?? 0) || a.cost - b.cost)[0];
+}
+/**
+ * Start from the faction's stock opening, then splice in the things this
+ * particular enemy forces you to build.
+ */
+function buildOrder(you, roster, profile, enemy) {
+    const steps = [...you.opening];
+    const insertions = [];
+    if (profile.early_rush >= 2.2) {
+        const def = pickUnit(roster, (u) => hasRole(u, 'defense'));
+        insertions.push({
+            at: 1,
+            text: `PRIORITY — ${enemy.name} attacks early: get ${def ? `a ${def.name}` : 'a defensive structure'} and a few cheap units up before anything else`,
+        });
+    }
+    if (profile.air >= 2.2) {
+        const aa = bestAgainst(roster, 'air');
+        insertions.push({
+            at: 2,
+            text: `Anti-air early — ${aa ? aa.name : 'your best AA'} before their first air wave, and keep it moving with the army`,
+        });
+    }
+    if (profile.stealth >= 2.2) {
+        const det = pickUnit(roster, (u) => hasRole(u, 'detector'));
+        insertions.push({
+            at: 3,
+            text: `Detection is mandatory here — build ${det ? `a ${det.name}` : 'a detector'} and attach it to every push`,
+        });
+    }
+    if (profile.infantry_swarm >= 2.2) {
+        const clear = bestAgainst(roster, 'infantry_swarm');
+        insertions.push({
+            at: 4,
+            text: `Area damage for their hordes — ${clear ? clear.name : 'your best area-damage unit'} rather than more single-target fire`,
+        });
+    }
+    if (profile.armor >= 2.5) {
+        const at = bestAgainst(roster, 'armor');
+        insertions.push({
+            at: 4,
+            text: `Anti-armour core — ${at ? at.name : 'your best anti-tank unit'}, in numbers, before their tank ball arrives`,
+        });
+    }
+    for (const ins of insertions.sort((a, b) => b.at - a.at)) {
+        steps.splice(Math.min(ins.at, steps.length), 0, ins.text);
+    }
+    if (profile.base_defense >= 2.2) {
+        const arty = pickUnit(roster, (u) => hasRole(u, 'artillery'));
+        steps.push(`Tech toward ${arty ? arty.name : 'siege units'} — their defensive line has to be out-ranged, not charged`);
+    }
+    if (profile.superweapon >= 2.2) {
+        steps.push('Spread your production buildings apart now, and plan a raid on the superweapon rather than racing its timer');
+    }
+    return steps;
+}
+function timeline(you, profile, difficulty, enemy, map) {
+    const [w1, w2, w3] = PHASE_WINDOWS[difficulty];
+    const top = rankedAxes(profile).slice(0, 2);
+    const early = [
+        'Get every worker or supply unit mining before you build anything else',
+        'Scout with your first cheap unit — you need to see their opening, not guess it',
+    ];
+    if (profile.early_rush >= 2.2)
+        early.push(`Expect contact inside this window — ${enemy.name} does not wait`);
+    else
+        early.push('No early pressure expected: take the greedy expansion while it is free');
+    if (map && map.supplyDensity <= 1)
+        early.push('Supply is thin on this map — claim a second pile before they do');
+    const mid = [
+        `Build the counter core: ${top.map((a) => AXIS_LABEL[a].toLowerCase()).join(' and ')} are what they will actually apply`,
+        'Raid their supply line at least once — economy damage compounds, army damage does not',
+    ];
+    if (map && map.chokepoints >= 2)
+        mid.push('Hold the chokepoint rather than the map; it is worth more than territory here');
+    else
+        mid.push('There is no chokepoint to hold — keep the army mobile and pick your engagements');
+    const late = [];
+    if (profile.superweapon >= 2)
+        late.push('Their superweapon comes online in this window — kill the launcher or be somewhere else');
+    late.push(`Commit with ${you.name}'s late-game units once you have map control, not before`);
+    late.push('Push when their army is dead, not when yours is full — the window is after a won engagement');
+    return [
+        { label: 'Opening', window: w1, objectives: early },
+        { label: 'Midgame', window: w2, objectives: mid },
+        { label: 'Late game', window: w3, objectives: late },
+    ];
+}
+function matchesSelector(sel, f) {
+    return sel === '*' || sel === f.id || sel === f.side;
+}
+function collectMatchupNotes(notes, you, enemy) {
+    const out = [];
+    for (const n of notes) {
+        if (matchesSelector(n.you, you) && matchesSelector(n.enemy, enemy))
+            out.push(...n.advice);
+    }
+    return [...new Set(out)];
+}
+function doNotList(you, profile) {
+    const out = [];
+    for (const axis of rankedAxes(profile, 1.5)) {
+        const exposure = you.vulnerability[axis] ?? 0;
+        if (exposure >= 2)
+            out.push(DO_NOT[axis]);
+    }
+    if (!out.length) {
+        const top = rankedAxes(profile)[0];
+        if (top)
+            out.push(DO_NOT[top]);
+    }
+    return out.slice(0, 4);
+}
+function slug(name) {
+    return name.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+}
+/**
+ * Build a battle plan from an explicit dataset.
+ *
+ * Deliberately free of any Node import so the browser build can run exactly
+ * this engine rather than a re-implementation of it.
+ */
+function planFrom(ds, input) {
+    const rand = mulberry32(input.seed ?? 0x5eed);
+    const factionById = (id) => ds.factions.find((f) => f.id === id);
+    const unitsFor = (id) => ds.units.filter((u) => u.factions?.includes(id));
+    const mapById = (id) => ds.maps.find((m) => m.id === id) ?? ds.maps.find((m) => slug(m.name) === slug(id));
+    const map = input.mapId ? mapById(input.mapId) : undefined;
+    if (input.mapId && !map)
+        throw new Error(`Unknown map: ${input.mapId}`);
+    // Enemy: chosen, or picked at random so the plan is still a real matchup.
+    const enemy = input.enemy
+        ? factionById(input.enemy)
+        : ds.factions[Math.floor(rand() * ds.factions.length)];
+    if (!enemy)
+        throw new Error(`Unknown faction: ${input.enemy}`);
+    const profile = enemyThreatProfile(enemy, input.difficulty, map);
+    // Your side: chosen, or the engine picks the best answer to that enemy.
+    let you = input.you ? factionById(input.you) : undefined;
+    if (input.you && !you)
+        throw new Error(`Unknown faction: ${input.you}`);
+    let ranking;
+    let rationale;
+    if (!you) {
+        const ranked = rankLineups(ds.factions, unitsFor, enemy, profile);
+        ranking = ranked.map((r) => ({ faction: r.faction, score: r.score, why: r.why }));
+        you = ranked[0].faction;
+        rationale = [
+            `Picked ${you.name} because it scores highest against ${enemy.name} on this difficulty${map ? ` and on ${map.name}` : ''}.`,
+            ranked[0].why,
+            ranked[1] ? `Next best: ${ranked[1].faction.name} (${ranked[1].score}/100).` : '',
+        ].filter(Boolean);
+    }
+    const roster = unitsFor(you.id);
+    const counters = recommendCounters(you, roster, profile);
+    const top = rankedAxes(profile);
+    const headline = `${you.name} vs ${enemy.name}` +
+        (map ? ` on ${map.name}` : '') +
+        ` — ${input.difficulty.toUpperCase()}. ` +
+        (top[0]
+            ? `Their game is ${AXIS_LABEL[top[0]].toLowerCase()}; answer that first and the rest follows.`
+            : 'A soft matchup — play your standard opening and take the map.');
+    const watchFor = [
+        ...enemy.signatureTactics,
+        ...enemy.quirks.slice(0, 1),
+        DIFFICULTY_NOTE[input.difficulty],
+    ];
+    const mapNotes = map
+        ? [...map.notes, `${map.players} players, ${map.terrain} terrain. Chokepoints ${map.chokepoints}/3, supply ${map.supplyDensity}/3, open ground ${map.openness}/3.`]
+        : ['No map selected — pick one to get terrain-specific advice on chokepoints, supply and expansion timing.'];
+    return {
+        you,
+        enemy,
+        difficulty: input.difficulty,
+        ...(map ? { map } : {}),
+        ...(rationale ? { lineupRationale: rationale } : {}),
+        ...(ranking ? { lineupRanking: ranking } : {}),
+        headline,
+        buildOrder: buildOrder(you, roster, profile, enemy),
+        counters,
+        timeline: timeline(you, profile, input.difficulty, enemy, map),
+        watchFor,
+        doNot: doNotList(you, profile),
+        mapNotes,
+        matchupNotes: collectMatchupNotes(ds.matchups, you, enemy),
+    };
+}
+
+const DATA = {"factions":[{"id":"usa","name":"United States of America","side":"usa","tagline":"Expensive, precise, and lethal once the airfields are humming.","threat":{"air":3,"armor":2,"infantry_swarm":1,"artillery":2,"stealth":1,"superweapon":2,"economy":2,"base_defense":2,"early_rush":1,"chemical":0},"vulnerability":{"early_rush":3,"infantry_swarm":2,"stealth":2,"artillery":2},"strengths":["Best air force in the game once Airfields are up","Tomahawk Launchers out-range almost every base defence","Drones bolt onto vehicles for free repair, scouting and extra guns","Strategy Center stances swing a fight without spending credits"],"weaknesses":["Units cost more than anything they will trade with early on","Very soft for the first five minutes — a committed rush ends the game","Airfields are large, fragile, and worth raiding","Infantry hordes overwhelm small numbers of expensive units"],"opening":["Dozer -> Supply Center, pull both Chinooks onto the nearest supply pile","Barracks -> two Rangers for scouting and garrison clearing","Supply Drop Zone as soon as credits allow — it pays passively all game","War Factory -> Humvees, then Crusaders","Strategy Center (unlocks stances and the Paladin), then Airfield"],"signatureTactics":["Garrison a central building with Rangers and Missile Defenders early","Comanche pairs hunting supply lines and dozers, never trading with AA","Tomahawk line behind a Crusader screen to peel base defences apart","Colonel Burton to silently demolish a superweapon or power grid"],"quirks":["Drones attach to vehicles: Battle Drone repairs, Scout Drone spots, Hellfire adds damage","Strategy Center stance: Bombardment (range), Hold the Line (armour), Search and Destroy (damage/vision)","Supply Drop Zone gives income with no chinook risk"],"wikiPage":"United_States_of_America_(Generals)","source":"curated"},{"id":"usa_air","name":"USA Air Force General","general":"Gen. Malcolm \"Ace\" Granger","side":"usa","tagline":"Owns the sky, rents the ground.","threat":{"air":3,"armor":1,"infantry_swarm":1,"artillery":1,"stealth":2,"superweapon":2,"economy":2,"base_defense":1,"early_rush":1,"chemical":0},"vulnerability":{"early_rush":3,"armor":3,"base_defense":3,"infantry_swarm":2},"strengths":["King Raptor and Aurora Alpha hit harder and survive more than stock aircraft","Stealth Comanches arrive unseen over supply lines","Carpet bombing erases infantry hordes and clustered production","Aircraft rearm and recover faster than anyone can replace ground losses"],"weaknesses":["No Crusader or Paladin line — his ground army is thin and improvised","A fast ground rush kills him before the second Airfield finishes","Massed anti-air (Quad Cannons, Gattlings, Avengers) shuts the whole army off","Base defence is an afterthought"],"opening":["Dozer -> Supply Center, both Chinooks mining immediately","Barracks -> Rangers, then a Patriot Battery on the main approach","Airfield as the first real investment","Second Airfield before any ground tech"],"signatureTactics":["Raptor pairs sniping dozers and supply trucks from minute four","Aurora Alpha runs on superweapons, Command Centers and War Factories","Chinook-lift a Humvee ball behind the enemy economy","Keep a Patriot screen at home so he never has to land to defend"],"quirks":["Aircraft are the army — losing air superiority loses the game","Countermeasures upgrade makes aircraft shrug off missile defences"],"wikiPage":"Air_Force_General","source":"curated"},{"id":"usa_laser","name":"USA Laser General","general":"Gen. \"Pinpoint\" Townes","side":"usa","tagline":"Immaculate defence, wired to a fuse box.","threat":{"air":2,"armor":2,"infantry_swarm":1,"artillery":1,"stealth":1,"superweapon":2,"economy":2,"base_defense":3,"early_rush":1,"chemical":0},"vulnerability":{"early_rush":2,"artillery":3,"infantry_swarm":2,"economy":3},"strengths":["Laser Turrets out-damage any other static defence for the price","Laser Crusaders cut through armour with no travel time to dodge","Point Defence Lasers shoot incoming rockets and missiles out of the air","Cold Fusion Reactors are cheaper and produce more power than standard"],"weaknesses":["Everything is power-gated — dark reactors mean dark turrets","Artillery out-ranges his defensive line and he cannot answer in kind","Missile-only armies do badly, but shell and gun armies walk through","Thin early game like all USA sides"],"opening":["Dozer -> Supply Center, Chinooks onto supply","Cold Fusion Reactor early — the whole army keys off power","Barracks -> Rangers, Laser Turret on the main approach","War Factory -> Laser Crusaders","Strategy Center, then Airfield"],"signatureTactics":["Turtle a chokepoint with Laser Turrets and push out with Laser Crusaders","Use Point Defence Laser coverage to walk into missile-heavy armies","Avenger units to blank enemy missiles over the army ball"],"quirks":["Power is the single point of failure — protect and over-build reactors","Point Defence Laser intercepts rockets and missiles but not shells or bullets"],"wikiPage":"Laser_General","source":"curated"},{"id":"usa_super","name":"USA Superweapon General","general":"Gen. Alexis Alexander","side":"usa","tagline":"Survive her opening and you still have to survive the sky falling.","threat":{"air":2,"armor":2,"infantry_swarm":1,"artillery":2,"stealth":1,"superweapon":3,"economy":2,"base_defense":3,"early_rush":1,"chemical":0},"vulnerability":{"early_rush":3,"stealth":2,"armor":2},"strengths":["Particle Cannons are cheaper and recharge faster, and she fields more of them","EMP Patriots freeze vehicles in place inside her defensive envelope","Advanced Control Rods push more power out of every reactor","Late game is effectively unwinnable if she is allowed to reach it"],"weaknesses":["Slow, greedy opening — she is at her weakest for the first eight minutes","A spread-out enemy base blunts every Particle Cannon shot","Killing the Particle Cannon uplinks resets her entire plan","Raids on dozers delay superweapons disproportionately"],"opening":["Dozer -> Supply Center, Chinooks mining","Barracks and a Patriot Battery, because she must survive to tech","Cold Fusion Reactor -> Strategy Center","Particle Cannon uplink the moment it is affordable"],"signatureTactics":["Hold a tight defensive perimeter and win on superweapon uptime","EMP Patriot line to strand armour inside Particle Cannon range","Chain Particle Cannon shots onto production rather than armies"],"quirks":["Her clock is the real opponent — every minute favours her","Superweapon timers are public information: count them"],"wikiPage":"Superweapon_General","source":"curated"},{"id":"china","name":"People's Republic of China","side":"china","tagline":"Bring more of everything and let the horde bonus do the maths.","threat":{"air":2,"armor":3,"infantry_swarm":2,"artillery":2,"stealth":0,"superweapon":2,"economy":2,"base_defense":2,"early_rush":2,"chemical":1},"vulnerability":{"air":2,"stealth":2,"artillery":2,"chemical":1},"strengths":["Overlords are the toughest thing on the field and carry upgrades on their back","Horde bonus makes massed identical units hit far above their cost","Gattling Cannons answer air and infantry from the same building","Hackers print credits without ever leaving the base"],"weaknesses":["Slow ground units get kited by anything faster","No stealth and poor stealth detection outside the Listening Outpost","Long-range artillery picks the horde apart before it arrives","Nuclear reactors detonate when destroyed, inside your own base"],"opening":["Dozer -> Supply Center, both Supply Trucks mining","Barracks -> Red Guard pairs to hold ground and scout","War Factory -> Battlemasters, keep five together for the horde bonus","Nuclear Reactor -> Internet Center for hackers, or Propaganda Center for upgrades","Gattling Cannon on the approach before the first air scout arrives"],"signatureTactics":["Five-Battlemaster horde with a Dragon Tank behind to clear garrisons","Overlord with a Gattling Cannon on top as a mobile no-fly zone","Nuke Cannon or Inferno Cannon line to crack a turtled base","Black Lotus to capture a building or drain an enemy supply centre"],"quirks":["Horde bonus: five or more of the same unit near each other gain attack","Propaganda Towers and Overlord speakers passively heal nearby units","Nationalism and Patriotism stack the horde bonus higher"],"wikiPage":"China_(Generals)","source":"curated"},{"id":"china_tank","name":"China Tank General","general":"Gen. Ta Hun Kwai","side":"china","tagline":"A wall of armour that arrives early and never stops.","threat":{"air":1,"armor":3,"infantry_swarm":1,"artillery":1,"stealth":0,"superweapon":2,"economy":2,"base_defense":2,"early_rush":3,"chemical":0},"vulnerability":{"air":3,"artillery":2,"stealth":2},"strengths":["Tanks are cheaper, faster and roll off the line already veteran","Emperor Overlord carries its own propaganda aura and shrugs off massed fire","Can contest the map earlier than any other Chinese side","Armour count snowballs if the first push is not punished"],"weaknesses":["Almost nothing in his arsenal answers massed air","Rocket infantry in garrisons trade brutally well against him","Artillery kills the ball before it closes","Committed to the ground: no flexibility if you deny the ground"],"opening":["Dozer -> Supply Center, trucks mining","War Factory immediately — his tanks are the opening","Battlemaster pressure on the enemy supply line before minute five","Gattling Cannon at home only after the first push"],"signatureTactics":["Early Battlemaster raid on dozers and supply trucks","Emperor Overlord spearhead with Battlemasters filling the horde bonus","Overrun infantry with tank treads rather than shooting them"],"quirks":["Veterancy on delivery means his first tanks beat your first tanks","Overlords can mount Gattling, Propaganda or Bunker upgrades"],"wikiPage":"Tank_General","source":"curated"},{"id":"china_infantry","name":"China Infantry General","general":"Gen. \"Anvil\" Shin Fai","side":"china","tagline":"Bodies, endlessly, all of them already veterans.","threat":{"air":1,"armor":1,"infantry_swarm":3,"artillery":2,"stealth":0,"superweapon":2,"economy":2,"base_defense":2,"early_rush":3,"chemical":0},"vulnerability":{"chemical":3,"artillery":3,"air":2,"armor":2},"strengths":["Infantry arrive as veterans and scale into enormous hordes","Minigunners and Tank Hunters cover infantry and armour from one Barracks","Attack Outposts push the horde forward with healing and detection","Cheapest map control in the game"],"weaknesses":["Flame and toxin delete whole hordes in seconds","Artillery and carpet bombing are equally catastrophic","Very little answer to heavy armour in open ground","Garrisons become death traps once the building burns"],"opening":["Dozer -> Supply Center, trucks mining","Barracks first, then a second Barracks — production width is the strategy","Red Guard and Tank Hunter mix, pushed out to claim ground early","Troop Crawler to move the horde and detect stealth"],"signatureTactics":["Early veteran Red Guard flood onto the enemy's supply line","Garrison every building on the approach with Tank Hunters","Troop Crawler drops behind the enemy line and unloads a full horde"],"quirks":["All infantry start veteran, which changes every early trade","Horde bonus applies to infantry, so bigger really is better"],"wikiPage":"Infantry_General","source":"curated"},{"id":"china_nuke","name":"China Nuclear General","general":"Gen. Tsing Shi Tao","side":"china","tagline":"Everything he owns is also a bomb, including his power plants.","threat":{"air":2,"armor":3,"infantry_swarm":2,"artillery":3,"stealth":0,"superweapon":3,"economy":3,"base_defense":2,"early_rush":2,"chemical":2},"vulnerability":{"early_rush":2,"air":2,"artillery":2},"strengths":["Tanks leave a radioactive detonation behind when they die","Tactical Nuke Cannon flattens clustered armies and static defences","Nuclear reactors produce more power, so he techs faster","Nuke MiGs turn a bombing run into an area denial weapon"],"weaknesses":["His own reactors detonate inside his base when destroyed","Clumped defenders are exactly what his whole arsenal wants","Long-range engagements deny his death-explosion value","Early aggression arrives before the nuclear tech does"],"opening":["Dozer -> Supply Center, trucks mining","Nuclear Reactor early — power is his economy advantage","War Factory -> Battlemasters with the nuclear upgrades","Nuke Cannon once the front stabilises"],"signatureTactics":["Trade tanks aggressively — his die better than yours","Tactical Nuke Cannon onto any static defensive line","Nuke MiG runs to make ground permanently uncomfortable"],"quirks":["Death explosions mean you lose units even when you win the fight","His reactors are a liability you can exploit with a single raid"],"wikiPage":"Nuke_General","source":"curated"},{"id":"gla","name":"Global Liberation Army","side":"gla","tagline":"Cheap, fast, everywhere, and impossible to finish off.","threat":{"air":0,"armor":2,"infantry_swarm":2,"artillery":2,"stealth":2,"superweapon":2,"economy":3,"base_defense":1,"early_rush":3,"chemical":2},"vulnerability":{"air":3,"armor":2,"base_defense":2},"strengths":["Fastest, cheapest army on the field — trades on volume and tempo","Tunnel Networks teleport the army across the map and heal it","Destroyed buildings leave holes that rebuild for a fraction of the cost","Black Market and salvage give income and free veterancy"],"weaknesses":["No aircraft at all — the sky belongs to the enemy by default","Light armour everywhere; anything heavy wins a straight fight","Static defence is weak outside Stinger Sites and tunnels","Falls off badly if the early tempo is neutralised"],"opening":["Worker -> Supply Stash, extra Workers onto supply immediately","Barracks -> Rebels for scouting, RPG Troopers for the first raid","Arms Dealer -> Technicals, then Scorpions","Tunnel Network toward the middle of the map to project the army","Black Market for income and upgrades"],"signatureTactics":["Rebel and RPG raid on the enemy dozer line before minute four","Tunnel Network forward so reinforcements arrive already at the front","Jarmen Kell snipes vehicle crews, then infantry walk into free tanks","Bomb Truck disguised in an enemy column, driven into a superweapon"],"quirks":["Buildings leave rebuildable holes — killing GLA structures is never permanent","Salvage crates from destroyed vehicles upgrade units on the spot","GPS Scrambler and Sneak Attack put an army where it should not be"],"wikiPage":"Global_Liberation_Army","source":"curated"},{"id":"gla_toxin","name":"GLA Toxin General","general":"Dr. Thrax","side":"gla","tagline":"Poisons the ground you were going to stand on.","threat":{"air":0,"armor":1,"infantry_swarm":2,"artillery":2,"stealth":1,"superweapon":2,"economy":2,"base_defense":2,"early_rush":3,"chemical":3},"vulnerability":{"air":3,"armor":3},"strengths":["Starts with Anthrax Beta and can upgrade to Gamma — toxins never wear off","Toxin Tractors and Toxin Rebels clear infantry and garrisons instantly","Toxin Scuds leave lingering clouds that deny ground for free","Anthrax Bomb is a cheap answer to any infantry-based army"],"weaknesses":["Toxins do very little to vehicles and nothing at all to aircraft","A fully mechanised enemy ignores most of his damage output","Light armour, like all GLA sides","No aircraft"],"opening":["Worker -> Supply Stash, extra Workers mining","Barracks -> Toxin Rebels for the early raid","Arms Dealer -> Toxin Tractors","Tunnel Network forward, Black Market for income"],"signatureTactics":["Toxin Tractor pairs erasing garrisons and infantry screens","Poison the enemy supply pile so workers cannot mine it","Anthrax Bomb onto any massed infantry formation"],"quirks":["Toxin damage lingers on the ground after the attack stops","Against vehicles his damage profile collapses — he must catch infantry"],"wikiPage":"Toxin_General","source":"curated"},{"id":"gla_stealth","name":"GLA Stealth General","general":"Prince Kassad","side":"gla","tagline":"The army was always there. You simply could not see it.","threat":{"air":0,"armor":1,"infantry_swarm":2,"artillery":2,"stealth":3,"superweapon":1,"economy":2,"base_defense":2,"early_rush":2,"chemical":1},"vulnerability":{"air":3,"armor":3,"artillery":2},"strengths":["Nearly the entire army is stealthed by default","Camo Netting hides buildings, so his base is hard to even find","Hijackers steal vehicles outright, turning your army into his","Booby Traps and Demo Traps punish careless expansion"],"weaknesses":["One detector unravels the entire strategy","Straight firepower is below average once he is visible","Light armour and no aircraft","Loses badly to area damage swept across suspected positions"],"opening":["Worker -> Supply Stash, extra Workers mining","Barracks -> stealthed Rebels to scout and hold ground unseen","Camo Netting on the base as early as possible","Tunnel Network forward, Arms Dealer for Rocket Buggies"],"signatureTactics":["Park stealthed units on the enemy's expansion path and wait","Hijack the first vehicles that walk past unescorted","GPS Scrambler and Sneak Attack to open a second front inside the base"],"quirks":["Assume every empty-looking piece of ground is occupied","Stealth breaks when he fires — the window to punish is short"],"wikiPage":"Stealth_General","source":"curated"},{"id":"gla_demo","name":"GLA Demolition General","general":"Gen. Rodall \"Demo\" Juhziz","side":"gla","tagline":"Every single thing he owns is a delivery system for explosives.","threat":{"air":0,"armor":2,"infantry_swarm":3,"artillery":2,"stealth":2,"superweapon":3,"economy":2,"base_defense":2,"early_rush":3,"chemical":1},"vulnerability":{"air":3,"armor":2,"artillery":3},"strengths":["Terrorists are the cheapest way in the game to delete a tank","Demo Traps turn any piece of ground into a minefield","Bomb Trucks can disguise themselves and drive into anything important","Units detonate on death, so killing them is still a cost"],"weaknesses":["Almost everything he has must physically touch you to work","Long-range units and aircraft are close to immune","Very light armour — he dies on the approach if you see him coming","No aircraft"],"opening":["Worker -> Supply Stash, extra Workers mining","Barracks -> Terrorists and Rebels for the first raid","Demo Traps on your own chokepoints and expansions","Arms Dealer -> Bomb Trucks, Tunnel Network forward"],"signatureTactics":["Terrorist packs onto any tank ball that lost its infantry screen","Bomb Truck disguised as an enemy vehicle, aimed at a superweapon","Demo Trap every supply pile the enemy is about to expand onto"],"quirks":["Death explosions mean melee range is never safe near him","Cheap suicide units mean his army value is always lower than it looks"],"wikiPage":"Demolition_General","source":"curated"}],"units":[{"id":"ranger","name":"Ranger","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"infantry","roles":["anti_infantry","garrison_clear","scout"],"cost":225,"tier":"early","answers":{"infantry_swarm":1,"early_rush":1},"note":"Cheap bodies that clear garrisons and hold ground until real units arrive.","source":"curated","wikiPage":"Ranger"},{"id":"missile_defender","name":"Missile Defender","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"infantry","roles":["anti_vehicle","anti_air"],"cost":300,"tier":"early","answers":{"armor":2,"air":2,"early_rush":2},"note":"The USA answer to an early tank push and to low-flying aircraft, especially garrisoned.","source":"curated","wikiPage":"Missile_Defender"},{"id":"pathfinder","name":"Pathfinder","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"infantry","roles":["anti_infantry","stealth","scout"],"cost":400,"tier":"mid","answers":{"infantry_swarm":3},"note":"One-shots infantry from outside their range; the cleanest answer to a horde.","source":"curated","wikiPage":"Pathfinder"},{"id":"colonel_burton","name":"Colonel Burton","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"infantry","roles":["hero","anti_structure","stealth"],"cost":1500,"tier":"mid","answers":{"base_defense":3,"superweapon":3,"economy":2},"note":"Walks in unseen and demolishes superweapons, power grids and defence lines.","source":"curated","wikiPage":"Colonel_Burton"},{"id":"humvee","name":"Humvee","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"ground","roles":["anti_infantry","transport","scout"],"cost":700,"tier":"early","answers":{"infantry_swarm":2,"early_rush":2},"note":"Fast, carries infantry that fire from inside, and is the USA's early map presence.","source":"curated","wikiPage":"Humvee"},{"id":"sentry_drone","name":"Sentry Drone","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"ground","roles":["scout","detector","anti_infantry"],"cost":800,"tier":"early","answers":{"stealth":3,"infantry_swarm":1},"note":"The USA stealth detector. Nothing else you own reliably sees a stealthed army.","source":"curated","wikiPage":"Sentry_drone"},{"id":"crusader","name":"Crusader Tank","factions":["usa","usa_super"],"domain":"ground","roles":["anti_vehicle"],"cost":900,"tier":"mid","answers":{"armor":2},"note":"The standard USA main battle tank; good in numbers with drone support.","source":"curated","wikiPage":"Crusader_Tank"},{"id":"paladin","name":"Paladin Tank","factions":["usa","usa_super"],"domain":"ground","roles":["anti_vehicle","defense"],"cost":1200,"tier":"late","answers":{"armor":3},"note":"Crusader with a point defence laser that eats incoming rockets and missiles.","source":"curated","wikiPage":"Paladin_Tank"},{"id":"laser_crusader","name":"Laser Crusader","factions":["usa_laser"],"domain":"ground","roles":["anti_vehicle"],"cost":900,"tier":"mid","answers":{"armor":3},"note":"Hitscan damage with no shell travel time — it does not miss moving targets.","source":"curated","wikiPage":"Laser_Crusader"},{"id":"tomahawk","name":"Tomahawk Launcher","factions":["usa","usa_laser","usa_super"],"domain":"ground","roles":["artillery","anti_structure"],"cost":1200,"tier":"mid","answers":{"base_defense":3,"artillery":2,"stealth":1},"note":"Out-ranges essentially every static defence in the game. Siege from outside the envelope.","source":"curated","wikiPage":"Tomahawk_Launcher"},{"id":"microwave_tank","name":"Microwave Tank","factions":["usa","usa_laser","usa_super"],"domain":"ground","roles":["support","garrison_clear","anti_structure"],"cost":1200,"tier":"mid","answers":{"base_defense":2,"infantry_swarm":3},"note":"Disables buildings and cooks garrisoned infantry without damaging the structure.","source":"curated","wikiPage":"Microwave_Tank"},{"id":"avenger","name":"Avenger","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"ground","roles":["anti_air","support"],"cost":1800,"tier":"late","answers":{"air":3},"note":"Mobile anti-air that also blanks enemy missiles aimed at the units around it.","source":"curated","wikiPage":"Avenger"},{"id":"raptor","name":"Raptor","factions":["usa","usa_laser","usa_super"],"domain":"air","roles":["aircraft","anti_vehicle"],"cost":1200,"tier":"mid","answers":{"armor":3,"artillery":3},"note":"Fast strike aircraft; the fastest way to kill artillery and a tank ball.","source":"curated","wikiPage":"Raptor"},{"id":"king_raptor","name":"King Raptor","factions":["usa_air"],"domain":"air","roles":["aircraft","anti_vehicle"],"cost":1400,"tier":"mid","answers":{"armor":3,"artillery":3,"air":2},"note":"Granger's upgraded Raptor: tougher, harder hitting, and able to contest other aircraft.","source":"curated","wikiPage":"King_Raptor"},{"id":"comanche","name":"Comanche","factions":["usa","usa_laser","usa_super"],"domain":"air","roles":["aircraft","anti_infantry","anti_vehicle"],"cost":1500,"tier":"mid","answers":{"infantry_swarm":3,"armor":2,"economy":3},"note":"Hovers over supply lines and deletes workers, dozers and infantry. Never trade it into AA.","source":"curated","wikiPage":"Comanche"},{"id":"stealth_comanche","name":"Stealth Comanche","factions":["usa_air"],"domain":"air","roles":["aircraft","anti_infantry","anti_vehicle","stealth"],"cost":1500,"tier":"mid","answers":{"infantry_swarm":3,"armor":2,"economy":3},"note":"Arrives over the economy without ever appearing on radar.","source":"curated","wikiPage":"Comanche"},{"id":"stealth_fighter","name":"Stealth Fighter","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"air","roles":["aircraft","anti_structure","stealth"],"cost":1600,"tier":"late","answers":{"base_defense":3,"superweapon":2},"note":"Flies through an air defence net that cannot see it and removes a key building.","source":"curated","wikiPage":"Stealth_Fighter"},{"id":"aurora","name":"Aurora Bomber","factions":["usa","usa_laser","usa_super"],"domain":"air","roles":["aircraft","anti_structure"],"cost":2000,"tier":"late","answers":{"base_defense":3,"superweapon":3,"infantry_swarm":2},"note":"Invulnerable on the approach; it will land its bomb on whatever you point it at.","source":"curated","wikiPage":"Aurora_Bomber"},{"id":"aurora_alpha","name":"Aurora Alpha","factions":["usa_air"],"domain":"air","roles":["aircraft","anti_structure"],"cost":2400,"tier":"late","answers":{"base_defense":3,"superweapon":3,"infantry_swarm":3},"note":"Aurora with a bigger blast — deletes a superweapon or a production cluster per run.","source":"curated","wikiPage":"Aurora_Alpha"},{"id":"patriot","name":"Patriot Battery","factions":["usa","usa_laser","usa_super"],"domain":"ground","roles":["defense","anti_air","anti_vehicle"],"cost":1000,"tier":"early","answers":{"air":2,"armor":1,"early_rush":2},"note":"The base-defence backbone: cheap, covers both air and ground approaches.","source":"curated","wikiPage":"Patriot_Battery"},{"id":"emp_patriot","name":"EMP Patriot","factions":["usa_super"],"domain":"ground","roles":["defense","anti_vehicle"],"cost":1000,"tier":"early","answers":{"armor":3,"early_rush":2},"note":"Strands enemy vehicles motionless inside your defensive envelope.","source":"curated","wikiPage":"EMP_Patriot"},{"id":"laser_turret","name":"Laser Turret","factions":["usa_laser"],"domain":"ground","roles":["defense","anti_air","anti_vehicle"],"cost":1000,"tier":"early","answers":{"air":2,"armor":2,"early_rush":2},"note":"Best damage per credit of any static defence — as long as the power stays on.","source":"curated","wikiPage":"Laser_Turret"},{"id":"firebase","name":"Firebase","factions":["usa","usa_laser","usa_super"],"domain":"ground","roles":["defense","anti_infantry"],"cost":800,"tier":"early","answers":{"infantry_swarm":2,"early_rush":2},"note":"Garrison it with Missile Defenders and it covers armour and air at once.","source":"curated","wikiPage":"Firebase"},{"id":"red_guard","name":"Red Guard","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"infantry","roles":["anti_infantry","garrison_clear"],"cost":300,"tier":"early","answers":{"infantry_swarm":2,"early_rush":1},"note":"Comes in pairs and benefits from the horde bonus; the cheapest ground you can hold.","source":"curated","wikiPage":"Red_Guard"},{"id":"tank_hunter","name":"Tank Hunter","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"infantry","roles":["anti_vehicle","anti_air"],"cost":300,"tier":"early","answers":{"armor":3,"air":1,"early_rush":2},"note":"Garrisoned Tank Hunters break any early armour push at a fraction of its cost.","source":"curated","wikiPage":"Tank_Hunter"},{"id":"minigunner","name":"Minigunner","factions":["china_infantry"],"domain":"infantry","roles":["anti_infantry","garrison_clear"],"cost":400,"tier":"early","answers":{"infantry_swarm":3},"note":"Shin Fai's dedicated infantry killer, veteran from the moment it is built.","source":"curated","wikiPage":"Minigunner"},{"id":"hacker","name":"Hacker","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"infantry","roles":["economy","support"],"cost":625,"tier":"early","answers":{"economy":3},"note":"Generates credits from inside the base and can disable enemy buildings.","source":"curated","wikiPage":"Hacker"},{"id":"black_lotus","name":"Black Lotus","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"infantry","roles":["hero","capture","stealth","support"],"cost":1500,"tier":"mid","answers":{"economy":3,"base_defense":2,"armor":2},"note":"Captures buildings, steals credits outright and disables vehicles from range.","source":"curated","wikiPage":"Black_Lotus"},{"id":"battlemaster","name":"Battlemaster","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"ground","roles":["anti_vehicle"],"cost":700,"tier":"early","answers":{"armor":2,"early_rush":2},"note":"Cheap enough to mass; five together trigger the horde bonus and punch well above cost.","source":"curated","wikiPage":"Battlemaster_Tank"},{"id":"overlord","name":"Overlord","factions":["china","china_infantry","china_nuke"],"domain":"ground","roles":["anti_vehicle","anti_infantry","defense"],"cost":2000,"tier":"late","answers":{"armor":3,"infantry_swarm":2,"early_rush":3},"note":"The toughest ground unit in the game, and it carries a Gattling or Propaganda tower on top.","source":"curated","wikiPage":"Overlord_Tank"},{"id":"emperor_overlord","name":"Emperor Overlord","factions":["china_tank"],"domain":"ground","roles":["anti_vehicle","anti_infantry","defense","support"],"cost":2400,"tier":"late","answers":{"armor":3,"infantry_swarm":2,"early_rush":3},"note":"Overlord with a built-in propaganda aura that heals everything around it.","source":"curated","wikiPage":"Emperor_Overlord"},{"id":"gattling_tank","name":"Gattling Tank","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"ground","roles":["anti_air","anti_infantry"],"cost":800,"tier":"early","answers":{"air":3,"infantry_swarm":3},"note":"The single best answer China has to aircraft and to infantry hordes.","source":"curated","wikiPage":"Gattling_Tank"},{"id":"dragon_tank","name":"Dragon Tank","factions":["china","china_infantry","china_nuke"],"domain":"ground","roles":["garrison_clear","anti_infantry"],"cost":800,"tier":"mid","answers":{"infantry_swarm":3,"stealth":1,"base_defense":1},"note":"Flame clears garrisons, erases infantry, and burns stealthed units out of cover.","source":"curated","wikiPage":"Dragon_Tank"},{"id":"inferno_cannon","name":"Inferno Cannon","factions":["china","china_infantry","china_nuke"],"domain":"ground","roles":["artillery","anti_infantry"],"cost":1200,"tier":"mid","answers":{"infantry_swarm":3,"base_defense":2},"note":"Incendiary artillery; a line of them removes an infantry army before it closes.","source":"curated","wikiPage":"Inferno_Cannon"},{"id":"nuke_cannon","name":"Nuke Cannon","factions":["china","china_nuke"],"domain":"ground","roles":["artillery","anti_structure"],"cost":1600,"tier":"late","answers":{"base_defense":3,"infantry_swarm":3,"artillery":2},"note":"Siege artillery that out-ranges base defences and flattens clustered armies.","source":"curated","wikiPage":"Nuke_Cannon"},{"id":"troop_crawler","name":"Troop Crawler","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"ground","roles":["transport","detector","support"],"cost":900,"tier":"early","answers":{"stealth":2,"infantry_swarm":1},"note":"Moves a horde safely and sees stealthed units while it does.","source":"curated","wikiPage":"Troop_Crawler"},{"id":"listening_outpost","name":"Listening Outpost","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"ground","roles":["scout","detector","stealth"],"cost":500,"tier":"early","answers":{"stealth":3},"note":"China's proper stealth detector: cheap, stealthed itself, wide detection radius.","source":"curated","wikiPage":"Listening_Outpost"},{"id":"mig","name":"MiG","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"air","roles":["aircraft","anti_vehicle","anti_structure"],"cost":1200,"tier":"mid","answers":{"armor":3,"artillery":3,"base_defense":2},"note":"Napalm strike aircraft; the Chinese answer to artillery and massed armour.","source":"curated","wikiPage":"MiG"},{"id":"helix","name":"Helix","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"air","roles":["aircraft","transport","anti_infantry","anti_structure"],"cost":2000,"tier":"late","answers":{"infantry_swarm":3,"base_defense":2},"note":"Flying gunship and transport in one; upgrades bolt guns, napalm or a bunker onto it.","source":"curated","wikiPage":"Helix"},{"id":"gattling_cannon","name":"Gattling Cannon","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"ground","roles":["defense","anti_air","anti_infantry"],"cost":1000,"tier":"early","answers":{"air":3,"infantry_swarm":3,"early_rush":2},"note":"One building that answers both aircraft and infantry; put it on the approach early.","source":"curated","wikiPage":"Gattling_Cannon"},{"id":"bunker","name":"Bunker","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"ground","roles":["defense","anti_infantry"],"cost":400,"tier":"early","answers":{"early_rush":2,"infantry_swarm":1,"armor":1},"note":"Fill it with Tank Hunters and it stops an early armour push cold.","source":"curated","wikiPage":"Bunker"},{"id":"rebel","name":"Rebel","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"infantry","roles":["anti_infantry","scout","capture"],"cost":225,"tier":"early","answers":{"infantry_swarm":1,"early_rush":1,"economy":1},"note":"Dirt cheap, can capture buildings, and with Camo Netting it scouts unseen.","source":"curated","wikiPage":"Rebel"},{"id":"rpg_trooper","name":"RPG Trooper","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"infantry","roles":["anti_vehicle","anti_air"],"cost":300,"tier":"early","answers":{"armor":3,"air":1,"early_rush":2},"note":"The GLA answer to armour. In numbers, and in garrisons, it beats tanks on cost.","source":"curated","wikiPage":"RPG_Trooper"},{"id":"terrorist","name":"Terrorist","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"infantry","roles":["suicide","anti_vehicle","anti_structure"],"cost":200,"tier":"early","answers":{"armor":3,"base_defense":1},"note":"The cheapest tank kill in the game. It only has to reach the target once.","source":"curated","wikiPage":"Terrorist"},{"id":"hijacker","name":"Hijacker","factions":["gla","gla_stealth","gla_demo"],"domain":"infantry","roles":["capture","stealth"],"cost":800,"tier":"mid","answers":{"armor":3},"note":"Takes an enemy vehicle intact. Against an expensive army this is pure profit.","source":"curated","wikiPage":"Hijacker"},{"id":"saboteur","name":"Saboteur","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"infantry","roles":["capture","stealth","support"],"cost":300,"tier":"mid","answers":{"economy":2,"base_defense":2,"superweapon":2},"note":"Sneaks into a building to steal credits, reset a superweapon timer or cut power.","source":"curated","wikiPage":"Saboteur"},{"id":"jarmen_kell","name":"Jarmen Kell","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"infantry","roles":["hero","anti_infantry","stealth"],"cost":1500,"tier":"mid","answers":{"armor":3,"infantry_swarm":2},"note":"Snipes vehicle crews from stealth; your infantry then walk into the empty tanks.","source":"curated","wikiPage":"Jarmen_Kell"},{"id":"angry_mob","name":"Angry Mob","factions":["gla","gla_toxin","gla_demo"],"domain":"infantry","roles":["anti_infantry","garrison_clear"],"cost":600,"tier":"mid","answers":{"infantry_swarm":2,"base_defense":1},"note":"A crowd that keeps replacing itself; good at swamping a position cheaply.","source":"curated","wikiPage":"Angry_Mob"},{"id":"technical","name":"Technical","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["anti_infantry","scout","transport"],"cost":500,"tier":"early","answers":{"infantry_swarm":2,"early_rush":2},"note":"The GLA's early map control; fast, disposable, and upgrades itself off salvage.","source":"curated","wikiPage":"Technical"},{"id":"scorpion","name":"Scorpion Tank","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["anti_vehicle"],"cost":600,"tier":"early","answers":{"armor":2,"early_rush":2},"note":"Cheap armour that wins on numbers rather than on any single engagement.","source":"curated","wikiPage":"Scorpion_Tank"},{"id":"marauder","name":"Marauder Tank","factions":["gla","gla_stealth","gla_demo"],"domain":"ground","roles":["anti_vehicle"],"cost":900,"tier":"mid","answers":{"armor":3},"note":"Salvage upgrades turn it into a genuine main battle tank as the game runs on.","source":"curated","wikiPage":"Marauder_Tank"},{"id":"quad_cannon","name":"Quad Cannon","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["anti_air","anti_infantry"],"cost":700,"tier":"early","answers":{"air":3,"infantry_swarm":3},"note":"The only real anti-air the GLA has. Build it before you think you need it.","source":"curated","wikiPage":"Quad_Cannon"},{"id":"rocket_buggy","name":"Rocket Buggy","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["artillery","anti_vehicle"],"cost":900,"tier":"mid","answers":{"armor":2,"base_defense":2,"artillery":2},"note":"Fast artillery that fires and withdraws before anything slow can answer it.","source":"curated","wikiPage":"Rocket_Buggy"},{"id":"toxin_tractor","name":"Toxin Tractor","factions":["gla","gla_toxin"],"domain":"ground","roles":["garrison_clear","anti_infantry"],"cost":700,"tier":"early","answers":{"infantry_swarm":3,"base_defense":1},"note":"Clears garrisons and infantry instantly, and poisons the ground they stood on.","source":"curated","wikiPage":"Toxin_Tractor"},{"id":"battle_bus","name":"Battle Bus","factions":["gla","gla_stealth","gla_demo"],"domain":"ground","roles":["transport","anti_infantry","defense"],"cost":800,"tier":"mid","answers":{"infantry_swarm":2,"early_rush":2},"note":"Rolling bunker: infantry fire from inside, and it becomes a wreck that keeps fighting.","source":"curated","wikiPage":"Combat_Bus"},{"id":"scud_launcher","name":"SCUD Launcher","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["artillery","anti_structure"],"cost":1200,"tier":"mid","answers":{"base_defense":3,"infantry_swarm":2,"artillery":2},"note":"Long-range siege that out-ranges most defences; toxin warheads deny the ground after.","source":"curated","wikiPage":"SCUD_Launcher"},{"id":"bomb_truck","name":"Bomb Truck","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["suicide","anti_structure","stealth"],"cost":1200,"tier":"mid","answers":{"base_defense":3,"superweapon":3},"note":"Disguises itself as an enemy vehicle and drives into whatever matters most.","source":"curated","wikiPage":"Bomb_Truck"},{"id":"radar_van","name":"Radar Van","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["scout","detector","support"],"cost":800,"tier":"mid","answers":{"stealth":3},"note":"The GLA detector, and its radar scan reveals what the enemy is actually building.","source":"curated","wikiPage":"Radar_Van"},{"id":"stinger_site","name":"Stinger Site","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["defense","anti_air","anti_vehicle"],"cost":800,"tier":"early","answers":{"air":3,"armor":1,"early_rush":1},"note":"Three-man anti-air nest; the GLA's only serious answer to sustained air pressure.","source":"curated","wikiPage":"Stinger_Site"},{"id":"tunnel_network","name":"Tunnel Network","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["transport","defense","support"],"cost":800,"tier":"early","answers":{"early_rush":2,"base_defense":1},"note":"Moves the army across the map instantly and heals whatever sits inside it.","source":"curated","wikiPage":"Tunnel_Network"},{"id":"demo_trap","name":"Demolition Trap","factions":["gla","gla_demo"],"domain":"ground","roles":["defense","suicide"],"cost":600,"tier":"early","answers":{"early_rush":3,"armor":2},"note":"Buried charge on a chokepoint or a supply pile; it pays for itself the first time.","source":"curated","wikiPage":"Demo_Trap"}],"maps":[{"id":"tournament_desert","name":"Tournament Desert","players":2,"size":"2p","terrain":"desert","chokepoints":1,"supplyDensity":2,"openness":3,"features":["Open central basin","Symmetrical supply docks","Minimal cover"],"notes":["Almost no terrain to hide behind — whoever wins the open-field engagement wins the map.","Expansion supply is exposed; raiding workers pays better here than anywhere."],"source":"curated","wikiPage":"Tournament_Desert"},{"id":"tournament_plains","name":"Tournament Plains","players":2,"size":"2p","terrain":"temperate","chokepoints":1,"supplyDensity":2,"openness":3,"features":["Flat approaches","Twin supply centres","Long sight lines"],"notes":["Long sight lines favour artillery and air; short-ranged armies must force the distance closed.","There is no chokepoint to turtle behind — mobile defence beats static defence."],"source":"curated","wikiPage":"Tournament_Plains"},{"id":"alpine_assault","name":"Alpine Assault","players":2,"size":"2p","terrain":"snow","chokepoints":3,"supplyDensity":1,"openness":1,"features":["Narrow mountain pass","Cliff-locked approaches","Sparse supply"],"notes":["One real land route: static defence and artillery are disproportionately strong.","Thin supply rewards early expansion and punishes greedy tech."],"source":"curated","wikiPage":"Alpine_Assault"},{"id":"bitter_winter","name":"Bitter Winter","players":2,"size":"2p","terrain":"snow","chokepoints":2,"supplyDensity":2,"openness":2,"features":["Frozen river crossing","Garrisonable structures","Central high ground"],"notes":["The crossings are the whole game — hold one and the map halves.","Garrisonable buildings near the middle make early infantry unusually valuable."],"source":"curated","wikiPage":"Bitter_Winter"},{"id":"winding_river","name":"Winding River","players":2,"size":"2p","terrain":"temperate","chokepoints":3,"supplyDensity":2,"openness":1,"features":["River splits the map","Few bridges","Defensible banks"],"notes":["Bridges are hard chokepoints: mine them, defend them, or bypass them by air or tunnel.","Artillery across the river hits with impunity if you do not contest the bank."],"source":"curated","wikiPage":"Winding_River"},{"id":"barren_badlands","name":"Barren Badlands","players":4,"size":"4p","terrain":"desert","chokepoints":2,"supplyDensity":2,"openness":2,"features":["Rocky outcrops","Scattered supply piles","Multiple approach lanes"],"notes":["Several approach lanes mean a single defensive line does not cover you.","Scattered supply favours whoever can protect two piles at once."],"source":"curated","wikiPage":"Barren_Badlands"},{"id":"mountain_path","name":"Mountain Path","players":4,"size":"4p","terrain":"temperate","chokepoints":3,"supplyDensity":1,"openness":1,"features":["Cliff-lined paths","Choked centre","Limited expansion"],"notes":["Heavily choked: siege units and base defences dominate over manoeuvre.","With supply this thin, an early expansion denial usually decides it."],"source":"curated","wikiPage":"Mountain_Path"},{"id":"tournament_island","name":"Tournament Island","players":4,"size":"4p","terrain":"temperate","chokepoints":2,"supplyDensity":3,"openness":2,"features":["Water separates quadrants","Rich supply","Oil derricks"],"notes":["Water breaks up ground pushes — air and long-range units cross freely, armour does not.","Oil derricks are worth capturing early and worth raiding all game."],"source":"curated","wikiPage":"Tournament_Island"},{"id":"silent_woods","name":"Silent Woods","players":4,"size":"4p","terrain":"temperate","chokepoints":2,"supplyDensity":2,"openness":2,"features":["Tree cover","Garrisonable cabins","Winding approaches"],"notes":["Tree cover and winding lanes make ambushes and stealth armies much stronger here.","Scout constantly — an army can sit fifteen seconds from your base unseen."],"source":"curated","wikiPage":"Silent_Woods"},{"id":"flash_fire","name":"Flash Fire","players":4,"size":"4p","terrain":"desert","chokepoints":1,"supplyDensity":2,"openness":3,"features":["Wide open flats","Central supply contest","Exposed expansions"],"notes":["Open flats: the fight is decided by army composition, not by position.","Central supply is a permanent contest — plan to fight for it, not to own it."],"source":"curated","wikiPage":"Flash_Fire"},{"id":"killing_fields","name":"Killing Fields","players":4,"size":"4p","terrain":"temperate","chokepoints":2,"supplyDensity":3,"openness":2,"features":["Dense supply","Multiple bridges","Garrisonable farms"],"notes":["Rich supply lets both sides tech fast — expect superweapons and late-game armies.","Garrisonable farms along the lanes reward keeping infantry in the army all game."],"source":"curated","wikiPage":"Killing_Fields"},{"id":"forgotten_forest","name":"Forgotten Forest","players":4,"size":"4p","terrain":"jungle","chokepoints":3,"supplyDensity":2,"openness":1,"features":["Heavy tree cover","Narrow trails","Hidden flanks"],"notes":["Narrow trails and heavy cover: this is the best stealth map in the stock rotation.","Detection is not optional here, whatever you are playing against."],"source":"curated","wikiPage":"Forgotten_Forest"},{"id":"dark_mountain","name":"Dark Mountain","players":4,"size":"4p","terrain":"snow","chokepoints":3,"supplyDensity":1,"openness":1,"features":["Mountain chokepoints","Sparse supply","High ground positions"],"notes":["Sparse supply and hard chokes reward a fast expansion followed by a turtle.","High ground positions give artillery a commanding field of fire."],"source":"curated","wikiPage":"Dark_Mountain"},{"id":"leipzig_lowlands","name":"Leipzig Lowlands","players":4,"size":"4p","terrain":"urban","chokepoints":2,"supplyDensity":2,"openness":2,"features":["Urban blocks","Dense garrisons","Street chokepoints"],"notes":["Urban garrisons make infantry and garrison-clearing units decisive.","Streets funnel armour — bring something that clears buildings or you will stall."],"source":"curated","wikiPage":"Leipzig_Lowlands"},{"id":"scorched_earth","name":"Scorched Earth","players":6,"size":"6p","terrain":"desert","chokepoints":1,"supplyDensity":2,"openness":3,"features":["Sprawling open ground","Many expansions","Long travel times"],"notes":["Long travel times mean reinforcements arrive late — forward production matters.","With six players, the diplomatic and positional read matters as much as the build."],"source":"curated","wikiPage":"Scorched_Earth"},{"id":"homeland_alliance","name":"Homeland Alliance","players":8,"size":"8p","terrain":"mixed","chokepoints":2,"supplyDensity":3,"openness":2,"features":["Eight starting positions","Abundant supply","Mixed terrain"],"notes":["Eight players and rich supply means the game goes long — build for the late game.","Expect superweapons; spread your base from the first dozer."],"source":"curated","wikiPage":"Homeland_Alliance"}],"matchups":[{"you":"*","enemy":"gla","advice":["The GLA has no aircraft whatsoever. Any air investment you make is unanswerable except by Quad Cannons and Stinger Sites — scout for those, then fly.","Destroyed GLA buildings leave holes that rebuild cheaply. Killing a structure is a delay, not a removal: kill the workers too.","Watch for Tunnel Networks near your base. A tunnel is a teleport pad for an army you never saw cross the map."]},{"you":"*","enemy":"usa","advice":["USA units cost more than yours. Trading evenly is winning — force engagements you can afford to lose.","Airfields are large and fragile. A raid that kills parked aircraft costs them far more than it costs you.","They are weakest before the first Airfield lands. Apply pressure early or accept a late-game air war."]},{"you":"*","enemy":"china","advice":["Do not let five identical Chinese units sit together — the horde bonus makes that ball much stronger than its cost.","China has almost no stealth and poor detection. A stealthed or flanking force will get behind them.","Their units are slow. Kiting, artillery and air all beat the Chinese ground ball if you refuse a head-on fight."]},{"you":"*","enemy":"usa_laser","advice":["Everything Townes owns runs on power. Kill Cold Fusion Reactors and the Laser Turrets go dark, the lasers stop, and his base opens up.","His Point Defence Lasers shoot down rockets and missiles — bring shells, bullets and flame instead of a missile-only army.","Artillery out-ranges his defensive line. Siege him from outside the turret envelope rather than walking into it."]},{"you":"*","enemy":"usa_super","advice":["Alexander wins if the game goes long. Pressure her before the first Particle Cannon comes online — her opening is deliberately greedy.","Spread your base out. Clustered production is exactly what a Particle Cannon is priced for.","Kill the uplinks, not the army. Every destroyed Particle Cannon resets minutes of her plan."]},{"you":"*","enemy":"usa_air","advice":["Granger has no real tank line. A committed early ground push arrives before his second Airfield and he cannot answer it.","Mass anti-air rather than spreading it. Overlapping AA turns his aircraft from a threat into a donation.","His base defence is thin. Once you are inside it, you stay inside it."]},{"you":"*","enemy":"china_tank","advice":["Ta Hun Kwai has almost nothing that shoots upward. Aircraft are close to a free win if you get them out.","Rocket infantry in garrisons trade brutally well against his armour — a garrisoned building costs him tanks.","His tanks arrive veteran and early. Do not plan on winning the first ground engagement; plan on not taking it."]},{"you":"*","enemy":"china_infantry","advice":["Flame, toxin and area damage delete his hordes. Dragon Tanks, Inferno Cannons, Toxin Tractors, napalm and carpet bombing all convert his army into nothing.","Never fight his infantry with your own infantry — his start veteran and there are more of them.","Artillery is the cleanest answer. He has to close the distance and artillery does not let him."]},{"you":"*","enemy":"china_nuke","advice":["His tanks detonate when they die. Keep your army spread out or you will lose the fight you just won.","His nuclear reactors explode when destroyed — inside his own base. A single raid on his power does structural damage.","Engage at range. Every mechanic he has rewards you standing close to his units."]},{"you":"*","enemy":"gla_stealth","advice":["Bring detectors or you are not playing the game. USA: Sentry Drone. China: Listening Outpost, and Troop Crawlers in the army. GLA: Radar Van.","Assume any empty ground is occupied. Sweep suspected positions with area damage before you move through them.","Escort your vehicles. Kassad's Hijackers turn an unescorted tank into one of his tanks."]},{"you":"*","enemy":"gla_toxin","advice":["Go mechanised. Toxins do very little to vehicles and nothing at all to aircraft — an infantry army is a gift to Dr. Thrax.","Do not garrison buildings against him. Toxin Tractors clear a garrison faster than you can refill it.","Expect poisoned supply piles. Lingering toxin can stop your workers mining a pile you thought was safe."]},{"you":"*","enemy":"gla_demo","advice":["Nearly everything Juhziz owns has to touch you. Kill it on the approach and it never functions.","Long-range units and aircraft are close to immune to his whole arsenal.","Sweep for Demolition Traps before expanding. He buries them on exactly the supply pile you were about to take."]},{"you":"gla","enemy":"*","advice":["You have no aircraft. Quad Cannons and Stinger Sites are not optional — build them before the enemy shows you why.","Your buildings leave holes. Rebuilding is cheap: fight like your base is expendable, because it partly is."]},{"you":"usa","enemy":"*","advice":["Your units cost more than theirs. Every engagement you take should be one you chose.","Do not lose parked aircraft. An Airfield raid costs you more than any ground trade will."]},{"you":"china","enemy":"*","advice":["Keep five or more identical units together for the horde bonus — it is a free damage upgrade you are otherwise refusing.","Build a Listening Outpost early. It is the only cheap detection you have and stealth armies are common."]}],"provenance":{"curatedAt":"2026-09-16"}};
+
+const SIDE_COLOR = { usa: 'var(--usa)', china: 'var(--china)', gla: 'var(--gla)' };
+const SIDE_NAME = { usa: 'USA', china: 'China', gla: 'GLA' };
+const DIFFICULTIES = ['easy', 'medium', 'hard', 'brutal'];
+
+const state = {
+  you: null,            // null = let the planner choose
+  enemy: 'china_tank',
+  difficulty: 'hard',
+  mapId: null,
+  seed: 20030922,       // Zero Hour's release date, as a seed
+};
+
+const $ = (id) => document.getElementById(id);
+const el = (tag, className, text) => {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text !== undefined) node.textContent = text;
+  return node;
+};
+
+/* ---------------------------------------------------------- controls --- */
+
+function buildChips(container, selected, onPick, anyLabel) {
+  container.replaceChildren();
+
+  const anyWrap = el('div', 'chips');
+  const anyBtn = el('button', 'chip chip-any', anyLabel);
+  anyBtn.type = 'button';
+  anyBtn.setAttribute('aria-pressed', String(selected === null));
+  anyBtn.addEventListener('click', () => onPick(null));
+  anyWrap.append(anyBtn);
+  container.append(anyWrap);
+
+  for (const side of ['usa', 'china', 'gla']) {
+    const group = el('div', 'side-group');
+    group.append(el('div', 'side-label', SIDE_NAME[side]));
+    const chips = el('div', 'chips');
+    for (const f of DATA.factions.filter((x) => x.side === side)) {
+      const btn = el('button', 'chip');
+      btn.type = 'button';
+      btn.style.setProperty('--sidecolor', SIDE_COLOR[side]);
+      btn.setAttribute('aria-pressed', String(selected === f.id));
+      btn.append(el('span', null, f.general ? f.name.replace(/^(USA|China|GLA) /, '') : f.name));
+      if (f.general) btn.append(el('span', 'chip-sub', f.general.replace(/^(Gen\.|Dr\.|Prince) /, '').split(' ')[0]));
+      btn.addEventListener('click', () => onPick(f.id));
+      chips.append(btn);
+    }
+    group.append(chips);
+    container.append(group);
+  }
+}
+
+function buildDifficulty() {
+  const box = $('difficulty');
+  box.replaceChildren();
+  for (const d of DIFFICULTIES) {
+    const btn = el('button', 'seg', d);
+    btn.type = 'button';
+    btn.setAttribute('aria-pressed', String(state.difficulty === d));
+    btn.addEventListener('click', () => { state.difficulty = d; render(); });
+    box.append(btn);
+  }
+}
+
+function buildMapSelect() {
+  const sel = $('map-select');
+  sel.replaceChildren();
+  const any = el('option', null, 'No map — general advice');
+  any.value = '';
+  sel.append(any);
+  const sorted = [...DATA.maps].sort((a, b) => a.players - b.players || a.name.localeCompare(b.name));
+  for (const m of sorted) {
+    const opt = el('option', null, `${m.name} — ${m.players}p, ${m.terrain}`);
+    opt.value = m.id;
+    sel.append(opt);
+  }
+  sel.value = state.mapId ?? '';
+  sel.addEventListener('change', () => {
+    state.mapId = sel.value || null;
+    render();
+  });
+}
+
+/* ---------------------------------------------------------- briefing --- */
+
+function pressureClass(v) {
+  return v >= 2.4 ? 'is-crit' : v >= 1.6 ? 'is-warn' : '';
+}
+
+function panel(title, count) {
+  const section = el('section', 'panel');
+  const h2 = el('h2');
+  h2.append(document.createTextNode(title));
+  if (count) h2.append(el('span', 'count', count));
+  section.append(h2);
+  return section;
+}
+
+function adviceList(items, variant) {
+  const ul = el('ul', 'advice' + (variant ? ' ' + variant : ''));
+  for (const item of items) ul.append(el('li', null, item));
+  return ul;
+}
+
+function renderMatchup(plan) {
+  const box = el('div', 'matchup');
+
+  const versus = el('div', 'versus');
+  versus.append(el('span', 'army-you', plan.you.name));
+  versus.append(el('span', 'vs', 'versus'));
+  versus.append(el('span', 'army-them', plan.enemy.name));
+  box.append(versus);
+
+  if (plan.you.general || plan.enemy.general) {
+    const line = el('div', 'commanders');
+    if (plan.you.general) {
+      const s = el('span');
+      s.append(el('b', null, 'You: '), document.createTextNode(plan.you.general));
+      line.append(s);
+    }
+    if (plan.enemy.general) {
+      const s = el('span');
+      s.append(el('b', null, 'Them: '), document.createTextNode(plan.enemy.general));
+      line.append(s);
+    }
+    box.append(line);
+  }
+
+  box.append(el('p', 'headline', plan.headline));
+
+  const tags = el('div', 'conditions');
+  tags.append(el('span', `tag tag-diff-${plan.difficulty}`, plan.difficulty));
+  tags.append(el('span', 'tag', plan.map ? plan.map.name : 'any map'));
+  if (plan.map) {
+    tags.append(el('span', 'tag', `${plan.map.players} players`));
+    tags.append(el('span', 'tag', `chokepoints ${plan.map.chokepoints}/3`));
+    tags.append(el('span', 'tag', `supply ${plan.map.supplyDensity}/3`));
+  }
+  box.append(tags);
+
+  return box;
+}
+
+function renderLineup(plan) {
+  if (!plan.lineupRationale) return null;
+  const section = panel('Why this lineup', 'scored against their army');
+  for (const line of plan.lineupRationale) section.append(el('p', 'unit-why', line));
+
+  const ranking = el('div', 'ranking');
+  const top = plan.lineupRanking.slice(0, 6);
+  const max = Math.max(1, ...top.map((r) => r.score));
+  for (const row of top) {
+    const line = el('div', 'rank-row' + (row.faction.id === plan.you.id ? ' is-pick' : ''));
+    line.append(el('div', 'rank-score', String(row.score)));
+    const bar = el('div', 'rank-bar');
+    const fill = el('i');
+    fill.style.width = `${(row.score / max) * 100}%`;
+    if (row.faction.id !== plan.you.id) fill.style.background = 'var(--line)';
+    bar.append(fill);
+    line.append(bar);
+    line.append(el('div', 'rank-name', row.faction.name));
+    ranking.append(line);
+  }
+  section.append(ranking);
+  return section;
+}
+
+function renderThreat(plan) {
+  const section = panel('Their threat profile', 'pressure on each axis');
+  const meters = el('div', 'meters');
+  for (const counter of plan.counters) {
+    const row = el('div', 'meter');
+    row.append(el('div', 'meter-name', AXIS_LABEL[counter.axis]));
+    const track = el('div', 'meter-track');
+    const fill = el('div', 'meter-fill ' + pressureClass(counter.pressure));
+    fill.style.width = `${(Math.min(3, counter.pressure) / 3) * 100}%`;
+    track.append(fill);
+    row.append(track);
+    row.append(el('div', 'meter-val', counter.pressure.toFixed(1)));
+    meters.append(row);
+  }
+  section.append(meters);
+  return section;
+}
+
+function renderBuildOrder(plan) {
+  const section = panel('Build order', `${plan.buildOrder.length} steps`);
+  const ol = el('ol', 'steps');
+  for (const step of plan.buildOrder) {
+    const li = el('li');
+    if (/^PRIORITY/.test(step) || /mandatory/i.test(step)) li.className = 'is-priority';
+    li.append(el('span', null, step));
+    ol.append(li);
+  }
+  section.append(ol);
+  return section;
+}
+
+function renderCounters(plan) {
+  const section = panel('Counter their game', 'what to build, and why');
+  const grid = el('div', 'counter-grid');
+  for (const counter of plan.counters) {
+    const card = el('div', 'counter');
+    const head = el('div', 'counter-head');
+    head.append(el('h3', null, AXIS_LABEL[counter.axis]));
+    head.append(el('span', 'pressure', `${counter.pressure.toFixed(1)} / 3`));
+    card.append(head);
+
+    const ul = el('ul', 'units');
+    for (const u of counter.units) {
+      const li = el('li', 'unit');
+      const name = el('div', 'unit-name');
+      name.append(el('span', null, u.name));
+      name.append(el('span', 'unit-cost', `${u.cost.toLocaleString()} cr`));
+      name.append(el('span', 'unit-tier', u.tier));
+      li.append(name);
+      li.append(el('div', 'unit-why', u.why));
+      ul.append(li);
+    }
+    card.append(ul);
+    card.append(el('div', 'counter-guide', counter.guidance));
+    grid.append(card);
+  }
+  section.append(grid);
+  return section;
+}
+
+function renderTimeline(plan) {
+  const section = panel('Timeline', 'what to be doing, and when');
+  const phases = el('div', 'phases');
+  for (const phase of plan.timeline) {
+    const box = el('div', 'phase');
+    box.append(el('h3', null, phase.label));
+    box.append(el('span', 'window', phase.window));
+    const ul = el('ul');
+    for (const o of phase.objectives) ul.append(el('li', null, o));
+    box.append(ul);
+    phases.append(box);
+  }
+  section.append(phases);
+  return section;
+}
+
+function render() {
+  let plan;
+  try {
+    plan = planFrom(DATA, {
+      you: state.you ?? undefined,
+      enemy: state.enemy ?? undefined,
+      difficulty: state.difficulty,
+      mapId: state.mapId ?? undefined,
+      seed: state.seed,
+    });
+  } catch (err) {
+    const box = $('briefing');
+    box.replaceChildren(el('p', 'headline', `Could not build a plan: ${err.message}`));
+    return;
+  }
+
+  buildChips($('you-chips'), state.you, (id) => { state.you = id; render(); }, 'Let the planner choose');
+  buildChips($('enemy-chips'), state.enemy, (id) => { state.enemy = id; render(); }, 'Surprise me');
+  buildDifficulty();
+  $('map-select').value = state.mapId ?? '';
+
+  const out = $('briefing');
+  const parts = [
+    renderMatchup(plan),
+    renderLineup(plan),
+    renderThreat(plan),
+    renderBuildOrder(plan),
+    renderCounters(plan),
+    renderTimeline(plan),
+  ].filter(Boolean);
+
+  const split = el('div', 'split');
+  const watch = panel('Watch for');
+  watch.append(adviceList(plan.watchFor, 'is-watch'));
+  const dont = panel('Do not');
+  dont.append(adviceList(plan.doNot, 'is-danger'));
+  split.append(watch, dont);
+  parts.push(split);
+
+  if (plan.matchupNotes.length) {
+    const notes = panel('Matchup notes', `${plan.matchupNotes.length} applicable`);
+    notes.append(adviceList(plan.matchupNotes));
+    parts.push(notes);
+  }
+
+  const mapPanel = panel(plan.map ? `Map — ${plan.map.name}` : 'Map');
+  mapPanel.append(adviceList(plan.mapNotes));
+  if (plan.map && plan.map.features.length) {
+    const tags = el('div', 'conditions');
+    for (const f of plan.map.features) tags.append(el('span', 'tag', f));
+    mapPanel.append(tags);
+  }
+  parts.push(mapPanel);
+
+  out.replaceChildren(...parts);
+}
+
+/* ------------------------------------------------------------- boot --- */
+
+$('stamp').textContent = `${DATA.factions.length} armies · ${DATA.units.length} units · ${DATA.maps.length} maps`;
+
+$('reroll').addEventListener('click', () => {
+  state.seed = Math.floor(Math.random() * 1e9);
+  render();
+});
+
+const prov = DATA.provenance;
+$('colophon').replaceChildren(
+  el('span', null, `curated dataset ${prov.curatedAt}`),
+  el('span', null, prov.wikiCache
+    ? `wiki overlay: ${prov.wikiCache.pages} pages from ${prov.wikiCache.source}`
+    : 'no wiki overlay — run npm run ingest to merge live wiki data'),
+  el('span', null, 'strategy engine runs entirely in this page'),
+);
+
+buildMapSelect();
+render();
+</script>

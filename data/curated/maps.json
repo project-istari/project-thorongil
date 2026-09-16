@@ -1,0 +1,338 @@
+[
+  {
+    "id": "tournament_desert",
+    "name": "Tournament Desert",
+    "players": 2,
+    "size": "2p",
+    "terrain": "desert",
+    "chokepoints": 1,
+    "supplyDensity": 2,
+    "openness": 3,
+    "features": [
+      "Open central basin",
+      "Symmetrical supply docks",
+      "Minimal cover"
+    ],
+    "notes": [
+      "Almost no terrain to hide behind \u2014 whoever wins the open-field engagement wins the map.",
+      "Expansion supply is exposed; raiding workers pays better here than anywhere."
+    ],
+    "source": "curated",
+    "wikiPage": "Tournament_Desert"
+  },
+  {
+    "id": "tournament_plains",
+    "name": "Tournament Plains",
+    "players": 2,
+    "size": "2p",
+    "terrain": "temperate",
+    "chokepoints": 1,
+    "supplyDensity": 2,
+    "openness": 3,
+    "features": [
+      "Flat approaches",
+      "Twin supply centres",
+      "Long sight lines"
+    ],
+    "notes": [
+      "Long sight lines favour artillery and air; short-ranged armies must force the distance closed.",
+      "There is no chokepoint to turtle behind \u2014 mobile defence beats static defence."
+    ],
+    "source": "curated",
+    "wikiPage": "Tournament_Plains"
+  },
+  {
+    "id": "alpine_assault",
+    "name": "Alpine Assault",
+    "players": 2,
+    "size": "2p",
+    "terrain": "snow",
+    "chokepoints": 3,
+    "supplyDensity": 1,
+    "openness": 1,
+    "features": [
+      "Narrow mountain pass",
+      "Cliff-locked approaches",
+      "Sparse supply"
+    ],
+    "notes": [
+      "One real land route: static defence and artillery are disproportionately strong.",
+      "Thin supply rewards early expansion and punishes greedy tech."
+    ],
+    "source": "curated",
+    "wikiPage": "Alpine_Assault"
+  },
+  {
+    "id": "bitter_winter",
+    "name": "Bitter Winter",
+    "players": 2,
+    "size": "2p",
+    "terrain": "snow",
+    "chokepoints": 2,
+    "supplyDensity": 2,
+    "openness": 2,
+    "features": [
+      "Frozen river crossing",
+      "Garrisonable structures",
+      "Central high ground"
+    ],
+    "notes": [
+      "The crossings are the whole game \u2014 hold one and the map halves.",
+      "Garrisonable buildings near the middle make early infantry unusually valuable."
+    ],
+    "source": "curated",
+    "wikiPage": "Bitter_Winter"
+  },
+  {
+    "id": "winding_river",
+    "name": "Winding River",
+    "players": 2,
+    "size": "2p",
+    "terrain": "temperate",
+    "chokepoints": 3,
+    "supplyDensity": 2,
+    "openness": 1,
+    "features": [
+      "River splits the map",
+      "Few bridges",
+      "Defensible banks"
+    ],
+    "notes": [
+      "Bridges are hard chokepoints: mine them, defend them, or bypass them by air or tunnel.",
+      "Artillery across the river hits with impunity if you do not contest the bank."
+    ],
+    "source": "curated",
+    "wikiPage": "Winding_River"
+  },
+  {
+    "id": "barren_badlands",
+    "name": "Barren Badlands",
+    "players": 4,
+    "size": "4p",
+    "terrain": "desert",
+    "chokepoints": 2,
+    "supplyDensity": 2,
+    "openness": 2,
+    "features": [
+      "Rocky outcrops",
+      "Scattered supply piles",
+      "Multiple approach lanes"
+    ],
+    "notes": [
+      "Several approach lanes mean a single defensive line does not cover you.",
+      "Scattered supply favours whoever can protect two piles at once."
+    ],
+    "source": "curated",
+    "wikiPage": "Barren_Badlands"
+  },
+  {
+    "id": "mountain_path",
+    "name": "Mountain Path",
+    "players": 4,
+    "size": "4p",
+    "terrain": "temperate",
+    "chokepoints": 3,
+    "supplyDensity": 1,
+    "openness": 1,
+    "features": [
+      "Cliff-lined paths",
+      "Choked centre",
+      "Limited expansion"
+    ],
+    "notes": [
+      "Heavily choked: siege units and base defences dominate over manoeuvre.",
+      "With supply this thin, an early expansion denial usually decides it."
+    ],
+    "source": "curated",
+    "wikiPage": "Mountain_Path"
+  },
+  {
+    "id": "tournament_island",
+    "name": "Tournament Island",
+    "players": 4,
+    "size": "4p",
+    "terrain": "temperate",
+    "chokepoints": 2,
+    "supplyDensity": 3,
+    "openness": 2,
+    "features": [
+      "Water separates quadrants",
+      "Rich supply",
+      "Oil derricks"
+    ],
+    "notes": [
+      "Water breaks up ground pushes \u2014 air and long-range units cross freely, armour does not.",
+      "Oil derricks are worth capturing early and worth raiding all game."
+    ],
+    "source": "curated",
+    "wikiPage": "Tournament_Island"
+  },
+  {
+    "id": "silent_woods",
+    "name": "Silent Woods",
+    "players": 4,
+    "size": "4p",
+    "terrain": "temperate",
+    "chokepoints": 2,
+    "supplyDensity": 2,
+    "openness": 2,
+    "features": [
+      "Tree cover",
+      "Garrisonable cabins",
+      "Winding approaches"
+    ],
+    "notes": [
+      "Tree cover and winding lanes make ambushes and stealth armies much stronger here.",
+      "Scout constantly \u2014 an army can sit fifteen seconds from your base unseen."
+    ],
+    "source": "curated",
+    "wikiPage": "Silent_Woods"
+  },
+  {
+    "id": "flash_fire",
+    "name": "Flash Fire",
+    "players": 4,
+    "size": "4p",
+    "terrain": "desert",
+    "chokepoints": 1,
+    "supplyDensity": 2,
+    "openness": 3,
+    "features": [
+      "Wide open flats",
+      "Central supply contest",
+      "Exposed expansions"
+    ],
+    "notes": [
+      "Open flats: the fight is decided by army composition, not by position.",
+      "Central supply is a permanent contest \u2014 plan to fight for it, not to own it."
+    ],
+    "source": "curated",
+    "wikiPage": "Flash_Fire"
+  },
+  {
+    "id": "killing_fields",
+    "name": "Killing Fields",
+    "players": 4,
+    "size": "4p",
+    "terrain": "temperate",
+    "chokepoints": 2,
+    "supplyDensity": 3,
+    "openness": 2,
+    "features": [
+      "Dense supply",
+      "Multiple bridges",
+      "Garrisonable farms"
+    ],
+    "notes": [
+      "Rich supply lets both sides tech fast \u2014 expect superweapons and late-game armies.",
+      "Garrisonable farms along the lanes reward keeping infantry in the army all game."
+    ],
+    "source": "curated",
+    "wikiPage": "Killing_Fields"
+  },
+  {
+    "id": "forgotten_forest",
+    "name": "Forgotten Forest",
+    "players": 4,
+    "size": "4p",
+    "terrain": "jungle",
+    "chokepoints": 3,
+    "supplyDensity": 2,
+    "openness": 1,
+    "features": [
+      "Heavy tree cover",
+      "Narrow trails",
+      "Hidden flanks"
+    ],
+    "notes": [
+      "Narrow trails and heavy cover: this is the best stealth map in the stock rotation.",
+      "Detection is not optional here, whatever you are playing against."
+    ],
+    "source": "curated",
+    "wikiPage": "Forgotten_Forest"
+  },
+  {
+    "id": "dark_mountain",
+    "name": "Dark Mountain",
+    "players": 4,
+    "size": "4p",
+    "terrain": "snow",
+    "chokepoints": 3,
+    "supplyDensity": 1,
+    "openness": 1,
+    "features": [
+      "Mountain chokepoints",
+      "Sparse supply",
+      "High ground positions"
+    ],
+    "notes": [
+      "Sparse supply and hard chokes reward a fast expansion followed by a turtle.",
+      "High ground positions give artillery a commanding field of fire."
+    ],
+    "source": "curated",
+    "wikiPage": "Dark_Mountain"
+  },
+  {
+    "id": "leipzig_lowlands",
+    "name": "Leipzig Lowlands",
+    "players": 4,
+    "size": "4p",
+    "terrain": "urban",
+    "chokepoints": 2,
+    "supplyDensity": 2,
+    "openness": 2,
+    "features": [
+      "Urban blocks",
+      "Dense garrisons",
+      "Street chokepoints"
+    ],
+    "notes": [
+      "Urban garrisons make infantry and garrison-clearing units decisive.",
+      "Streets funnel armour \u2014 bring something that clears buildings or you will stall."
+    ],
+    "source": "curated",
+    "wikiPage": "Leipzig_Lowlands"
+  },
+  {
+    "id": "scorched_earth",
+    "name": "Scorched Earth",
+    "players": 6,
+    "size": "6p",
+    "terrain": "desert",
+    "chokepoints": 1,
+    "supplyDensity": 2,
+    "openness": 3,
+    "features": [
+      "Sprawling open ground",
+      "Many expansions",
+      "Long travel times"
+    ],
+    "notes": [
+      "Long travel times mean reinforcements arrive late \u2014 forward production matters.",
+      "With six players, the diplomatic and positional read matters as much as the build."
+    ],
+    "source": "curated",
+    "wikiPage": "Scorched_Earth"
+  },
+  {
+    "id": "homeland_alliance",
+    "name": "Homeland Alliance",
+    "players": 8,
+    "size": "8p",
+    "terrain": "mixed",
+    "chokepoints": 2,
+    "supplyDensity": 3,
+    "openness": 2,
+    "features": [
+      "Eight starting positions",
+      "Abundant supply",
+      "Mixed terrain"
+    ],
+    "notes": [
+      "Eight players and rich supply means the game goes long \u2014 build for the late game.",
+      "Expect superweapons; spread your base from the first dozer."
+    ],
+    "source": "curated",
+    "wikiPage": "Homeland_Alliance"
+  }
+]

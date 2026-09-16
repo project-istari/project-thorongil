@@ -1,0 +1,466 @@
+[
+  {
+    "id": "usa",
+    "name": "United States of America",
+    "side": "usa",
+    "tagline": "Expensive, precise, and lethal once the airfields are humming.",
+    "threat": { "air": 3, "armor": 2, "infantry_swarm": 1, "artillery": 2, "stealth": 1, "superweapon": 2, "economy": 2, "base_defense": 2, "early_rush": 1, "chemical": 0 },
+    "vulnerability": { "early_rush": 3, "infantry_swarm": 2, "stealth": 2, "artillery": 2 },
+    "strengths": [
+      "Best air force in the game once Airfields are up",
+      "Tomahawk Launchers out-range almost every base defence",
+      "Drones bolt onto vehicles for free repair, scouting and extra guns",
+      "Strategy Center stances swing a fight without spending credits"
+    ],
+    "weaknesses": [
+      "Units cost more than anything they will trade with early on",
+      "Very soft for the first five minutes — a committed rush ends the game",
+      "Airfields are large, fragile, and worth raiding",
+      "Infantry hordes overwhelm small numbers of expensive units"
+    ],
+    "opening": [
+      "Dozer -> Supply Center, pull both Chinooks onto the nearest supply pile",
+      "Barracks -> two Rangers for scouting and garrison clearing",
+      "Supply Drop Zone as soon as credits allow — it pays passively all game",
+      "War Factory -> Humvees, then Crusaders",
+      "Strategy Center (unlocks stances and the Paladin), then Airfield"
+    ],
+    "signatureTactics": [
+      "Garrison a central building with Rangers and Missile Defenders early",
+      "Comanche pairs hunting supply lines and dozers, never trading with AA",
+      "Tomahawk line behind a Crusader screen to peel base defences apart",
+      "Colonel Burton to silently demolish a superweapon or power grid"
+    ],
+    "quirks": [
+      "Drones attach to vehicles: Battle Drone repairs, Scout Drone spots, Hellfire adds damage",
+      "Strategy Center stance: Bombardment (range), Hold the Line (armour), Search and Destroy (damage/vision)",
+      "Supply Drop Zone gives income with no chinook risk"
+    ],
+    "wikiPage": "United_States_of_America_(Generals)",
+    "source": "curated"
+  },
+  {
+    "id": "usa_air",
+    "name": "USA Air Force General",
+    "general": "Gen. Malcolm \"Ace\" Granger",
+    "side": "usa",
+    "tagline": "Owns the sky, rents the ground.",
+    "threat": { "air": 3, "armor": 1, "infantry_swarm": 1, "artillery": 1, "stealth": 2, "superweapon": 2, "economy": 2, "base_defense": 1, "early_rush": 1, "chemical": 0 },
+    "vulnerability": { "early_rush": 3, "armor": 3, "base_defense": 3, "infantry_swarm": 2 },
+    "strengths": [
+      "King Raptor and Aurora Alpha hit harder and survive more than stock aircraft",
+      "Stealth Comanches arrive unseen over supply lines",
+      "Carpet bombing erases infantry hordes and clustered production",
+      "Aircraft rearm and recover faster than anyone can replace ground losses"
+    ],
+    "weaknesses": [
+      "No Crusader or Paladin line — his ground army is thin and improvised",
+      "A fast ground rush kills him before the second Airfield finishes",
+      "Massed anti-air (Quad Cannons, Gattlings, Avengers) shuts the whole army off",
+      "Base defence is an afterthought"
+    ],
+    "opening": [
+      "Dozer -> Supply Center, both Chinooks mining immediately",
+      "Barracks -> Rangers, then a Patriot Battery on the main approach",
+      "Airfield as the first real investment",
+      "Second Airfield before any ground tech"
+    ],
+    "signatureTactics": [
+      "Raptor pairs sniping dozers and supply trucks from minute four",
+      "Aurora Alpha runs on superweapons, Command Centers and War Factories",
+      "Chinook-lift a Humvee ball behind the enemy economy",
+      "Keep a Patriot screen at home so he never has to land to defend"
+    ],
+    "quirks": [
+      "Aircraft are the army — losing air superiority loses the game",
+      "Countermeasures upgrade makes aircraft shrug off missile defences"
+    ],
+    "wikiPage": "Air_Force_General",
+    "source": "curated"
+  },
+  {
+    "id": "usa_laser",
+    "name": "USA Laser General",
+    "general": "Gen. \"Pinpoint\" Townes",
+    "side": "usa",
+    "tagline": "Immaculate defence, wired to a fuse box.",
+    "threat": { "air": 2, "armor": 2, "infantry_swarm": 1, "artillery": 1, "stealth": 1, "superweapon": 2, "economy": 2, "base_defense": 3, "early_rush": 1, "chemical": 0 },
+    "vulnerability": { "early_rush": 2, "artillery": 3, "infantry_swarm": 2, "economy": 3 },
+    "strengths": [
+      "Laser Turrets out-damage any other static defence for the price",
+      "Laser Crusaders cut through armour with no travel time to dodge",
+      "Point Defence Lasers shoot incoming rockets and missiles out of the air",
+      "Cold Fusion Reactors are cheaper and produce more power than standard"
+    ],
+    "weaknesses": [
+      "Everything is power-gated — dark reactors mean dark turrets",
+      "Artillery out-ranges his defensive line and he cannot answer in kind",
+      "Missile-only armies do badly, but shell and gun armies walk through",
+      "Thin early game like all USA sides"
+    ],
+    "opening": [
+      "Dozer -> Supply Center, Chinooks onto supply",
+      "Cold Fusion Reactor early — the whole army keys off power",
+      "Barracks -> Rangers, Laser Turret on the main approach",
+      "War Factory -> Laser Crusaders",
+      "Strategy Center, then Airfield"
+    ],
+    "signatureTactics": [
+      "Turtle a chokepoint with Laser Turrets and push out with Laser Crusaders",
+      "Use Point Defence Laser coverage to walk into missile-heavy armies",
+      "Avenger units to blank enemy missiles over the army ball"
+    ],
+    "quirks": [
+      "Power is the single point of failure — protect and over-build reactors",
+      "Point Defence Laser intercepts rockets and missiles but not shells or bullets"
+    ],
+    "wikiPage": "Laser_General",
+    "source": "curated"
+  },
+  {
+    "id": "usa_super",
+    "name": "USA Superweapon General",
+    "general": "Gen. Alexis Alexander",
+    "side": "usa",
+    "tagline": "Survive her opening and you still have to survive the sky falling.",
+    "threat": { "air": 2, "armor": 2, "infantry_swarm": 1, "artillery": 2, "stealth": 1, "superweapon": 3, "economy": 2, "base_defense": 3, "early_rush": 1, "chemical": 0 },
+    "vulnerability": { "early_rush": 3, "stealth": 2, "armor": 2 },
+    "strengths": [
+      "Particle Cannons are cheaper and recharge faster, and she fields more of them",
+      "EMP Patriots freeze vehicles in place inside her defensive envelope",
+      "Advanced Control Rods push more power out of every reactor",
+      "Late game is effectively unwinnable if she is allowed to reach it"
+    ],
+    "weaknesses": [
+      "Slow, greedy opening — she is at her weakest for the first eight minutes",
+      "A spread-out enemy base blunts every Particle Cannon shot",
+      "Killing the Particle Cannon uplinks resets her entire plan",
+      "Raids on dozers delay superweapons disproportionately"
+    ],
+    "opening": [
+      "Dozer -> Supply Center, Chinooks mining",
+      "Barracks and a Patriot Battery, because she must survive to tech",
+      "Cold Fusion Reactor -> Strategy Center",
+      "Particle Cannon uplink the moment it is affordable"
+    ],
+    "signatureTactics": [
+      "Hold a tight defensive perimeter and win on superweapon uptime",
+      "EMP Patriot line to strand armour inside Particle Cannon range",
+      "Chain Particle Cannon shots onto production rather than armies"
+    ],
+    "quirks": [
+      "Her clock is the real opponent — every minute favours her",
+      "Superweapon timers are public information: count them"
+    ],
+    "wikiPage": "Superweapon_General",
+    "source": "curated"
+  },
+  {
+    "id": "china",
+    "name": "People's Republic of China",
+    "side": "china",
+    "tagline": "Bring more of everything and let the horde bonus do the maths.",
+    "threat": { "air": 2, "armor": 3, "infantry_swarm": 2, "artillery": 2, "stealth": 0, "superweapon": 2, "economy": 2, "base_defense": 2, "early_rush": 2, "chemical": 1 },
+    "vulnerability": { "air": 2, "stealth": 2, "artillery": 2, "chemical": 1 },
+    "strengths": [
+      "Overlords are the toughest thing on the field and carry upgrades on their back",
+      "Horde bonus makes massed identical units hit far above their cost",
+      "Gattling Cannons answer air and infantry from the same building",
+      "Hackers print credits without ever leaving the base"
+    ],
+    "weaknesses": [
+      "Slow ground units get kited by anything faster",
+      "No stealth and poor stealth detection outside the Listening Outpost",
+      "Long-range artillery picks the horde apart before it arrives",
+      "Nuclear reactors detonate when destroyed, inside your own base"
+    ],
+    "opening": [
+      "Dozer -> Supply Center, both Supply Trucks mining",
+      "Barracks -> Red Guard pairs to hold ground and scout",
+      "War Factory -> Battlemasters, keep five together for the horde bonus",
+      "Nuclear Reactor -> Internet Center for hackers, or Propaganda Center for upgrades",
+      "Gattling Cannon on the approach before the first air scout arrives"
+    ],
+    "signatureTactics": [
+      "Five-Battlemaster horde with a Dragon Tank behind to clear garrisons",
+      "Overlord with a Gattling Cannon on top as a mobile no-fly zone",
+      "Nuke Cannon or Inferno Cannon line to crack a turtled base",
+      "Black Lotus to capture a building or drain an enemy supply centre"
+    ],
+    "quirks": [
+      "Horde bonus: five or more of the same unit near each other gain attack",
+      "Propaganda Towers and Overlord speakers passively heal nearby units",
+      "Nationalism and Patriotism stack the horde bonus higher"
+    ],
+    "wikiPage": "China_(Generals)",
+    "source": "curated"
+  },
+  {
+    "id": "china_tank",
+    "name": "China Tank General",
+    "general": "Gen. Ta Hun Kwai",
+    "side": "china",
+    "tagline": "A wall of armour that arrives early and never stops.",
+    "threat": { "air": 1, "armor": 3, "infantry_swarm": 1, "artillery": 1, "stealth": 0, "superweapon": 2, "economy": 2, "base_defense": 2, "early_rush": 3, "chemical": 0 },
+    "vulnerability": { "air": 3, "artillery": 2, "stealth": 2 },
+    "strengths": [
+      "Tanks are cheaper, faster and roll off the line already veteran",
+      "Emperor Overlord carries its own propaganda aura and shrugs off massed fire",
+      "Can contest the map earlier than any other Chinese side",
+      "Armour count snowballs if the first push is not punished"
+    ],
+    "weaknesses": [
+      "Almost nothing in his arsenal answers massed air",
+      "Rocket infantry in garrisons trade brutally well against him",
+      "Artillery kills the ball before it closes",
+      "Committed to the ground: no flexibility if you deny the ground"
+    ],
+    "opening": [
+      "Dozer -> Supply Center, trucks mining",
+      "War Factory immediately — his tanks are the opening",
+      "Battlemaster pressure on the enemy supply line before minute five",
+      "Gattling Cannon at home only after the first push"
+    ],
+    "signatureTactics": [
+      "Early Battlemaster raid on dozers and supply trucks",
+      "Emperor Overlord spearhead with Battlemasters filling the horde bonus",
+      "Overrun infantry with tank treads rather than shooting them"
+    ],
+    "quirks": [
+      "Veterancy on delivery means his first tanks beat your first tanks",
+      "Overlords can mount Gattling, Propaganda or Bunker upgrades"
+    ],
+    "wikiPage": "Tank_General",
+    "source": "curated"
+  },
+  {
+    "id": "china_infantry",
+    "name": "China Infantry General",
+    "general": "Gen. \"Anvil\" Shin Fai",
+    "side": "china",
+    "tagline": "Bodies, endlessly, all of them already veterans.",
+    "threat": { "air": 1, "armor": 1, "infantry_swarm": 3, "artillery": 2, "stealth": 0, "superweapon": 2, "economy": 2, "base_defense": 2, "early_rush": 3, "chemical": 0 },
+    "vulnerability": { "chemical": 3, "artillery": 3, "air": 2, "armor": 2 },
+    "strengths": [
+      "Infantry arrive as veterans and scale into enormous hordes",
+      "Minigunners and Tank Hunters cover infantry and armour from one Barracks",
+      "Attack Outposts push the horde forward with healing and detection",
+      "Cheapest map control in the game"
+    ],
+    "weaknesses": [
+      "Flame and toxin delete whole hordes in seconds",
+      "Artillery and carpet bombing are equally catastrophic",
+      "Very little answer to heavy armour in open ground",
+      "Garrisons become death traps once the building burns"
+    ],
+    "opening": [
+      "Dozer -> Supply Center, trucks mining",
+      "Barracks first, then a second Barracks — production width is the strategy",
+      "Red Guard and Tank Hunter mix, pushed out to claim ground early",
+      "Troop Crawler to move the horde and detect stealth"
+    ],
+    "signatureTactics": [
+      "Early veteran Red Guard flood onto the enemy's supply line",
+      "Garrison every building on the approach with Tank Hunters",
+      "Troop Crawler drops behind the enemy line and unloads a full horde"
+    ],
+    "quirks": [
+      "All infantry start veteran, which changes every early trade",
+      "Horde bonus applies to infantry, so bigger really is better"
+    ],
+    "wikiPage": "Infantry_General",
+    "source": "curated"
+  },
+  {
+    "id": "china_nuke",
+    "name": "China Nuclear General",
+    "general": "Gen. Tsing Shi Tao",
+    "side": "china",
+    "tagline": "Everything he owns is also a bomb, including his power plants.",
+    "threat": { "air": 2, "armor": 3, "infantry_swarm": 2, "artillery": 3, "stealth": 0, "superweapon": 3, "economy": 3, "base_defense": 2, "early_rush": 2, "chemical": 2 },
+    "vulnerability": { "early_rush": 2, "air": 2, "artillery": 2 },
+    "strengths": [
+      "Tanks leave a radioactive detonation behind when they die",
+      "Tactical Nuke Cannon flattens clustered armies and static defences",
+      "Nuclear reactors produce more power, so he techs faster",
+      "Nuke MiGs turn a bombing run into an area denial weapon"
+    ],
+    "weaknesses": [
+      "His own reactors detonate inside his base when destroyed",
+      "Clumped defenders are exactly what his whole arsenal wants",
+      "Long-range engagements deny his death-explosion value",
+      "Early aggression arrives before the nuclear tech does"
+    ],
+    "opening": [
+      "Dozer -> Supply Center, trucks mining",
+      "Nuclear Reactor early — power is his economy advantage",
+      "War Factory -> Battlemasters with the nuclear upgrades",
+      "Nuke Cannon once the front stabilises"
+    ],
+    "signatureTactics": [
+      "Trade tanks aggressively — his die better than yours",
+      "Tactical Nuke Cannon onto any static defensive line",
+      "Nuke MiG runs to make ground permanently uncomfortable"
+    ],
+    "quirks": [
+      "Death explosions mean you lose units even when you win the fight",
+      "His reactors are a liability you can exploit with a single raid"
+    ],
+    "wikiPage": "Nuke_General",
+    "source": "curated"
+  },
+  {
+    "id": "gla",
+    "name": "Global Liberation Army",
+    "side": "gla",
+    "tagline": "Cheap, fast, everywhere, and impossible to finish off.",
+    "threat": { "air": 0, "armor": 2, "infantry_swarm": 2, "artillery": 2, "stealth": 2, "superweapon": 2, "economy": 3, "base_defense": 1, "early_rush": 3, "chemical": 2 },
+    "vulnerability": { "air": 3, "armor": 2, "base_defense": 2 },
+    "strengths": [
+      "Fastest, cheapest army on the field — trades on volume and tempo",
+      "Tunnel Networks teleport the army across the map and heal it",
+      "Destroyed buildings leave holes that rebuild for a fraction of the cost",
+      "Black Market and salvage give income and free veterancy"
+    ],
+    "weaknesses": [
+      "No aircraft at all — the sky belongs to the enemy by default",
+      "Light armour everywhere; anything heavy wins a straight fight",
+      "Static defence is weak outside Stinger Sites and tunnels",
+      "Falls off badly if the early tempo is neutralised"
+    ],
+    "opening": [
+      "Worker -> Supply Stash, extra Workers onto supply immediately",
+      "Barracks -> Rebels for scouting, RPG Troopers for the first raid",
+      "Arms Dealer -> Technicals, then Scorpions",
+      "Tunnel Network toward the middle of the map to project the army",
+      "Black Market for income and upgrades"
+    ],
+    "signatureTactics": [
+      "Rebel and RPG raid on the enemy dozer line before minute four",
+      "Tunnel Network forward so reinforcements arrive already at the front",
+      "Jarmen Kell snipes vehicle crews, then infantry walk into free tanks",
+      "Bomb Truck disguised in an enemy column, driven into a superweapon"
+    ],
+    "quirks": [
+      "Buildings leave rebuildable holes — killing GLA structures is never permanent",
+      "Salvage crates from destroyed vehicles upgrade units on the spot",
+      "GPS Scrambler and Sneak Attack put an army where it should not be"
+    ],
+    "wikiPage": "Global_Liberation_Army",
+    "source": "curated"
+  },
+  {
+    "id": "gla_toxin",
+    "name": "GLA Toxin General",
+    "general": "Dr. Thrax",
+    "side": "gla",
+    "tagline": "Poisons the ground you were going to stand on.",
+    "threat": { "air": 0, "armor": 1, "infantry_swarm": 2, "artillery": 2, "stealth": 1, "superweapon": 2, "economy": 2, "base_defense": 2, "early_rush": 3, "chemical": 3 },
+    "vulnerability": { "air": 3, "armor": 3 },
+    "strengths": [
+      "Starts with Anthrax Beta and can upgrade to Gamma — toxins never wear off",
+      "Toxin Tractors and Toxin Rebels clear infantry and garrisons instantly",
+      "Toxin Scuds leave lingering clouds that deny ground for free",
+      "Anthrax Bomb is a cheap answer to any infantry-based army"
+    ],
+    "weaknesses": [
+      "Toxins do very little to vehicles and nothing at all to aircraft",
+      "A fully mechanised enemy ignores most of his damage output",
+      "Light armour, like all GLA sides",
+      "No aircraft"
+    ],
+    "opening": [
+      "Worker -> Supply Stash, extra Workers mining",
+      "Barracks -> Toxin Rebels for the early raid",
+      "Arms Dealer -> Toxin Tractors",
+      "Tunnel Network forward, Black Market for income"
+    ],
+    "signatureTactics": [
+      "Toxin Tractor pairs erasing garrisons and infantry screens",
+      "Poison the enemy supply pile so workers cannot mine it",
+      "Anthrax Bomb onto any massed infantry formation"
+    ],
+    "quirks": [
+      "Toxin damage lingers on the ground after the attack stops",
+      "Against vehicles his damage profile collapses — he must catch infantry"
+    ],
+    "wikiPage": "Toxin_General",
+    "source": "curated"
+  },
+  {
+    "id": "gla_stealth",
+    "name": "GLA Stealth General",
+    "general": "Prince Kassad",
+    "side": "gla",
+    "tagline": "The army was always there. You simply could not see it.",
+    "threat": { "air": 0, "armor": 1, "infantry_swarm": 2, "artillery": 2, "stealth": 3, "superweapon": 1, "economy": 2, "base_defense": 2, "early_rush": 2, "chemical": 1 },
+    "vulnerability": { "air": 3, "armor": 3, "artillery": 2 },
+    "strengths": [
+      "Nearly the entire army is stealthed by default",
+      "Camo Netting hides buildings, so his base is hard to even find",
+      "Hijackers steal vehicles outright, turning your army into his",
+      "Booby Traps and Demo Traps punish careless expansion"
+    ],
+    "weaknesses": [
+      "One detector unravels the entire strategy",
+      "Straight firepower is below average once he is visible",
+      "Light armour and no aircraft",
+      "Loses badly to area damage swept across suspected positions"
+    ],
+    "opening": [
+      "Worker -> Supply Stash, extra Workers mining",
+      "Barracks -> stealthed Rebels to scout and hold ground unseen",
+      "Camo Netting on the base as early as possible",
+      "Tunnel Network forward, Arms Dealer for Rocket Buggies"
+    ],
+    "signatureTactics": [
+      "Park stealthed units on the enemy's expansion path and wait",
+      "Hijack the first vehicles that walk past unescorted",
+      "GPS Scrambler and Sneak Attack to open a second front inside the base"
+    ],
+    "quirks": [
+      "Assume every empty-looking piece of ground is occupied",
+      "Stealth breaks when he fires — the window to punish is short"
+    ],
+    "wikiPage": "Stealth_General",
+    "source": "curated"
+  },
+  {
+    "id": "gla_demo",
+    "name": "GLA Demolition General",
+    "general": "Gen. Rodall \"Demo\" Juhziz",
+    "side": "gla",
+    "tagline": "Every single thing he owns is a delivery system for explosives.",
+    "threat": { "air": 0, "armor": 2, "infantry_swarm": 3, "artillery": 2, "stealth": 2, "superweapon": 3, "economy": 2, "base_defense": 2, "early_rush": 3, "chemical": 1 },
+    "vulnerability": { "air": 3, "armor": 2, "artillery": 3 },
+    "strengths": [
+      "Terrorists are the cheapest way in the game to delete a tank",
+      "Demo Traps turn any piece of ground into a minefield",
+      "Bomb Trucks can disguise themselves and drive into anything important",
+      "Units detonate on death, so killing them is still a cost"
+    ],
+    "weaknesses": [
+      "Almost everything he has must physically touch you to work",
+      "Long-range units and aircraft are close to immune",
+      "Very light armour — he dies on the approach if you see him coming",
+      "No aircraft"
+    ],
+    "opening": [
+      "Worker -> Supply Stash, extra Workers mining",
+      "Barracks -> Terrorists and Rebels for the first raid",
+      "Demo Traps on your own chokepoints and expansions",
+      "Arms Dealer -> Bomb Trucks, Tunnel Network forward"
+    ],
+    "signatureTactics": [
+      "Terrorist packs onto any tank ball that lost its infantry screen",
+      "Bomb Truck disguised as an enemy vehicle, aimed at a superweapon",
+      "Demo Trap every supply pile the enemy is about to expand onto"
+    ],
+    "quirks": [
+      "Death explosions mean melee range is never safe near him",
+      "Cheap suicide units mean his army value is always lower than it looks"
+    ],
+    "wikiPage": "Demolition_General",
+    "source": "curated"
+  }
+]

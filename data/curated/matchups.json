@@ -1,0 +1,134 @@
+[
+  {
+    "you": "*",
+    "enemy": "gla",
+    "advice": [
+      "The GLA has no aircraft whatsoever. Any air investment you make is unanswerable except by Quad Cannons and Stinger Sites \u2014 scout for those, then fly.",
+      "Destroyed GLA buildings leave holes that rebuild cheaply. Killing a structure is a delay, not a removal: kill the workers too.",
+      "Watch for Tunnel Networks near your base. A tunnel is a teleport pad for an army you never saw cross the map."
+    ]
+  },
+  {
+    "you": "*",
+    "enemy": "usa",
+    "advice": [
+      "USA units cost more than yours. Trading evenly is winning \u2014 force engagements you can afford to lose.",
+      "Airfields are large and fragile. A raid that kills parked aircraft costs them far more than it costs you.",
+      "They are weakest before the first Airfield lands. Apply pressure early or accept a late-game air war."
+    ]
+  },
+  {
+    "you": "*",
+    "enemy": "china",
+    "advice": [
+      "Do not let five identical Chinese units sit together \u2014 the horde bonus makes that ball much stronger than its cost.",
+      "China has almost no stealth and poor detection. A stealthed or flanking force will get behind them.",
+      "Their units are slow. Kiting, artillery and air all beat the Chinese ground ball if you refuse a head-on fight."
+    ]
+  },
+  {
+    "you": "*",
+    "enemy": "usa_laser",
+    "advice": [
+      "Everything Townes owns runs on power. Kill Cold Fusion Reactors and the Laser Turrets go dark, the lasers stop, and his base opens up.",
+      "His Point Defence Lasers shoot down rockets and missiles \u2014 bring shells, bullets and flame instead of a missile-only army.",
+      "Artillery out-ranges his defensive line. Siege him from outside the turret envelope rather than walking into it."
+    ]
+  },
+  {
+    "you": "*",
+    "enemy": "usa_super",
+    "advice": [
+      "Alexander wins if the game goes long. Pressure her before the first Particle Cannon comes online \u2014 her opening is deliberately greedy.",
+      "Spread your base out. Clustered production is exactly what a Particle Cannon is priced for.",
+      "Kill the uplinks, not the army. Every destroyed Particle Cannon resets minutes of her plan."
+    ]
+  },
+  {
+    "you": "*",
+    "enemy": "usa_air",
+    "advice": [
+      "Granger has no real tank line. A committed early ground push arrives before his second Airfield and he cannot answer it.",
+      "Mass anti-air rather than spreading it. Overlapping AA turns his aircraft from a threat into a donation.",
+      "His base defence is thin. Once you are inside it, you stay inside it."
+    ]
+  },
+  {
+    "you": "*",
+    "enemy": "china_tank",
+    "advice": [
+      "Ta Hun Kwai has almost nothing that shoots upward. Aircraft are close to a free win if you get them out.",
+      "Rocket infantry in garrisons trade brutally well against his armour \u2014 a garrisoned building costs him tanks.",
+      "His tanks arrive veteran and early. Do not plan on winning the first ground engagement; plan on not taking it."
+    ]
+  },
+  {
+    "you": "*",
+    "enemy": "china_infantry",
+    "advice": [
+      "Flame, toxin and area damage delete his hordes. Dragon Tanks, Inferno Cannons, Toxin Tractors, napalm and carpet bombing all convert his army into nothing.",
+      "Never fight his infantry with your own infantry \u2014 his start veteran and there are more of them.",
+      "Artillery is the cleanest answer. He has to close the distance and artillery does not let him."
+    ]
+  },
+  {
+    "you": "*",
+    "enemy": "china_nuke",
+    "advice": [
+      "His tanks detonate when they die. Keep your army spread out or you will lose the fight you just won.",
+      "His nuclear reactors explode when destroyed \u2014 inside his own base. A single raid on his power does structural damage.",
+      "Engage at range. Every mechanic he has rewards you standing close to his units."
+    ]
+  },
+  {
+    "you": "*",
+    "enemy": "gla_stealth",
+    "advice": [
+      "Bring detectors or you are not playing the game. USA: Sentry Drone. China: Listening Outpost, and Troop Crawlers in the army. GLA: Radar Van.",
+      "Assume any empty ground is occupied. Sweep suspected positions with area damage before you move through them.",
+      "Escort your vehicles. Kassad's Hijackers turn an unescorted tank into one of his tanks."
+    ]
+  },
+  {
+    "you": "*",
+    "enemy": "gla_toxin",
+    "advice": [
+      "Go mechanised. Toxins do very little to vehicles and nothing at all to aircraft \u2014 an infantry army is a gift to Dr. Thrax.",
+      "Do not garrison buildings against him. Toxin Tractors clear a garrison faster than you can refill it.",
+      "Expect poisoned supply piles. Lingering toxin can stop your workers mining a pile you thought was safe."
+    ]
+  },
+  {
+    "you": "*",
+    "enemy": "gla_demo",
+    "advice": [
+      "Nearly everything Juhziz owns has to touch you. Kill it on the approach and it never functions.",
+      "Long-range units and aircraft are close to immune to his whole arsenal.",
+      "Sweep for Demolition Traps before expanding. He buries them on exactly the supply pile you were about to take."
+    ]
+  },
+  {
+    "you": "gla",
+    "enemy": "*",
+    "advice": [
+      "You have no aircraft. Quad Cannons and Stinger Sites are not optional \u2014 build them before the enemy shows you why.",
+      "Your buildings leave holes. Rebuilding is cheap: fight like your base is expendable, because it partly is."
+    ]
+  },
+  {
+    "you": "usa",
+    "enemy": "*",
+    "advice": [
+      "Your units cost more than theirs. Every engagement you take should be one you chose.",
+      "Do not lose parked aircraft. An Airfield raid costs you more than any ground trade will."
+    ]
+  },
+  {
+    "you": "china",
+    "enemy": "*",
+    "advice": [
+      "Keep five or more identical units together for the horde bonus \u2014 it is a free damage upgrade you are otherwise refusing.",
+      "Build a Listening Outpost early. It is the only cheap detection you have and stealth armies are common."
+    ]
+  }
+]
