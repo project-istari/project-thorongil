@@ -132,9 +132,12 @@ export function renderPlan(plan: BattlePlan, ds: Dataset): string {
   out.push('');
 
   const prov = ds.provenance;
+  const ing = prov.lastIngest;
   const wiki = prov.wikiCache
     ? `wiki cache ${prov.wikiCache.pages} pages from ${prov.wikiCache.source} (${prov.wikiCache.fetchedAt.slice(0, 10)})`
-    : 'no wiki cache - run `npm run ingest` to overlay live wiki data';
+    : ing && !ing.ok
+      ? `wiki crawl ${ing.attemptedAt.slice(0, 10)} failed - ${ing.error}`
+      : 'no wiki crawl recorded - run `npm run ingest` to overlay live wiki data';
   out.push(dim(`  data: curated ${prov.curatedAt} · ${wiki}`));
   out.push('');
 

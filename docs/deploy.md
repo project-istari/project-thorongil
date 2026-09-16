@@ -55,10 +55,19 @@ Reconciliation: 47/61 curated units matched a wiki page
     ...
 ```
 
-The live page also shows it. The footer reads either:
+**The live page reports it too, without reading any logs.** The masthead carries a
+`DATA` chip — green `Wiki ✓` or amber `Curated` — and the footer gives the full
+story, in one of three forms:
 
-- `Wiki overlay · 214 pages from cnc.fandom.com · 2026-09-16` — the crawl ran, or
-- `No wiki overlay — run npm run ingest to merge live wiki data` — it did not.
+| Footer line | What happened |
+|---|---|
+| `Wiki overlay · 214 pages from cnc.fandom.com · 2026-09-16 · 47/61 units reconciled` | The crawl ran and the data is merged. |
+| `Wiki crawl 2026-09-16 failed — HTTP 403 from the network proxy · serving curated data` | The crawl ran and was refused. The reason is the wiki's or the network's, verbatim. |
+| `No wiki crawl recorded · serving curated data` | The ingest step never executed at all — check that `vercel-build` is the build command. |
+
+That third case matters: "no overlay" used to mean both "refused" and "never ran",
+which are very different problems. The ingest now writes `data/ingest-status.json`
+on every attempt, success or failure, and the page reads it.
 
 If the crawl comes back empty, the ingest automatically falls back to discovering
 the wiki's real category names and crawling those, because category names drift

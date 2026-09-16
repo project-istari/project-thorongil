@@ -161,7 +161,26 @@ export interface Dataset {
   provenance: {
     curatedAt: string;
     wikiCache?: { fetchedAt: string; pages: number; source: string };
+    /**
+     * What the last crawl attempt did. Recorded even when it failed, so a
+     * build that shipped without wiki data can say why rather than leaving
+     * "no overlay" to mean both "never ran" and "ran and was refused".
+     */
+    lastIngest?: IngestStatus;
   };
+}
+
+export interface IngestStatus {
+  attemptedAt: string;
+  ok: boolean;
+  source: string;
+  pages?: number;
+  /** Failure reason, one line, when ok is false. */
+  error?: string;
+  /** Curated units that matched a wiki page. */
+  matched?: number;
+  curatedTotal?: number;
+  costCorrections?: number;
 }
 
 export interface PlanRequest {

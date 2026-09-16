@@ -10,13 +10,13 @@
  *   npm run ingest -- --category "Zero Hour units" --category "Generals maps"
  */
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { parseArgs } from 'node:util';
 import { WikiClient, WikiBlockedError, DEFAULT_ENDPOINT } from './wiki.js';
 import { parsePage, type ParsedPage } from './parse.js';
-import { WIKI_CACHE, CURATED } from '../data/index.js';
+import { WIKI_CACHE, CURATED, INGEST_STATUS } from '../data/index.js';
 import type { WikiCache } from '../data/index.js';
-import type { Unit } from '../types.js';
+import type { IngestStatus, Unit } from '../types.js';
 
 /**
  * Seed categories. Wiki category names drift, so these are a starting point,
@@ -89,9 +89,10 @@ async function listCategories(client: WikiClient, prefix: string): Promise<strin
  * This is the point of the crawl: the curated costs are approximations, and
  * this report is how you see which ones the wiki disagrees with.
  */
-function reconcile(units: WikiCache['units']): void {
-  if (!units?.length) return;
-  const curated = JSON.parse(readFileSync(join(CURATED, 'units.json'), 'utf8')) as Unit[];
+function reconcile(units: WikiCache['units']): { matched: number; curatedTotal: number; costCorrections: number } {
+  const curatedAll = JSON.parse(readFileSync(join(CURATED, 'units.json'), 'utf8')) as Unit[];
+  if (!units?.length) return { matched: 0, curatedTotal: curatedAll.length, costCorrections: 0 };
+  const curated = curatedAll;
   const byName = new Map(curated.map((u) => [u.name.toLowerCase(), u]));
 
   let matched = 0;
@@ -112,6 +113,22 @@ function reconcile(units: WikiCache['units']): void {
     if (costDiffs.length > 25) console.log(`    ... and ${costDiffs.length - 25} more`);
   } else if (matched) {
     console.log('  no cost disagreements');
+  }
+  return { matched, curatedTotal: curated.length, costCorrections: costDiffs.length };
+}
+
+/**
+ * Record what this run did, succeed or fail.
+ *
+ * The page and the CLI read this so "no wiki data" can say whether the crawl
+ * was refused, came back empty, or was never attempted at all.
+ */
+function writeStatus(status: IngestStatus): void {
+  try {
+    mkdirSync(dirname(INGEST_STATUS), { recursive: true });
+    writeFileSync(INGEST_STATUS, JSON.stringify(status, null, 2));
+  } catch {
+    // Never fail a build over the status file.
   }
 }
 
@@ -182,6 +199,12 @@ async function main(): Promise<number> {
   if (!wanted.length) {
     console.error('\nNo pages found, and category discovery turned up nothing usable.');
     console.error('Run:  npm run ingest -- --discover "Zero Hour"   to inspect the wiki by hand.');
+    writeStatus({
+      attemptedAt: new Date().toISOString(),
+      ok: false,
+      source: client.host,
+      error: 'crawl reached the wiki but no pages matched any category or search',
+    });
     return args['soft-fail'] ? 0 : 1;
   }
 
@@ -208,12 +231,22 @@ async function main(): Promise<number> {
   };
   console.log(`\nParsed: ${counts.units} units, ${counts.factions} factions, ${counts.maps} maps, ${counts.unknown} unclassified`);
   console.log(`API requests: ${client.requestCount}`);
-  reconcile(cache.units);
+  const recon = reconcile(cache.units);
 
   if (args['dry-run']) {
     console.log('\n--dry-run: nothing written.');
     return 0;
   }
+
+  writeStatus({
+    attemptedAt: new Date().toISOString(),
+    ok: true,
+    source: client.host,
+    pages: pages.length,
+    matched: recon.matched,
+    curatedTotal: recon.curatedTotal,
+    costCorrections: recon.costCorrections,
+  });
 
   mkdirSync(WIKI_CACHE, { recursive: true });
   const out = join(WIKI_CACHE, `${cache.fetchedAt.replace(/[:.]/g, '-')}.json`);
@@ -228,6 +261,12 @@ main()
   .catch((err) => {
     if (err instanceof WikiBlockedError) {
       console.error(`\n${err.message}\n`);
+      writeStatus({
+        attemptedAt: new Date().toISOString(),
+        ok: false,
+        source: err.host,
+        error: err.detail,
+      });
       // A deploy should still ship the curated dataset when the wiki is out of reach.
       process.exit(process.argv.includes('--soft-fail') ? 0 : 2);
     }

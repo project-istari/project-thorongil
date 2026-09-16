@@ -107,3 +107,18 @@ test('matchup selectors resolve to something real', () => {
     assert.ok(m.advice.length > 0, 'matchup with no advice');
   }
 });
+
+test('provenance always states where the data came from', () => {
+  const p = ds.provenance;
+  assert.match(p.curatedAt, /^\d{4}-\d{2}-\d{2}$/);
+  // A crawl record is optional, but if present it must be self-describing:
+  // a failed attempt has to carry a reason, a successful one a page count.
+  if (p.lastIngest) {
+    assert.equal(typeof p.lastIngest.ok, 'boolean');
+    assert.ok(p.lastIngest.source.length > 0);
+    assert.match(p.lastIngest.attemptedAt, /^\d{4}-\d{2}-\d{2}T/);
+    if (p.lastIngest.ok) assert.equal(typeof p.lastIngest.pages, 'number');
+    else assert.ok((p.lastIngest.error ?? '').length > 0, 'a failed crawl must say why');
+  }
+  if (p.wikiCache) assert.ok(p.wikiCache.pages >= 0);
+});

@@ -1011,6 +1011,36 @@ function render() {
 
 /* ---------------------------------------------------------------- boot --- */
 
+/**
+ * Say precisely where the data came from. "No overlay" previously meant both
+ * "the crawl was refused" and "no crawl ever ran"; the ingest now records which.
+ */
+function dataSource() {
+  const p = DATA.provenance;
+  const ing = p.lastIngest;
+  if (p.wikiCache) {
+    const recon = ing && ing.matched != null ? ` · ${ing.matched}/${ing.curatedTotal} units reconciled` : '';
+    return {
+      chip: 'Wiki \u2713',
+      tone: 'var(--ok)',
+      line: `Wiki overlay \u00b7 ${p.wikiCache.pages} pages from ${p.wikiCache.source} \u00b7 ${p.wikiCache.fetchedAt.slice(0, 10)}${recon}`,
+    };
+  }
+  if (ing && !ing.ok) {
+    return {
+      chip: 'Curated',
+      tone: 'var(--warn)',
+      line: `Wiki crawl ${ing.attemptedAt.slice(0, 10)} failed \u2014 ${ing.error} \u00b7 serving curated data`,
+    };
+  }
+  return {
+    chip: 'Curated',
+    tone: 'var(--ink-soft)',
+    line: 'No wiki crawl recorded \u00b7 serving curated data',
+  };
+}
+
+const src = dataSource();
 const readiness = $('readiness');
 readiness.replaceChildren(
   ...[['Armies', DATA.factions.length], ['Units', DATA.units.length], ['Theatres', DATA.maps.length]]
@@ -1021,18 +1051,23 @@ readiness.replaceChildren(
       return box;
     }),
 );
+const dataChip = el('span', 'readout');
+dataChip.style.borderColor = src.tone;
+dataChip.append(document.createTextNode('Data '));
+const chipVal = el('b', null, src.chip);
+chipVal.style.color = src.tone;
+dataChip.append(chipVal);
+dataChip.title = src.line;
+readiness.append(dataChip);
 
 $('reroll').addEventListener('click', () => {
   state.seed = Math.floor(Math.random() * 1e9);
   render();
 });
 
-const prov = DATA.provenance;
 $('colophon').replaceChildren(
-  el('span', null, `Curated dossier ${prov.curatedAt} · strategy engine runs in this page`),
-  el('span', null, prov.wikiCache
-    ? `Wiki overlay · ${prov.wikiCache.pages} pages from ${prov.wikiCache.source} · ${prov.wikiCache.fetchedAt.slice(0, 10)}`
-    : 'No wiki overlay — run npm run ingest to merge live wiki data'),
+  el('span', null, `Curated dossier ${DATA.provenance.curatedAt} · strategy engine runs in this page`),
+  el('span', null, src.line),
   el('span', null, 'Fan-made planning tool · not affiliated with Electronic Arts'),
 );
 

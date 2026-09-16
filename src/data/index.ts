@@ -1,7 +1,7 @@
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { Dataset, Faction, GameMap, MatchupNote, Unit } from '../types.js';
+import type { Dataset, Faction, GameMap, IngestStatus, MatchupNote, Unit } from '../types.js';
 
 /** Walk up from this module until we find the package root. */
 function findRoot(): string {
@@ -16,8 +16,10 @@ function findRoot(): string {
 }
 
 const ROOT = findRoot();
-const CURATED = join(ROOT, 'data', 'curated');
-const WIKI_CACHE = join(ROOT, 'data', 'wiki-cache');
+const DATA_DIR = join(ROOT, 'data');
+const CURATED = join(DATA_DIR, 'curated');
+const WIKI_CACHE = join(DATA_DIR, 'wiki-cache');
+const INGEST_STATUS = join(DATA_DIR, 'ingest-status.json');
 
 function readJson<T>(path: string): T {
   return JSON.parse(readFileSync(path, 'utf8')) as T;
@@ -85,6 +87,15 @@ function latestWikiCache(): WikiCache | undefined {
   }
 }
 
+function lastIngestStatus(): IngestStatus | undefined {
+  if (!existsSync(INGEST_STATUS)) return undefined;
+  try {
+    return readJson<IngestStatus>(INGEST_STATUS);
+  } catch {
+    return undefined;   // a corrupt status file must never break a build
+  }
+}
+
 let cached: Dataset | undefined;
 
 export function loadDataset(): Dataset {
@@ -96,6 +107,7 @@ export function loadDataset(): Dataset {
   const matchups = readJson<MatchupNote[]>(join(CURATED, 'matchups.json'));
 
   const wiki = latestWikiCache();
+  const status = lastIngestStatus();
 
   const dataset: Dataset = {
     factions: overlay(factions, wiki?.factions, ['threat', 'vulnerability', 'opening', 'signatureTactics', 'id', 'side']),
@@ -105,6 +117,7 @@ export function loadDataset(): Dataset {
     provenance: {
       curatedAt: '2026-09-16',
       ...(wiki ? { wikiCache: { fetchedAt: wiki.fetchedAt, pages: wiki.pageCount, source: wiki.source } } : {}),
+      ...(status ? { lastIngest: status } : {}),
     },
   };
 
@@ -125,4 +138,4 @@ export function mapById(id: string): GameMap | undefined {
   return ds.maps.find((m) => m.id === id) ?? ds.maps.find((m) => slug(m.name) === slug(id));
 }
 
-export { ROOT, CURATED, WIKI_CACHE, slug };
+export { ROOT, DATA_DIR, CURATED, WIKI_CACHE, INGEST_STATUS, slug };
