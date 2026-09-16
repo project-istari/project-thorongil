@@ -4,8 +4,24 @@
     "name": "United States of America",
     "side": "usa",
     "tagline": "Expensive, precise, and lethal once the airfields are humming.",
-    "threat": { "air": 3, "armor": 2, "infantry_swarm": 1, "artillery": 2, "stealth": 1, "superweapon": 2, "economy": 2, "base_defense": 2, "early_rush": 1, "chemical": 0 },
-    "vulnerability": { "early_rush": 3, "infantry_swarm": 2, "stealth": 2, "artillery": 2 },
+    "threat": {
+      "air": 3,
+      "armor": 2,
+      "infantry_swarm": 1,
+      "artillery": 2,
+      "stealth": 1,
+      "superweapon": 2,
+      "economy": 2,
+      "base_defense": 2,
+      "early_rush": 1,
+      "chemical": 0
+    },
+    "vulnerability": {
+      "early_rush": 3,
+      "infantry_swarm": 2,
+      "stealth": 2,
+      "artillery": 2
+    },
     "strengths": [
       "Best air force in the game once Airfields are up",
       "Tomahawk Launchers out-range almost every base defence",
@@ -14,14 +30,14 @@
     ],
     "weaknesses": [
       "Units cost more than anything they will trade with early on",
-      "Very soft for the first five minutes — a committed rush ends the game",
+      "Very soft for the first five minutes \u2014 a committed rush ends the game",
       "Airfields are large, fragile, and worth raiding",
       "Infantry hordes overwhelm small numbers of expensive units"
     ],
     "opening": [
       "Dozer -> Supply Center, pull both Chinooks onto the nearest supply pile",
       "Barracks -> two Rangers for scouting and garrison clearing",
-      "Supply Drop Zone as soon as credits allow — it pays passively all game",
+      "Supply Drop Zone as soon as credits allow \u2014 it pays passively all game",
       "War Factory -> Humvees, then Crusaders",
       "Strategy Center (unlocks stances and the Paladin), then Airfield"
     ],
@@ -45,8 +61,24 @@
     "general": "Gen. Malcolm \"Ace\" Granger",
     "side": "usa",
     "tagline": "Owns the sky, rents the ground.",
-    "threat": { "air": 3, "armor": 1, "infantry_swarm": 1, "artillery": 1, "stealth": 2, "superweapon": 2, "economy": 2, "base_defense": 1, "early_rush": 1, "chemical": 0 },
-    "vulnerability": { "early_rush": 3, "armor": 3, "base_defense": 3, "infantry_swarm": 2 },
+    "threat": {
+      "air": 3,
+      "armor": 1,
+      "infantry_swarm": 1,
+      "artillery": 1,
+      "stealth": 2,
+      "superweapon": 2,
+      "economy": 2,
+      "base_defense": 1,
+      "early_rush": 1,
+      "chemical": 0
+    },
+    "vulnerability": {
+      "early_rush": 3,
+      "armor": 3,
+      "base_defense": 3,
+      "infantry_swarm": 2
+    },
     "strengths": [
       "King Raptor and Aurora Alpha hit harder and survive more than stock aircraft",
       "Stealth Comanches arrive unseen over supply lines",
@@ -54,7 +86,7 @@
       "Aircraft rearm and recover faster than anyone can replace ground losses"
     ],
     "weaknesses": [
-      "No Crusader or Paladin line — his ground army is thin and improvised",
+      "No Crusader or Paladin line \u2014 his ground army is thin and improvised",
       "A fast ground rush kills him before the second Airfield finishes",
       "Massed anti-air (Quad Cannons, Gattlings, Avengers) shuts the whole army off",
       "Base defence is an afterthought"
@@ -72,10 +104,10 @@
       "Keep a Patriot screen at home so he never has to land to defend"
     ],
     "quirks": [
-      "Aircraft are the army — losing air superiority loses the game",
+      "Aircraft are the army \u2014 losing air superiority loses the game",
       "Countermeasures upgrade makes aircraft shrug off missile defences"
     ],
-    "wikiPage": "Air_Force_General",
+    "wikiPage": "Malcolm_Granger",
     "source": "curated"
   },
   {
@@ -84,8 +116,24 @@
     "general": "Gen. \"Pinpoint\" Townes",
     "side": "usa",
     "tagline": "Immaculate defence, wired to a fuse box.",
-    "threat": { "air": 2, "armor": 2, "infantry_swarm": 1, "artillery": 1, "stealth": 1, "superweapon": 2, "economy": 2, "base_defense": 3, "early_rush": 1, "chemical": 0 },
-    "vulnerability": { "early_rush": 2, "artillery": 3, "infantry_swarm": 2, "economy": 3 },
+    "threat": {
+      "air": 2,
+      "armor": 2,
+      "infantry_swarm": 1,
+      "artillery": 1,
+      "stealth": 1,
+      "superweapon": 2,
+      "economy": 2,
+      "base_defense": 3,
+      "early_rush": 1,
+      "chemical": 0
+    },
+    "vulnerability": {
+      "early_rush": 2,
+      "artillery": 3,
+      "infantry_swarm": 2,
+      "economy": 3
+    },
     "strengths": [
       "Laser Turrets out-damage any other static defence for the price",
       "Laser Crusaders cut through armour with no travel time to dodge",
@@ -93,14 +141,14 @@
       "Cold Fusion Reactors are cheaper and produce more power than standard"
     ],
     "weaknesses": [
-      "Everything is power-gated — dark reactors mean dark turrets",
+      "Everything is power-gated \u2014 dark reactors mean dark turrets",
       "Artillery out-ranges his defensive line and he cannot answer in kind",
       "Missile-only armies do badly, but shell and gun armies walk through",
       "Thin early game like all USA sides"
     ],
     "opening": [
       "Dozer -> Supply Center, Chinooks onto supply",
-      "Cold Fusion Reactor early — the whole army keys off power",
+      "Cold Fusion Reactor early \u2014 the whole army keys off power",
       "Barracks -> Rangers, Laser Turret on the main approach",
       "War Factory -> Laser Crusaders",
       "Strategy Center, then Airfield"
@@ -111,10 +159,10 @@
       "Avenger units to blank enemy missiles over the army ball"
     ],
     "quirks": [
-      "Power is the single point of failure — protect and over-build reactors",
+      "Power is the single point of failure \u2014 protect and over-build reactors",
       "Point Defence Laser intercepts rockets and missiles but not shells or bullets"
     ],
-    "wikiPage": "Laser_General",
+    "wikiPage": "Townes",
     "source": "curated"
   },
   {
@@ -123,8 +171,23 @@
     "general": "Gen. Alexis Alexander",
     "side": "usa",
     "tagline": "Survive her opening and you still have to survive the sky falling.",
-    "threat": { "air": 2, "armor": 2, "infantry_swarm": 1, "artillery": 2, "stealth": 1, "superweapon": 3, "economy": 2, "base_defense": 3, "early_rush": 1, "chemical": 0 },
-    "vulnerability": { "early_rush": 3, "stealth": 2, "armor": 2 },
+    "threat": {
+      "air": 2,
+      "armor": 2,
+      "infantry_swarm": 1,
+      "artillery": 2,
+      "stealth": 1,
+      "superweapon": 3,
+      "economy": 2,
+      "base_defense": 3,
+      "early_rush": 1,
+      "chemical": 0
+    },
+    "vulnerability": {
+      "early_rush": 3,
+      "stealth": 2,
+      "armor": 2
+    },
     "strengths": [
       "Particle Cannons are cheaper and recharge faster, and she fields more of them",
       "EMP Patriots freeze vehicles in place inside her defensive envelope",
@@ -132,7 +195,7 @@
       "Late game is effectively unwinnable if she is allowed to reach it"
     ],
     "weaknesses": [
-      "Slow, greedy opening — she is at her weakest for the first eight minutes",
+      "Slow, greedy opening \u2014 she is at her weakest for the first eight minutes",
       "A spread-out enemy base blunts every Particle Cannon shot",
       "Killing the Particle Cannon uplinks resets her entire plan",
       "Raids on dozers delay superweapons disproportionately"
@@ -149,10 +212,10 @@
       "Chain Particle Cannon shots onto production rather than armies"
     ],
     "quirks": [
-      "Her clock is the real opponent — every minute favours her",
+      "Her clock is the real opponent \u2014 every minute favours her",
       "Superweapon timers are public information: count them"
     ],
-    "wikiPage": "Superweapon_General",
+    "wikiPage": "Alexis_Alexander",
     "source": "curated"
   },
   {
@@ -160,8 +223,24 @@
     "name": "People's Republic of China",
     "side": "china",
     "tagline": "Bring more of everything and let the horde bonus do the maths.",
-    "threat": { "air": 2, "armor": 3, "infantry_swarm": 2, "artillery": 2, "stealth": 0, "superweapon": 2, "economy": 2, "base_defense": 2, "early_rush": 2, "chemical": 1 },
-    "vulnerability": { "air": 2, "stealth": 2, "artillery": 2, "chemical": 1 },
+    "threat": {
+      "air": 2,
+      "armor": 3,
+      "infantry_swarm": 2,
+      "artillery": 2,
+      "stealth": 0,
+      "superweapon": 2,
+      "economy": 2,
+      "base_defense": 2,
+      "early_rush": 2,
+      "chemical": 1
+    },
+    "vulnerability": {
+      "air": 2,
+      "stealth": 2,
+      "artillery": 2,
+      "chemical": 1
+    },
     "strengths": [
       "Overlords are the toughest thing on the field and carry upgrades on their back",
       "Horde bonus makes massed identical units hit far above their cost",
@@ -201,8 +280,23 @@
     "general": "Gen. Ta Hun Kwai",
     "side": "china",
     "tagline": "A wall of armour that arrives early and never stops.",
-    "threat": { "air": 1, "armor": 3, "infantry_swarm": 1, "artillery": 1, "stealth": 0, "superweapon": 2, "economy": 2, "base_defense": 2, "early_rush": 3, "chemical": 0 },
-    "vulnerability": { "air": 3, "artillery": 2, "stealth": 2 },
+    "threat": {
+      "air": 1,
+      "armor": 3,
+      "infantry_swarm": 1,
+      "artillery": 1,
+      "stealth": 0,
+      "superweapon": 2,
+      "economy": 2,
+      "base_defense": 2,
+      "early_rush": 3,
+      "chemical": 0
+    },
+    "vulnerability": {
+      "air": 3,
+      "artillery": 2,
+      "stealth": 2
+    },
     "strengths": [
       "Tanks are cheaper, faster and roll off the line already veteran",
       "Emperor Overlord carries its own propaganda aura and shrugs off massed fire",
@@ -217,7 +311,7 @@
     ],
     "opening": [
       "Dozer -> Supply Center, trucks mining",
-      "War Factory immediately — his tanks are the opening",
+      "War Factory immediately \u2014 his tanks are the opening",
       "Battlemaster pressure on the enemy supply line before minute five",
       "Gattling Cannon at home only after the first push"
     ],
@@ -230,7 +324,7 @@
       "Veterancy on delivery means his first tanks beat your first tanks",
       "Overlords can mount Gattling, Propaganda or Bunker upgrades"
     ],
-    "wikiPage": "Tank_General",
+    "wikiPage": "Ta_Hun_Kwai",
     "source": "curated"
   },
   {
@@ -239,8 +333,24 @@
     "general": "Gen. \"Anvil\" Shin Fai",
     "side": "china",
     "tagline": "Bodies, endlessly, all of them already veterans.",
-    "threat": { "air": 1, "armor": 1, "infantry_swarm": 3, "artillery": 2, "stealth": 0, "superweapon": 2, "economy": 2, "base_defense": 2, "early_rush": 3, "chemical": 0 },
-    "vulnerability": { "chemical": 3, "artillery": 3, "air": 2, "armor": 2 },
+    "threat": {
+      "air": 1,
+      "armor": 1,
+      "infantry_swarm": 3,
+      "artillery": 2,
+      "stealth": 0,
+      "superweapon": 2,
+      "economy": 2,
+      "base_defense": 2,
+      "early_rush": 3,
+      "chemical": 0
+    },
+    "vulnerability": {
+      "chemical": 3,
+      "artillery": 3,
+      "air": 2,
+      "armor": 2
+    },
     "strengths": [
       "Infantry arrive as veterans and scale into enormous hordes",
       "Minigunners and Tank Hunters cover infantry and armour from one Barracks",
@@ -255,7 +365,7 @@
     ],
     "opening": [
       "Dozer -> Supply Center, trucks mining",
-      "Barracks first, then a second Barracks — production width is the strategy",
+      "Barracks first, then a second Barracks \u2014 production width is the strategy",
       "Red Guard and Tank Hunter mix, pushed out to claim ground early",
       "Troop Crawler to move the horde and detect stealth"
     ],
@@ -268,7 +378,7 @@
       "All infantry start veteran, which changes every early trade",
       "Horde bonus applies to infantry, so bigger really is better"
     ],
-    "wikiPage": "Infantry_General",
+    "wikiPage": "Shin_Fai",
     "source": "curated"
   },
   {
@@ -277,8 +387,23 @@
     "general": "Gen. Tsing Shi Tao",
     "side": "china",
     "tagline": "Everything he owns is also a bomb, including his power plants.",
-    "threat": { "air": 2, "armor": 3, "infantry_swarm": 2, "artillery": 3, "stealth": 0, "superweapon": 3, "economy": 3, "base_defense": 2, "early_rush": 2, "chemical": 2 },
-    "vulnerability": { "early_rush": 2, "air": 2, "artillery": 2 },
+    "threat": {
+      "air": 2,
+      "armor": 3,
+      "infantry_swarm": 2,
+      "artillery": 3,
+      "stealth": 0,
+      "superweapon": 3,
+      "economy": 3,
+      "base_defense": 2,
+      "early_rush": 2,
+      "chemical": 2
+    },
+    "vulnerability": {
+      "early_rush": 2,
+      "air": 2,
+      "artillery": 2
+    },
     "strengths": [
       "Tanks leave a radioactive detonation behind when they die",
       "Tactical Nuke Cannon flattens clustered armies and static defences",
@@ -293,12 +418,12 @@
     ],
     "opening": [
       "Dozer -> Supply Center, trucks mining",
-      "Nuclear Reactor early — power is his economy advantage",
+      "Nuclear Reactor early \u2014 power is his economy advantage",
       "War Factory -> Battlemasters with the nuclear upgrades",
       "Nuke Cannon once the front stabilises"
     ],
     "signatureTactics": [
-      "Trade tanks aggressively — his die better than yours",
+      "Trade tanks aggressively \u2014 his die better than yours",
       "Tactical Nuke Cannon onto any static defensive line",
       "Nuke MiG runs to make ground permanently uncomfortable"
     ],
@@ -306,7 +431,7 @@
       "Death explosions mean you lose units even when you win the fight",
       "His reactors are a liability you can exploit with a single raid"
     ],
-    "wikiPage": "Nuke_General",
+    "wikiPage": "Tsing_Shi_Tao",
     "source": "curated"
   },
   {
@@ -314,16 +439,31 @@
     "name": "Global Liberation Army",
     "side": "gla",
     "tagline": "Cheap, fast, everywhere, and impossible to finish off.",
-    "threat": { "air": 0, "armor": 2, "infantry_swarm": 2, "artillery": 2, "stealth": 2, "superweapon": 2, "economy": 3, "base_defense": 1, "early_rush": 3, "chemical": 2 },
-    "vulnerability": { "air": 3, "armor": 2, "base_defense": 2 },
+    "threat": {
+      "air": 0,
+      "armor": 2,
+      "infantry_swarm": 2,
+      "artillery": 2,
+      "stealth": 2,
+      "superweapon": 2,
+      "economy": 3,
+      "base_defense": 1,
+      "early_rush": 3,
+      "chemical": 2
+    },
+    "vulnerability": {
+      "air": 3,
+      "armor": 2,
+      "base_defense": 2
+    },
     "strengths": [
-      "Fastest, cheapest army on the field — trades on volume and tempo",
+      "Fastest, cheapest army on the field \u2014 trades on volume and tempo",
       "Tunnel Networks teleport the army across the map and heal it",
       "Destroyed buildings leave holes that rebuild for a fraction of the cost",
       "Black Market and salvage give income and free veterancy"
     ],
     "weaknesses": [
-      "No aircraft at all — the sky belongs to the enemy by default",
+      "No aircraft at all \u2014 the sky belongs to the enemy by default",
       "Light armour everywhere; anything heavy wins a straight fight",
       "Static defence is weak outside Stinger Sites and tunnels",
       "Falls off badly if the early tempo is neutralised"
@@ -342,7 +482,7 @@
       "Bomb Truck disguised in an enemy column, driven into a superweapon"
     ],
     "quirks": [
-      "Buildings leave rebuildable holes — killing GLA structures is never permanent",
+      "Buildings leave rebuildable holes \u2014 killing GLA structures is never permanent",
       "Salvage crates from destroyed vehicles upgrade units on the spot",
       "GPS Scrambler and Sneak Attack put an army where it should not be"
     ],
@@ -355,10 +495,24 @@
     "general": "Dr. Thrax",
     "side": "gla",
     "tagline": "Poisons the ground you were going to stand on.",
-    "threat": { "air": 0, "armor": 1, "infantry_swarm": 2, "artillery": 2, "stealth": 1, "superweapon": 2, "economy": 2, "base_defense": 2, "early_rush": 3, "chemical": 3 },
-    "vulnerability": { "air": 3, "armor": 3 },
+    "threat": {
+      "air": 0,
+      "armor": 1,
+      "infantry_swarm": 2,
+      "artillery": 2,
+      "stealth": 1,
+      "superweapon": 2,
+      "economy": 2,
+      "base_defense": 2,
+      "early_rush": 3,
+      "chemical": 3
+    },
+    "vulnerability": {
+      "air": 3,
+      "armor": 3
+    },
     "strengths": [
-      "Starts with Anthrax Beta and can upgrade to Gamma — toxins never wear off",
+      "Starts with Anthrax Beta and can upgrade to Gamma \u2014 toxins never wear off",
       "Toxin Tractors and Toxin Rebels clear infantry and garrisons instantly",
       "Toxin Scuds leave lingering clouds that deny ground for free",
       "Anthrax Bomb is a cheap answer to any infantry-based army"
@@ -382,9 +536,9 @@
     ],
     "quirks": [
       "Toxin damage lingers on the ground after the attack stops",
-      "Against vehicles his damage profile collapses — he must catch infantry"
+      "Against vehicles his damage profile collapses \u2014 he must catch infantry"
     ],
-    "wikiPage": "Toxin_General",
+    "wikiPage": "Dr._Thrax",
     "source": "curated"
   },
   {
@@ -393,8 +547,23 @@
     "general": "Prince Kassad",
     "side": "gla",
     "tagline": "The army was always there. You simply could not see it.",
-    "threat": { "air": 0, "armor": 1, "infantry_swarm": 2, "artillery": 2, "stealth": 3, "superweapon": 1, "economy": 2, "base_defense": 2, "early_rush": 2, "chemical": 1 },
-    "vulnerability": { "air": 3, "armor": 3, "artillery": 2 },
+    "threat": {
+      "air": 0,
+      "armor": 1,
+      "infantry_swarm": 2,
+      "artillery": 2,
+      "stealth": 3,
+      "superweapon": 1,
+      "economy": 2,
+      "base_defense": 2,
+      "early_rush": 2,
+      "chemical": 1
+    },
+    "vulnerability": {
+      "air": 3,
+      "armor": 3,
+      "artillery": 2
+    },
     "strengths": [
       "Nearly the entire army is stealthed by default",
       "Camo Netting hides buildings, so his base is hard to even find",
@@ -420,9 +589,9 @@
     ],
     "quirks": [
       "Assume every empty-looking piece of ground is occupied",
-      "Stealth breaks when he fires — the window to punish is short"
+      "Stealth breaks when he fires \u2014 the window to punish is short"
     ],
-    "wikiPage": "Stealth_General",
+    "wikiPage": "Prince_Kassad",
     "source": "curated"
   },
   {
@@ -431,8 +600,23 @@
     "general": "Gen. Rodall \"Demo\" Juhziz",
     "side": "gla",
     "tagline": "Every single thing he owns is a delivery system for explosives.",
-    "threat": { "air": 0, "armor": 2, "infantry_swarm": 3, "artillery": 2, "stealth": 2, "superweapon": 3, "economy": 2, "base_defense": 2, "early_rush": 3, "chemical": 1 },
-    "vulnerability": { "air": 3, "armor": 2, "artillery": 3 },
+    "threat": {
+      "air": 0,
+      "armor": 2,
+      "infantry_swarm": 3,
+      "artillery": 2,
+      "stealth": 2,
+      "superweapon": 3,
+      "economy": 2,
+      "base_defense": 2,
+      "early_rush": 3,
+      "chemical": 1
+    },
+    "vulnerability": {
+      "air": 3,
+      "armor": 2,
+      "artillery": 3
+    },
     "strengths": [
       "Terrorists are the cheapest way in the game to delete a tank",
       "Demo Traps turn any piece of ground into a minefield",
@@ -442,7 +626,7 @@
     "weaknesses": [
       "Almost everything he has must physically touch you to work",
       "Long-range units and aircraft are close to immune",
-      "Very light armour — he dies on the approach if you see him coming",
+      "Very light armour \u2014 he dies on the approach if you see him coming",
       "No aircraft"
     ],
     "opening": [
@@ -460,7 +644,7 @@
       "Death explosions mean melee range is never safe near him",
       "Cheap suicide units mean his army value is always lower than it looks"
     ],
-    "wikiPage": "Demolition_General",
+    "wikiPage": "Rodall_Juhziz",
     "source": "curated"
   }
 ]

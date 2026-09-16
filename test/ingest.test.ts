@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parseInfobox, stripMarkup, parseCost, leadSentence, classify, parsePage, slugify } from '../src/ingest/parse.js';
+import { parseInfobox, stripMarkup, parseCost, leadSentence, classify, parsePage, slugify, isDisambiguation, disambiguationLinks } from '../src/ingest/parse.js';
 import type { WikiPage } from '../src/ingest/wiki.js';
 
 const SAMPLE: WikiPage = {
@@ -99,4 +99,90 @@ test('slugify matches the ids used in the curated dataset', () => {
   assert.equal(slugify('Overlord Tank'), 'overlord_tank');
   assert.equal(slugify("Gen. Rodall \"Demo\" Juhziz"), 'gen_rodall_demo_juhziz');
   assert.equal(slugify('  Spaced  Out  '), 'spaced_out');
+});
+
+/* ---------------------------------------------------------------------------
+ * The wiki this crawler actually targets does not use {{Infobox}}. Its unit
+ * pages open with {{UnitBox}}, behind a couple of navigation templates, and its
+ * plain-name pages are usually disambiguation stubs. These cases are all taken
+ * from live cnc.fandom.com markup.
+ * ------------------------------------------------------------------------ */
+
+const UNITBOX: WikiPage = {
+  pageid: 20,
+  title: 'Ranger (Generals)',
+  categories: ['Generals 1 American arsenal'],
+  wikitext: `{{Games|Gen|ZH}}
+{{For|the Red Alert 1 vehicle of the same name|Ranger (Red Alert)}}
+{{UnitBox
+|name         = Ranger
+|image        = Generals_Ranger.jpg
+|faction      =
+* {{Subfaction|USA|G1}}
+|role         = Basic infantry
+|cost         = $225
+|hp           = 180
+}}
+The '''Ranger''' is the USA's basic infantry unit.`,
+};
+
+test('parseInfobox reads {{UnitBox}}, not just {{Infobox}}', () => {
+  const fields = parseInfobox(UNITBOX.wikitext);
+  assert.equal(fields['cost'], '$225');
+  assert.equal(fields['role'], 'Basic infantry');
+  assert.equal(parseCost(fields), 225);
+});
+
+test('parseInfobox skips navigation templates ahead of the infobox', () => {
+  // {{Games}} and {{For}} precede the real box; matching the first template
+  // outright would read the wrong one and find no fields at all.
+  const fields = parseInfobox(UNITBOX.wikitext);
+  assert.ok(!('gen' in fields), 'read the {{Games}} navigation template');
+  assert.equal(fields['name'], 'Ranger');
+});
+
+test('parseInfobox still ignores templates that are not infoboxes', () => {
+  assert.deepEqual(parseInfobox('{{Games|Gen|ZH}}\nJust prose.'), {});
+  assert.deepEqual(parseInfobox('{{For|something|Other page}}'), {});
+});
+
+test('parsePage carries the wiki image onto the record', () => {
+  const withImage: WikiPage = { ...UNITBOX, image: 'https://static.example/Ranger.jpg' };
+  assert.equal(parsePage(withImage).unit?.image, 'https://static.example/Ranger.jpg');
+  // Absent on a page the wiki has no image for, rather than an empty string.
+  assert.equal(parsePage(UNITBOX).unit?.image, undefined);
+});
+
+test('parsePage joins on the requested title, not the redirect target', () => {
+  // The curated dataset asked for "Crusader_Tank"; the wiki redirected us to
+  // "Crusader tank". Reporting the target would break the reconciliation join.
+  const redirected: WikiPage = { ...UNITBOX, title: 'Crusader tank', requestedTitle: 'Crusader Tank' };
+  assert.equal(parsePage(redirected).unit?.wikiPage, 'Crusader_Tank');
+});
+
+test('isDisambiguation spots stub pages by template and by category', () => {
+  const byTemplate: WikiPage = {
+    pageid: 21, title: 'Ranger', categories: [],
+    wikitext: '{{Disambig}}\n\n* [[Ranger (Generals)]]',
+  };
+  const byCategory: WikiPage = {
+    pageid: 22, title: 'Overlord', categories: ['Disambiguation pages'], wikitext: '',
+  };
+  assert.equal(isDisambiguation(byTemplate), true);
+  assert.equal(isDisambiguation(byCategory), true);
+  assert.equal(isDisambiguation(UNITBOX), false);
+});
+
+test('disambiguationLinks resolves {{PAGENAME}} and skips namespaced links', () => {
+  const stub: WikiPage = {
+    pageid: 23, title: 'Ranger', categories: [],
+    wikitext: `{{Disambig}}
+'''{{PAGENAME}}''' can refer to:
+* [[{{PAGENAME}} (Red Alert)]] - an Allied vehicle.
+* [[{{PAGENAME}} (Generals)]] - the USA's basic infantry.
+[[Category:Disambiguation pages]]`,
+  };
+  const links = disambiguationLinks(stub);
+  assert.deepEqual(links, ['Ranger (Red Alert)', 'Ranger (Generals)']);
+  assert.ok(!links.some((l) => l.startsWith('Category:')), 'category link leaked in');
 });

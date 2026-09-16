@@ -162,9 +162,14 @@ export function loadDataset(): Dataset {
   const wiki = latestWikiCache();
   const status = lastIngestStatus();
 
-  const f = overlay(factions, wiki?.factions, ['threat', 'vulnerability', 'opening', 'signatureTactics', 'id', 'side'], ADMIT.faction);
-  const u = overlay(units, wiki?.units, ['answers', 'roles', 'factions', 'id', 'tier'], ADMIT.unit);
-  const m = overlay(maps, wiki?.maps, ['chokepoints', 'supplyDensity', 'openness', 'id'], ADMIT.map);
+  // `name` is protected alongside the judgement fields. The wiki's title casing
+  // differs from ours ("Sentry drone" vs "Sentry Drone"), and the curated name
+  // is the vocabulary the authored build orders, matchup notes and counter
+  // guidance all speak — letting a crawl rewrite it silently desynchronises the
+  // advice from the units it names.
+  const f = overlay(factions, wiki?.factions, ['threat', 'vulnerability', 'opening', 'signatureTactics', 'id', 'side', 'name'], ADMIT.faction);
+  const u = overlay(units, wiki?.units, ['answers', 'roles', 'factions', 'id', 'tier', 'name'], ADMIT.unit);
+  const m = overlay(maps, wiki?.maps, ['chokepoints', 'supplyDensity', 'openness', 'id', 'name'], ADMIT.map);
 
   const dataset: Dataset = {
     factions: f.records,

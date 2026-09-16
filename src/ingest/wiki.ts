@@ -20,6 +20,21 @@ export interface WikiPage {
   title: string;
   wikitext: string;
   categories: string[];
+  /**
+   * Lead image URL, when the wiki has one registered for the page.
+   *
+   * Contributed as a fact like cost or prose: the page shows it, the engine
+   * never reasons about it.
+   */
+  image?: string;
+  /**
+   * The title we asked for, when it differs from the title we got.
+   *
+   * MediaWiki silently follows normalisation and redirects, so asking for
+   * "Crusader_Tank" returns a page titled "Crusader tank". The curated dataset
+   * joins on the title it recorded, so that original has to survive the trip.
+   */
+  requestedTitle?: string;
 }
 
 export const DEFAULT_ENDPOINT = 'https://cnc.fandom.com/api.php';
@@ -149,38 +164,85 @@ export class WikiClient {
     return res.query?.search ?? [];
   }
 
-  /** Page wikitext and categories, up to 50 titles per call (the API limit). */
+  /**
+   * Page wikitext, categories and lead image, up to 50 titles per call.
+   *
+   * `redirects=1` is what makes the curated dataset's page titles usable: many
+   * of them ("Crusader_Tank", "Scorpion tank") are redirects to the real
+   * article. The API reports every normalisation and redirect it followed, and
+   * we thread the originally requested title back onto the page so the caller
+   * can still join it against the record that asked for it.
+   */
   async fetchPages(titles: string[]): Promise<WikiPage[]> {
+    // Keyed by page id, because several requested titles can land on one page:
+    // "Kassad" from a category crawl and "Prince Kassad" from the curated seed
+    // are the same article. Whichever copy carries a requestedTitle is the one
+    // worth keeping — it is the only one that can join to a curated record.
+    const byId = new Map<number, WikiPage>();
     const out: WikiPage[] = [];
     for (let i = 0; i < titles.length; i += 50) {
       const batch = titles.slice(i, i + 50);
       const res = await this.query<{
         query?: {
+          normalized?: Array<{ from: string; to: string }>;
+          redirects?: Array<{ from: string; to: string }>;
           pages: Array<{
             pageid: number;
             title: string;
             missing?: boolean;
             revisions?: Array<{ slots: { main: { content: string } } }>;
             categories?: Array<{ title: string }>;
+            original?: { source: string };
+            thumbnail?: { source: string };
           }>;
         };
       }>({
         action: 'query',
         titles: batch.join('|'),
-        prop: 'revisions|categories',
+        prop: 'revisions|categories|pageimages',
         rvprop: 'content',
         rvslots: 'main',
         cllimit: '500',
+        piprop: 'original|thumbnail',
+        pithumbsize: '800',
+        redirects: '1',
       });
+
+      // Walk requested -> normalised -> redirected so a final title can name
+      // the title we actually asked for. Both hops are optional and either can
+      // chain, so resolve iteratively rather than assuming one step.
+      const hop = new Map<string, string>();
+      for (const n of res.query?.normalized ?? []) hop.set(n.to, n.from);
+      for (const r of res.query?.redirects ?? []) hop.set(r.to, r.from);
+      const origin = (title: string): string => {
+        let cur = title;
+        for (let step = 0; step < 8; step++) {
+          const prev = hop.get(cur);
+          if (prev === undefined || prev === cur) break;
+          cur = prev;
+        }
+        return cur;
+      };
 
       for (const p of res.query?.pages ?? []) {
         if (p.missing) continue;
-        out.push({
+        const requested = origin(p.title);
+        const image = p.original?.source ?? p.thumbnail?.source;
+        const page: WikiPage = {
           pageid: p.pageid,
           title: p.title,
           wikitext: p.revisions?.[0]?.slots.main.content ?? '',
           categories: (p.categories ?? []).map((c) => c.title.replace(/^Category:/, '')),
-        });
+          ...(image ? { image } : {}),
+          ...(requested !== p.title ? { requestedTitle: requested } : {}),
+        };
+        const seen = byId.get(p.pageid);
+        if (!seen) {
+          byId.set(p.pageid, page);
+          out.push(page);
+        } else if (!seen.requestedTitle && page.requestedTitle) {
+          seen.requestedTitle = page.requestedTitle;
+        }
       }
     }
     return out;

@@ -13,7 +13,7 @@ enemy and picks the one with the best answers.
 
 ```bash
 npm install
-npm test            # 38 tests
+npm test            # 52 tests
 npm run plan        # interactive
 ```
 
@@ -96,12 +96,25 @@ writes them to `data/wiki-cache/`. The dataset loader overlays that cache on top
 the curated records automatically — no rebuild step, no code change.
 
 ```bash
-npm run ingest                                       # crawl the default categories
-npm run ingest -- --discover "Zero Hour"             # list real category names first
-npm run ingest -- --category "Zero Hour units"       # then crawl the ones you want
-npm run ingest -- --endpoint https://mirror/api.php  # any MediaWiki install
-npm run ingest -- --dry-run                          # parse without writing
+npm run ingest                                            # crawl the default categories
+npm run ingest -- --discover "Zero Hour"                  # list real category names first
+npm run ingest -- --category "Zero Hour GLA arsenal"      # then crawl the ones you want
+npm run ingest -- --endpoint https://mirror/api.php       # any MediaWiki install
+npm run ingest -- --dry-run                               # parse without writing
 ```
+
+The crawl seeds itself from the pages the curated dataset already names, then adds
+whatever the categories and searches turn up. Three things about this wiki are worth
+knowing, because each one silently produced an empty crawl before it was handled:
+
+- **Category names are not the game's names.** Zero Hour arsenals are filed by
+  nationality (`Zero Hour American arsenal`), and the original game is `Generals 1`,
+  not `Generals`. `--discover` lists what actually exists.
+- **It is not `{{Infobox}}`.** Unit pages open with `{{UnitBox}}`, behind a couple
+  of navigation templates. That is where costs live.
+- **Plain titles are disambiguation stubs.** `Ranger` lists the Red Alert vehicle
+  and the Generals infantryman without being either; the crawler follows the stub
+  to the article for this game.
 
 The overlay is deliberately one-directional. The wiki contributes **facts** — costs,
 descriptions, page links, and entities that were never curated. It never overwrites
@@ -122,22 +135,31 @@ the planner works offline and out of the box.
   published sources while building this.
 - **Unit costs are approximate.** They are directionally right and good enough for
   the cost-efficiency ranking, but they are not authoritative. Running the ingest
-  reconciles them against the wiki's own numbers.
+  reconciles them against the wiki's own numbers and corrects 25 of them.
+- **Unit and commander art comes from the wiki**, not from this repository: the
+  crawl records each page's lead image and the page links to it. 54 of 61 units and
+  all 12 commanders resolve to one.
 - **The map list is partial.** Sixteen maps are included; the ratings on them
   (chokepoints, supply, openness) are authored for planning purposes, since the wiki
   does not publish those as data. Ingest adds maps it finds.
+- **Maps have no wiki art, and the page does not pretend otherwise.** cnc.fandom.com
+  has no per-map article — every map title redirects to one shared list page — and
+  holds exactly three map previews in total. Rather than show a photo for one map and
+  nothing for the other fifteen, the terminal draws each map its own generated
+  tactical diagram from the authored ratings.
 
-`data/wiki-cache/` is empty in this repository: the network this was built on blocks
-`cnc.fandom.com` at the egress proxy, so the crawl could not be run here. The
-connector is written and tested against sample wiki markup. Three ways to fill it:
+`data/wiki-cache/` is gitignored, so a fresh clone starts on the curated dataset
+alone. Fill it either way:
 
-1. **Deploy to Vercel** — the build runs the crawl on Vercel's unrestricted
-   network, and the reconciliation report lands in the build log.
-2. **Run it locally** — `npm run ingest`, then commit `data/wiki-cache/*.json`.
-3. **Allowlist the host** — add `cnc.fandom.com` to the sandbox's egress policy.
+1. **Deploy to Vercel** — `npm run vercel-build` runs the crawl before baking the
+   page, and the reconciliation report lands in the build log.
+2. **Run it locally** — `npm run ingest`.
 
 After a crawl, `npm run ingest` prints a reconciliation report: how many curated
-units matched a wiki page, and every cost the wiki disagrees with.
+units matched a wiki page, how many carry art, and every cost the wiki disagrees
+with. A current crawl reconciles **54 of 61 units** and applies **25 cost
+corrections**, which is the concrete reason the curated costs above are described
+as approximate.
 
 Every record carries a `source` field of `curated`, `wiki` or `merged`, and both the
 CLI and the web page print the provenance line so you always know which you are
@@ -155,7 +177,7 @@ src/ingest/         MediaWiki client, wikitext parser, crawl runner
 src/cli/            terminal interface and renderer
 web/                page template and the bundler that inlines engine + data
 public/             the baked single-file site (Vercel's static root)
-test/               38 tests
+test/               52 tests
 ```
 
 ## Development
