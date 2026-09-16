@@ -13,35 +13,44 @@
   :root {
     color-scheme: dark;
 
-    --ground:     #080B08;
-    --ground-2:   #0E120D;
-    --panel:      #151B14;
-    --panel-2:    #1D251B;
-    --panel-hi:   #27311F;
+    /*
+      Zero Hour's shell, not Generals'. The first game's console is desert
+      amber; Zero Hour's is the blue steel HUD, so the accent is cyan and the
+      panels are navy rather than olive.
+    */
+    --ground:     #040910;
+    --ground-2:   #08111D;
+    --panel:      #0E1B2B;
+    --panel-2:    #15273C;
+    --panel-hi:   #1E3550;
 
-    --ink:        #E8EFE1;
-    --ink-soft:   #A3B29A;
-    --ink-faint:  #77876F;
+    --ink:        #E2EDF8;
+    --ink-soft:   #9AB2CA;
+    --ink-faint:  #6C86A2;
 
-    --line:       #2E3A29;
-    --line-hot:   #46552F;
+    --line:       #22405E;
+    --line-hot:   #356B96;
 
-    --amber:      #F5B145;
-    --amber-dim:  #B98330;
-    --amber-glow: rgba(245, 177, 69, 0.16);
+    --hud:      #4FC8F0;
+    --hud-dim:  #2A7E9E;
+    --hud-glow: rgba(79, 200, 240, 0.18);
 
-    /* Army colours, taken from the game's own faction palette. */
-    --usa:        #5FAEF2;
+    /*
+      Army colours from the game's own faction palette. USA sits deliberately
+      deeper and more violet than the cyan HUD accent, so a selected USA card
+      never reads as a highlighted panel.
+    */
+    --usa:        #6E93F0;
     --china:      #F2584A;
     --gla:        #B9CE55;
 
     --crit:       #F26A54;
-    --warn:       #F5B145;
-    --ok:         #7FD183;
+    --warn:       #F0B44F;
+    --ok:         #5FD0A8;
 
     --display: "Chakra Petch", "Barlow Condensed", "Arial Narrow", sans-serif;
     --body: "Barlow", ui-sans-serif, system-ui, sans-serif;
-    --hud: "Share Tech Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --hud-font: "Share Tech Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
     --chamfer: 10px;
   }
@@ -50,8 +59,8 @@
 
   body {
     background:
-      radial-gradient(120% 70% at 50% 0%, #141C12 0%, var(--ground) 62%),
-      repeating-linear-gradient(0deg, rgba(120,150,110,0.030) 0 1px, transparent 1px 3px),
+      radial-gradient(120% 70% at 50% 0%, #0B1B2E 0%, var(--ground) 62%),
+      repeating-linear-gradient(0deg, rgba(110,170,220,0.035) 0 1px, transparent 1px 3px),
       var(--ground);
     background-attachment: fixed;
     color: var(--ink);
@@ -91,7 +100,7 @@
     position: absolute;
     left: 0; bottom: -1px;
     width: clamp(90px, 22%, 240px); height: 3px;
-    background: var(--amber);
+    background: var(--hud);
   }
   .wordmark {
     font-family: var(--display);
@@ -104,18 +113,18 @@
     color: var(--ink);
     text-shadow: 0 0 28px rgba(245, 177, 69, 0.18);
   }
-  .wordmark span { color: var(--amber); }
+  .wordmark span { color: var(--hud); }
   .masthead .sub {
     margin: 0.45rem 0 0;
     color: var(--ink-soft);
-    font-family: var(--hud);
+    font-family: var(--hud-font);
     font-size: 0.82rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
   }
   .readiness { display: flex; flex-wrap: wrap; gap: 0.4rem; }
   .readout {
-    font-family: var(--hud);
+    font-family: var(--hud-font);
     font-size: 0.76rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -125,7 +134,7 @@
     padding: 0.32rem 0.6rem;
     white-space: nowrap;
   }
-  .readout b { color: var(--amber); font-weight: 400; }
+  .readout b { color: var(--hud); font-weight: 400; }
 
   /* ------------------------------------------------------------ layout --- */
   .board {
@@ -155,11 +164,11 @@
     min-width: 0;
   }
   .console > legend {
-    font-family: var(--hud);
+    font-family: var(--hud-font);
     font-size: 0.78rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--amber);
+    color: var(--hud);
     padding: 0;
     margin: 0 0 0.6rem;
   }
@@ -186,9 +195,9 @@
   .side-tab[aria-selected="true"] {
     color: var(--ink);
     background: var(--panel-hi);
-    border-bottom-color: var(--tab, var(--amber));
+    border-bottom-color: var(--tab, var(--hud));
   }
-  .side-tab:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+  .side-tab:focus-visible { outline: 2px solid var(--hud); outline-offset: 1px; }
 
   /* ---- army cards, now with the commander's face on them ---------------- */
   .armies { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; }
@@ -228,7 +237,7 @@
     background:
       linear-gradient(90deg, color-mix(in srgb, var(--mark) 18%, transparent), transparent 60%),
       var(--panel-hi);
-    border-color: var(--mark, var(--amber));
+    border-color: var(--mark, var(--hud));
     color: var(--ink);
     box-shadow: inset 0 0 22px -8px var(--mark);
   }
@@ -238,9 +247,9 @@
     right: -1px; top: -1px;
     border-width: 0 13px 13px 0;
     border-style: solid;
-    border-color: transparent var(--mark, var(--amber)) transparent transparent;
+    border-color: transparent var(--mark, var(--hud)) transparent transparent;
   }
-  .army:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+  .army:focus-visible { outline: 2px solid var(--hud); outline-offset: 1px; }
 
   /* Commander portrait. Falls back to the faction mark when the crawl has no
      art for this army, so the grid never shows a broken frame. */
@@ -283,8 +292,8 @@
     line-height: 1.15;
     color: inherit;
   }
-  .army[aria-pressed="true"] .army-name { color: var(--mark, var(--amber)); }
-  .army-who { font-family: var(--hud); font-size: 0.72rem; letter-spacing: 0.02em; color: var(--ink-faint); }
+  .army[aria-pressed="true"] .army-name { color: var(--mark, var(--hud)); }
+  .army-who { font-family: var(--hud-font); font-size: 0.72rem; letter-spacing: 0.02em; color: var(--ink-faint); }
 
   /* rank / difficulty */
   .ranks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px; }
@@ -312,11 +321,11 @@
   }
   .rank[aria-pressed="true"] {
     background: var(--panel-hi); color: var(--ink);
-    border-color: var(--tone, var(--amber));
+    border-color: var(--tone, var(--hud));
     box-shadow: inset 0 0 18px -8px var(--tone);
   }
-  .rank[aria-pressed="true"] .stars { color: var(--tone, var(--amber)); }
-  .rank:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+  .rank[aria-pressed="true"] .stars { color: var(--tone, var(--hud)); }
+  .rank:focus-visible { outline: 2px solid var(--hud); outline-offset: 1px; }
 
   select, .command-btn {
     width: 100%;
@@ -335,17 +344,17 @@
     font-size: 0.92rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--amber);
+    color: var(--hud);
     cursor: pointer;
   }
-  .command-btn:hover { box-shadow: inset 0 0 22px -8px var(--amber); }
-  select:focus-visible, .command-btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+  .command-btn:hover { box-shadow: inset 0 0 22px -8px var(--hud); }
+  select:focus-visible, .command-btn:focus-visible { outline: 2px solid var(--hud); outline-offset: 1px; }
 
   /* The theatre picker gets its own preview diagram underneath. */
   .theatre-preview { margin-top: 0.6rem; }
   .theatre-preview svg { width: 100%; height: auto; display: block; border: 1px solid var(--line); background: var(--ground-2); }
   .theatre-caption {
-    font-family: var(--hud); font-size: 0.68rem; letter-spacing: 0.08em;
+    font-family: var(--hud-font); font-size: 0.68rem; letter-spacing: 0.08em;
     text-transform: uppercase; color: var(--ink-faint); margin-top: 0.3rem;
   }
 
@@ -363,17 +372,17 @@
   .dossier::before {
     content: "";
     position: absolute; inset: 0 0 auto 0; height: 2px;
-    background: linear-gradient(90deg, var(--amber), transparent 70%);
+    background: linear-gradient(90deg, var(--hud), transparent 70%);
   }
   .eva {
-    font-family: var(--hud);
+    font-family: var(--hud-font);
     font-size: 0.78rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--amber-dim);
+    color: var(--hud-dim);
     margin-bottom: 0.7rem;
   }
-  .eva b { color: var(--amber); font-weight: 400; }
+  .eva b { color: var(--hud); font-weight: 400; }
 
   /* ---- the VS plate: two commanders facing each other ------------------- */
   .combatants { display: grid; gap: 0.7rem; align-items: stretch; }
@@ -432,9 +441,9 @@
     overflow-wrap: anywhere;
     color: var(--mark);
   }
-  .combatant .cmdr { font-family: var(--hud); font-size: 0.78rem; color: var(--ink-soft); letter-spacing: 0.04em; }
+  .combatant .cmdr { font-family: var(--hud-font); font-size: 0.78rem; color: var(--ink-soft); letter-spacing: 0.04em; }
   .combatant .role {
-    font-family: var(--hud); font-size: 0.66rem; letter-spacing: 0.18em;
+    font-family: var(--hud-font); font-size: 0.66rem; letter-spacing: 0.18em;
     text-transform: uppercase; color: var(--ink-faint);
   }
   .clash {
@@ -442,10 +451,10 @@
     font-weight: 700;
     font-size: 1.15rem;
     letter-spacing: 0.18em;
-    color: var(--amber);
+    color: var(--hud);
     text-align: center;
     padding: 0.2rem 0.5rem;
-    text-shadow: 0 0 18px var(--amber-glow);
+    text-shadow: 0 0 18px var(--hud-glow);
   }
 
   .assessment {
@@ -453,14 +462,14 @@
     font-size: 1.12rem;
     line-height: 1.5;
     color: var(--ink);
-    border-left: 3px solid var(--amber);
+    border-left: 3px solid var(--hud);
     padding-left: 0.85rem;
     text-wrap: pretty;
   }
 
   .conditions { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.95rem; }
   .cond {
-    font-family: var(--hud);
+    font-family: var(--hud-font);
     font-size: 0.74rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -473,6 +482,46 @@
   .cond.is-medium { border-color: var(--warn); color: var(--warn); }
   .cond.is-hard,
   .cond.is-brutal { border-color: var(--crit); color: var(--crit); }
+
+  /* ---- approach: the plan's chosen line, and the roads not taken -------- */
+  .approach {
+    margin-top: 1rem;
+    border: 1px solid var(--line-hot);
+    border-left: 3px solid var(--hud);
+    background: linear-gradient(90deg, rgba(79,200,240,0.09), transparent 70%);
+    padding: 0.75rem 0.9rem 0.85rem;
+  }
+  .approach-tag {
+    font-family: var(--hud-font);
+    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--hud-dim);
+  }
+  .approach-name {
+    font-family: var(--display);
+    font-weight: 700; font-size: 1.28rem; letter-spacing: 0.05em;
+    text-transform: uppercase; color: var(--hud); line-height: 1.15;
+    margin: 0.15rem 0 0.3rem;
+  }
+  .approach-premise { font-size: 1.04rem; color: var(--ink); margin: 0; text-wrap: pretty; }
+  .approach-risk {
+    font-size: 0.95rem; color: var(--ink-soft); margin: 0.55rem 0 0;
+    padding-left: 0.75rem; border-left: 2px solid var(--crit);
+  }
+  .approach-risk b { color: var(--crit); font-weight: 600; }
+
+  .alts { margin-top: 0.8rem; border-top: 1px solid var(--line); padding-top: 0.6rem; }
+  .alts-title {
+    font-family: var(--hud-font);
+    font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink-faint); margin-bottom: 0.4rem;
+  }
+  .alt { display: grid; gap: 0.1rem; padding: 0.3rem 0; }
+  .alt + .alt { border-top: 1px dashed var(--line); }
+  .alt-name {
+    font-family: var(--display); font-weight: 600; font-size: 0.95rem;
+    letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-soft);
+  }
+  .alt-premise { font-size: 0.92rem; color: var(--ink-faint); }
 
   /* panels */
   section.panel {
@@ -487,7 +536,7 @@
     font-size: 1.08rem;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--amber);
+    color: var(--hud);
     margin: 0 0 0.85rem;
     display: flex;
     align-items: center;
@@ -497,12 +546,12 @@
   .panel > h2::before {
     content: "";
     width: 8px; height: 8px;
-    background: var(--amber);
+    background: var(--hud);
     transform: rotate(45deg);
     flex: none;
   }
   .panel > h2 .count {
-    font-family: var(--hud);
+    font-family: var(--hud-font);
     font-size: 0.72rem;
     letter-spacing: 0.1em;
     color: var(--ink-faint);
@@ -529,7 +578,7 @@
   .segs.warn i.on { background: var(--warn); border-color: var(--warn); box-shadow: 0 0 10px -3px var(--warn); }
   .segs.crit i.on { background: var(--crit); border-color: var(--crit); box-shadow: 0 0 10px -3px var(--crit); }
   .meter-val {
-    font-family: var(--hud); font-size: 0.82rem; color: var(--ink-soft);
+    font-family: var(--hud-font); font-size: 0.82rem; color: var(--ink-soft);
     text-align: right; font-variant-numeric: tabular-nums;
     justify-self: end;
   }
@@ -550,9 +599,9 @@
   }
   ol.queue li::before {
     content: counter(q, decimal-leading-zero);
-    font-family: var(--hud);
+    font-family: var(--hud-font);
     font-size: 0.84rem;
-    color: var(--amber-dim);
+    color: var(--hud-dim);
     background: var(--ground-2);
     border: 1px solid var(--line);
     text-align: center;
@@ -587,7 +636,7 @@
     color: var(--ink);
   }
   .counter-head .pres {
-    margin-left: auto; font-family: var(--hud); font-size: 0.76rem;
+    margin-left: auto; font-family: var(--hud-font); font-size: 0.76rem;
     color: var(--ink-soft); font-variant-numeric: tabular-nums;
   }
 
@@ -636,9 +685,9 @@
     font-family: var(--display); font-weight: 600; font-size: 1rem;
     letter-spacing: 0.04em; color: var(--ink);
   }
-  .unit-cost { font-family: var(--hud); font-size: 0.82rem; color: var(--amber); font-variant-numeric: tabular-nums; }
+  .unit-cost { font-family: var(--hud-font); font-size: 0.82rem; color: var(--hud); font-variant-numeric: tabular-nums; }
   .unit-tier {
-    font-family: var(--hud); font-size: 0.66rem; letter-spacing: 0.08em;
+    font-family: var(--hud-font); font-size: 0.66rem; letter-spacing: 0.08em;
     color: var(--ink-faint); border: 1px solid var(--line); padding: 0 0.3rem;
   }
   .unit-why { font-size: 0.95rem; color: var(--ink-soft); line-height: 1.42; }
@@ -646,17 +695,17 @@
     font-size: 0.95rem; color: var(--ink-soft);
     border-top: 1px solid var(--line); padding-top: 0.55rem;
   }
-  .counter-doctrine::before { content: "▸ "; color: var(--amber); }
+  .counter-doctrine::before { content: "▸ "; color: var(--hud); }
 
   /* timeline */
   .phases { display: grid; gap: 0.7rem; align-items: start; grid-template-columns: repeat(auto-fit, minmax(min(245px, 100%), 1fr)); }
-  .phase { background: var(--panel-2); border: 1px solid var(--line); border-left: 3px solid var(--amber); padding: 0.65rem 0.75rem; min-width: 0; }
+  .phase { background: var(--panel-2); border: 1px solid var(--line); border-left: 3px solid var(--hud); padding: 0.65rem 0.75rem; min-width: 0; }
   .phase h3 {
     font-family: var(--display); font-weight: 600; font-size: 1rem;
     letter-spacing: 0.1em; text-transform: uppercase; margin: 0; color: var(--ink);
   }
   .phase .window {
-    font-family: var(--hud); font-size: 0.76rem; color: var(--amber-dim);
+    font-family: var(--hud-font); font-size: 0.76rem; color: var(--hud-dim);
     display: block; margin-bottom: 0.45rem; letter-spacing: 0.06em;
   }
   .phase ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.4rem; }
@@ -670,9 +719,9 @@
     display: grid; grid-template-columns: 1.3rem minmax(0, 1fr); gap: 0.5rem;
     font-size: 0.98rem; color: var(--ink-soft);
   }
-  ul.advice li::before { content: "▸"; color: var(--amber); font-size: 0.8rem; line-height: 1.8; }
+  ul.advice li::before { content: "▸"; color: var(--hud); font-size: 0.8rem; line-height: 1.8; }
   ul.advice.is-danger li::before { content: "✕"; color: var(--crit); font-size: 0.82rem; }
-  ul.advice.is-intel li::before { content: "!"; color: var(--warn); font-family: var(--hud); line-height: 1.7; }
+  ul.advice.is-intel li::before { content: "!"; color: var(--warn); font-family: var(--hud-font); line-height: 1.7; }
 
   /* ---- lineup ranking, with a face per contender ------------------------ */
   .roster { display: grid; gap: 3px; margin-top: 0.7rem; }
@@ -684,8 +733,8 @@
     padding: 0.2rem 0.25rem;
     border: 1px solid transparent;
   }
-  .roster-row.is-pick { border-color: color-mix(in srgb, var(--amber) 45%, var(--line)); background: rgba(245,177,69,0.06); }
-  .roster-score { font-family: var(--hud); font-size: 0.84rem; color: var(--ink-soft); text-align: right; font-variant-numeric: tabular-nums; }
+  .roster-row.is-pick { border-color: color-mix(in srgb, var(--hud) 45%, var(--line)); background: rgba(245,177,69,0.06); }
+  .roster-score { font-family: var(--hud-font); font-size: 0.84rem; color: var(--ink-soft); text-align: right; font-variant-numeric: tabular-nums; }
   .roster-face {
     width: 34px; height: 34px; border: 1px solid var(--line);
     background: var(--ground-2); overflow: hidden; display: grid; place-items: center;
@@ -696,8 +745,8 @@
   .roster-bar > i { display: block; height: 100%; background: var(--line-hot); }
   .roster-name { color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .roster-row.is-pick .roster-name { color: var(--ink); font-weight: 600; }
-  .roster-row.is-pick .roster-score { color: var(--amber); }
-  .roster-row.is-pick .roster-bar > i { background: var(--amber); box-shadow: 0 0 12px -3px var(--amber); }
+  .roster-row.is-pick .roster-score { color: var(--hud); }
+  .roster-row.is-pick .roster-bar > i { background: var(--hud); box-shadow: 0 0 12px -3px var(--hud); }
 
   .rationale { font-size: 0.98rem; color: var(--ink-soft); margin: 0 0 0.4rem; }
 
@@ -707,7 +756,7 @@
   .terrain-art { border: 1px solid var(--line-hot); background: var(--ground-2); }
   .terrain-art svg { width: 100%; height: auto; display: block; }
   .terrain-legend {
-    font-family: var(--hud); font-size: 0.7rem; letter-spacing: 0.08em;
+    font-family: var(--hud-font); font-size: 0.7rem; letter-spacing: 0.08em;
     text-transform: uppercase; color: var(--ink-faint);
     padding: 0.35rem 0.5rem; border-top: 1px solid var(--line);
     display: flex; flex-wrap: wrap; gap: 0.15rem 0.8rem;
@@ -719,7 +768,7 @@
     margin-top: 1.8rem;
     padding-top: 0.85rem;
     border-top: 1px solid var(--line);
-    font-family: var(--hud);
+    font-family: var(--hud-font);
     font-size: 0.72rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -727,7 +776,7 @@
     display: grid;
     gap: 0.3rem;
   }
-  .colophon a { color: var(--amber-dim); }
+  .colophon a { color: var(--hud-dim); }
 
   @media (max-width: 460px) {
     .armies { grid-template-columns: minmax(0, 1fr); }
@@ -782,7 +831,7 @@
         <div class="theatre-preview" id="theatre-preview"></div>
       </fieldset>
 
-      <button type="button" class="command-btn" id="reroll">Randomize deployment</button>
+      <button type="button" class="command-btn" id="reroll">Reroll the approach</button>
     </form>
 
     <main class="briefing" id="briefing"></main>
@@ -849,7 +898,7 @@ const mark = (side, size) => {
   const holder = el('span');
   holder.innerHTML = MARKS[side] ?? MARKS.usa;   // static strings defined above
   const svg = holder.firstChild;
-  svg.style.color = SIDE_COLOR[side] ?? 'var(--amber)';   // currentColor source
+  svg.style.color = SIDE_COLOR[side] ?? 'var(--hud)';   // currentColor source
   if (size) { svg.setAttribute('width', size); svg.setAttribute('height', size); }
   return svg;
 };
@@ -913,13 +962,18 @@ function seedOf(text) {
   return h >>> 0;
 }
 
+/*
+ * Terrain still reads as terrain — desert warm, jungle green, snow pale — but
+ * every tone is pulled toward the console's blue so the diagram sits inside the
+ * HUD rather than looking like a photograph dropped into it.
+ */
 const TERRAIN_INK = {
-  desert:    { base: '#3E3524', ridge: '#5A4A2C' },
-  snow:      { base: '#333B42', ridge: '#4B565E' },
-  urban:     { base: '#2F3335', ridge: '#454B4E' },
-  temperate: { base: '#28331F', ridge: '#3C4B2E' },
-  jungle:    { base: '#1F2E1B', ridge: '#314727' },
-  mixed:     { base: '#2C3327', ridge: '#424C3A' },
+  desert:    { base: '#3A3328', ridge: '#544733' },
+  snow:      { base: '#2C3A47', ridge: '#425667' },
+  urban:     { base: '#282F38', ridge: '#3C4653' },
+  temperate: { base: '#22321F', ridge: '#35492F' },
+  jungle:    { base: '#1B2C1E', ridge: '#2A4230' },
+  mixed:     { base: '#26302F', ridge: '#384744' },
 };
 
 const svgEl = (name, attrs) => {
@@ -961,10 +1015,10 @@ function mapDiagram(map) {
 
   // Tactical grid.
   for (let x = 30; x < W; x += 30) {
-    svg.append(svgEl('line', { x1: x, y1: 0, x2: x, y2: H, stroke: '#7E8F76', 'stroke-width': 0.4, opacity: 0.16 }));
+    svg.append(svgEl('line', { x1: x, y1: 0, x2: x, y2: H, stroke: '#6F93B4', 'stroke-width': 0.4, opacity: 0.16 }));
   }
   for (let y = 30; y < H; y += 30) {
-    svg.append(svgEl('line', { x1: 0, y1: y, x2: W, y2: y, stroke: '#7E8F76', 'stroke-width': 0.4, opacity: 0.16 }));
+    svg.append(svgEl('line', { x1: 0, y1: y, x2: W, y2: y, stroke: '#6F93B4', 'stroke-width': 0.4, opacity: 0.16 }));
   }
 
   // Chokepoints: opposing wedges pinching a lane. One pair per rating point.
@@ -974,11 +1028,11 @@ function mapDiagram(map) {
     const gap = 16 + rand() * 10;
     svg.append(svgEl('path', {
       d: `M${x - 26} ${y - 46} L${x + 26} ${y - 46} L${x} ${y - gap} Z`,
-      fill: ink.ridge, opacity: 0.85, stroke: '#8FA083', 'stroke-width': 0.6,
+      fill: ink.ridge, opacity: 0.85, stroke: '#89A9C4', 'stroke-width': 0.6,
     }));
     svg.append(svgEl('path', {
       d: `M${x - 26} ${y + 46} L${x + 26} ${y + 46} L${x} ${y + gap} Z`,
-      fill: ink.ridge, opacity: 0.85, stroke: '#8FA083', 'stroke-width': 0.6,
+      fill: ink.ridge, opacity: 0.85, stroke: '#89A9C4', 'stroke-width': 0.6,
     }));
   }
 
@@ -989,7 +1043,7 @@ function mapDiagram(map) {
     for (let c = 0; c < 3; c++) {
       svg.append(svgEl('rect', {
         x: cx + (c % 2) * 7 - 3, y: cy + Math.floor(c / 2) * 7 - 3,
-        width: 5.5, height: 5.5, fill: '#E3C558', opacity: 0.9,
+        width: 5.5, height: 5.5, fill: '#E8C766', opacity: 0.9,
       }));
     }
   }
@@ -999,11 +1053,11 @@ function mapDiagram(map) {
     const a = (i / map.players) * Math.PI * 2 - Math.PI / 2;
     const cx = W / 2 + Math.cos(a) * (W * 0.34);
     const cy = H / 2 + Math.sin(a) * (H * 0.33);
-    svg.append(svgEl('circle', { cx, cy, r: 9, fill: 'none', stroke: '#F5B145', 'stroke-width': 1.6, opacity: 0.95 }));
-    svg.append(svgEl('circle', { cx, cy, r: 3, fill: '#F5B145' }));
+    svg.append(svgEl('circle', { cx, cy, r: 9, fill: 'none', stroke: '#4FC8F0', 'stroke-width': 1.6, opacity: 0.95 }));
+    svg.append(svgEl('circle', { cx, cy, r: 3, fill: '#4FC8F0' }));
   }
 
-  svg.append(svgEl('rect', { x: 0.5, y: 0.5, width: W - 1, height: H - 1, fill: 'none', stroke: '#46552F', 'stroke-width': 1 }));
+  svg.append(svgEl('rect', { x: 0.5, y: 0.5, width: W - 1, height: H - 1, fill: 'none', stroke: '#356B96', 'stroke-width': 1 }));
   return svg;
 }
 
@@ -1047,7 +1101,7 @@ function armyCards(container, side, selected, onPick, anyLabel, anyHint) {
   if (side === null) {
     const btn = el('button', 'army is-any');
     btn.type = 'button';
-    btn.style.setProperty('--mark', 'var(--amber)');
+    btn.style.setProperty('--mark', 'var(--hud)');
     btn.setAttribute('aria-pressed', String(selected === null));
     const body = el('span', 'army-text');
     body.append(el('span', 'army-name', anyLabel));
@@ -1134,13 +1188,46 @@ function advice(items, variant) {
 
 function combatant(faction, role) {
   const box = el('div', 'combatant ' + role);
-  box.style.setProperty('--mark', SIDE_COLOR[faction.side] ?? 'var(--amber)');
+  box.style.setProperty('--mark', SIDE_COLOR[faction.side] ?? 'var(--hud)');
   box.append(frame('mugshot', faction.image, faction.side, faction.general ?? faction.name));
   const who = el('div', 'who');
   who.append(el('div', 'role', role === 'you' ? 'Your command' : 'Hostile force'));
   who.append(el('div', 'army-title', faction.name));
   who.append(el('div', 'cmdr', faction.general ?? 'Standard doctrine'));
   box.append(who);
+  return box;
+}
+
+/**
+ * The approach this plan commits to, what makes it fail, and the alternatives
+ * it passed over.
+ *
+ * The alternatives are the point. A matchup usually has several defensible
+ * answers, and showing only the chosen one made the planner read as though it
+ * were reporting the single correct play rather than making a call.
+ */
+function renderApproach(plan) {
+  const box = el('div', 'approach');
+  box.append(el('div', 'approach-tag', 'Approach'));
+  box.append(el('div', 'approach-name', plan.doctrine.name));
+  box.append(el('p', 'approach-premise', plan.doctrine.premise));
+
+  const risk = el('p', 'approach-risk');
+  risk.append(el('b', null, 'Fails if: '));
+  risk.append(document.createTextNode(plan.doctrine.risk));
+  box.append(risk);
+
+  if (plan.alternatives && plan.alternatives.length) {
+    const alts = el('div', 'alts');
+    alts.append(el('div', 'alts-title', `Also defensible here — ${plan.alternatives.length} other approaches`));
+    for (const a of plan.alternatives) {
+      const row = el('div', 'alt');
+      row.append(el('div', 'alt-name', a.name));
+      row.append(el('div', 'alt-premise', a.premise));
+      alts.append(row);
+    }
+    box.append(alts);
+  }
   return box;
 }
 
@@ -1160,6 +1247,7 @@ function renderDossier(plan) {
   box.append(row);
 
   box.append(el('p', 'assessment', plan.headline));
+  box.append(renderApproach(plan));
 
   const conds = el('div', 'conditions');
   conds.append(el('span', `cond is-${plan.difficulty}`, `Rank: ${plan.difficulty}`));
@@ -1422,10 +1510,41 @@ dataChip.append(chipVal);
 dataChip.title = src.line;
 readiness.append(dataChip);
 
-$('reroll').addEventListener('click', () => {
-  state.seed = Math.floor(Math.random() * 1e9);
+/**
+ * Reroll until the plan visibly differs from the one on screen.
+ *
+ * The approach is chosen by weighted draw, so consecutive random seeds can land
+ * on the same one — and a button that sometimes does nothing reads as broken
+ * rather than as chance. This keeps the engine's per-seed determinism intact
+ * (the same seed still gives the same plan) and only rejects seeds that would
+ * repeat the current approach, giving up after a bounded number of tries so a
+ * matchup with just one defensible approach still responds.
+ */
+function reroll() {
+  const before = currentDoctrineId();
+  for (let attempt = 0; attempt < 12; attempt++) {
+    state.seed = Math.floor(Math.random() * 1e9);
+    if (currentDoctrineId() !== before) break;
+  }
   render();
-});
+}
+
+/** The approach the current state would produce, without drawing anything. */
+function currentDoctrineId() {
+  try {
+    return planFrom(DATA, {
+      you: state.you ?? undefined,
+      enemy: state.enemy ?? undefined,
+      difficulty: state.difficulty,
+      mapId: state.mapId ?? undefined,
+      seed: state.seed,
+    }).doctrine.id;
+  } catch {
+    return null;   // an unplannable selection is the render path's problem
+  }
+}
+
+$('reroll').addEventListener('click', reroll);
 
 $('colophon').replaceChildren(
   el('span', null, `Curated dossier ${DATA.provenance.curatedAt} · strategy engine runs in this page`),

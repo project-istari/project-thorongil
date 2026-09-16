@@ -13,35 +13,44 @@
   :root {
     color-scheme: dark;
 
-    --ground:     #080B08;
-    --ground-2:   #0E120D;
-    --panel:      #151B14;
-    --panel-2:    #1D251B;
-    --panel-hi:   #27311F;
+    /*
+      Zero Hour's shell, not Generals'. The first game's console is desert
+      amber; Zero Hour's is the blue steel HUD, so the accent is cyan and the
+      panels are navy rather than olive.
+    */
+    --ground:     #040910;
+    --ground-2:   #08111D;
+    --panel:      #0E1B2B;
+    --panel-2:    #15273C;
+    --panel-hi:   #1E3550;
 
-    --ink:        #E8EFE1;
-    --ink-soft:   #A3B29A;
-    --ink-faint:  #77876F;
+    --ink:        #E2EDF8;
+    --ink-soft:   #9AB2CA;
+    --ink-faint:  #6C86A2;
 
-    --line:       #2E3A29;
-    --line-hot:   #46552F;
+    --line:       #22405E;
+    --line-hot:   #356B96;
 
-    --amber:      #F5B145;
-    --amber-dim:  #B98330;
-    --amber-glow: rgba(245, 177, 69, 0.16);
+    --hud:      #4FC8F0;
+    --hud-dim:  #2A7E9E;
+    --hud-glow: rgba(79, 200, 240, 0.18);
 
-    /* Army colours, taken from the game's own faction palette. */
-    --usa:        #5FAEF2;
+    /*
+      Army colours from the game's own faction palette. USA sits deliberately
+      deeper and more violet than the cyan HUD accent, so a selected USA card
+      never reads as a highlighted panel.
+    */
+    --usa:        #6E93F0;
     --china:      #F2584A;
     --gla:        #B9CE55;
 
     --crit:       #F26A54;
-    --warn:       #F5B145;
-    --ok:         #7FD183;
+    --warn:       #F0B44F;
+    --ok:         #5FD0A8;
 
     --display: "Chakra Petch", "Barlow Condensed", "Arial Narrow", sans-serif;
     --body: "Barlow", ui-sans-serif, system-ui, sans-serif;
-    --hud: "Share Tech Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --hud-font: "Share Tech Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
     --chamfer: 10px;
   }
@@ -50,8 +59,8 @@
 
   body {
     background:
-      radial-gradient(120% 70% at 50% 0%, #141C12 0%, var(--ground) 62%),
-      repeating-linear-gradient(0deg, rgba(120,150,110,0.030) 0 1px, transparent 1px 3px),
+      radial-gradient(120% 70% at 50% 0%, #0B1B2E 0%, var(--ground) 62%),
+      repeating-linear-gradient(0deg, rgba(110,170,220,0.035) 0 1px, transparent 1px 3px),
       var(--ground);
     background-attachment: fixed;
     color: var(--ink);
@@ -91,7 +100,7 @@
     position: absolute;
     left: 0; bottom: -1px;
     width: clamp(90px, 22%, 240px); height: 3px;
-    background: var(--amber);
+    background: var(--hud);
   }
   .wordmark {
     font-family: var(--display);
@@ -104,18 +113,18 @@
     color: var(--ink);
     text-shadow: 0 0 28px rgba(245, 177, 69, 0.18);
   }
-  .wordmark span { color: var(--amber); }
+  .wordmark span { color: var(--hud); }
   .masthead .sub {
     margin: 0.45rem 0 0;
     color: var(--ink-soft);
-    font-family: var(--hud);
+    font-family: var(--hud-font);
     font-size: 0.82rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
   }
   .readiness { display: flex; flex-wrap: wrap; gap: 0.4rem; }
   .readout {
-    font-family: var(--hud);
+    font-family: var(--hud-font);
     font-size: 0.76rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -125,7 +134,7 @@
     padding: 0.32rem 0.6rem;
     white-space: nowrap;
   }
-  .readout b { color: var(--amber); font-weight: 400; }
+  .readout b { color: var(--hud); font-weight: 400; }
 
   /* ------------------------------------------------------------ layout --- */
   .board {
@@ -155,11 +164,11 @@
     min-width: 0;
   }
   .console > legend {
-    font-family: var(--hud);
+    font-family: var(--hud-font);
     font-size: 0.78rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--amber);
+    color: var(--hud);
     padding: 0;
     margin: 0 0 0.6rem;
   }
@@ -186,9 +195,9 @@
   .side-tab[aria-selected="true"] {
     color: var(--ink);
     background: var(--panel-hi);
-    border-bottom-color: var(--tab, var(--amber));
+    border-bottom-color: var(--tab, var(--hud));
   }
-  .side-tab:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+  .side-tab:focus-visible { outline: 2px solid var(--hud); outline-offset: 1px; }
 
   /* ---- army cards, now with the commander's face on them ---------------- */
   .armies { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; }
@@ -228,7 +237,7 @@
     background:
       linear-gradient(90deg, color-mix(in srgb, var(--mark) 18%, transparent), transparent 60%),
       var(--panel-hi);
-    border-color: var(--mark, var(--amber));
+    border-color: var(--mark, var(--hud));
     color: var(--ink);
     box-shadow: inset 0 0 22px -8px var(--mark);
   }
@@ -238,9 +247,9 @@
     right: -1px; top: -1px;
     border-width: 0 13px 13px 0;
     border-style: solid;
-    border-color: transparent var(--mark, var(--amber)) transparent transparent;
+    border-color: transparent var(--mark, var(--hud)) transparent transparent;
   }
-  .army:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+  .army:focus-visible { outline: 2px solid var(--hud); outline-offset: 1px; }
 
   /* Commander portrait. Falls back to the faction mark when the crawl has no
      art for this army, so the grid never shows a broken frame. */
@@ -283,8 +292,8 @@
     line-height: 1.15;
     color: inherit;
   }
-  .army[aria-pressed="true"] .army-name { color: var(--mark, var(--amber)); }
-  .army-who { font-family: var(--hud); font-size: 0.72rem; letter-spacing: 0.02em; color: var(--ink-faint); }
+  .army[aria-pressed="true"] .army-name { color: var(--mark, var(--hud)); }
+  .army-who { font-family: var(--hud-font); font-size: 0.72rem; letter-spacing: 0.02em; color: var(--ink-faint); }
 
   /* rank / difficulty */
   .ranks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px; }
@@ -312,11 +321,11 @@
   }
   .rank[aria-pressed="true"] {
     background: var(--panel-hi); color: var(--ink);
-    border-color: var(--tone, var(--amber));
+    border-color: var(--tone, var(--hud));
     box-shadow: inset 0 0 18px -8px var(--tone);
   }
-  .rank[aria-pressed="true"] .stars { color: var(--tone, var(--amber)); }
-  .rank:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+  .rank[aria-pressed="true"] .stars { color: var(--tone, var(--hud)); }
+  .rank:focus-visible { outline: 2px solid var(--hud); outline-offset: 1px; }
 
   select, .command-btn {
     width: 100%;
@@ -335,17 +344,17 @@
     font-size: 0.92rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--amber);
+    color: var(--hud);
     cursor: pointer;
   }
-  .command-btn:hover { box-shadow: inset 0 0 22px -8px var(--amber); }
-  select:focus-visible, .command-btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+  .command-btn:hover { box-shadow: inset 0 0 22px -8px var(--hud); }
+  select:focus-visible, .command-btn:focus-visible { outline: 2px solid var(--hud); outline-offset: 1px; }
 
   /* The theatre picker gets its own preview diagram underneath. */
   .theatre-preview { margin-top: 0.6rem; }
   .theatre-preview svg { width: 100%; height: auto; display: block; border: 1px solid var(--line); background: var(--ground-2); }
   .theatre-caption {
-    font-family: var(--hud); font-size: 0.68rem; letter-spacing: 0.08em;
+    font-family: var(--hud-font); font-size: 0.68rem; letter-spacing: 0.08em;
     text-transform: uppercase; color: var(--ink-faint); margin-top: 0.3rem;
   }
 
@@ -363,17 +372,17 @@
   .dossier::before {
     content: "";
     position: absolute; inset: 0 0 auto 0; height: 2px;
-    background: linear-gradient(90deg, var(--amber), transparent 70%);
+    background: linear-gradient(90deg, var(--hud), transparent 70%);
   }
   .eva {
-    font-family: var(--hud);
+    font-family: var(--hud-font);
     font-size: 0.78rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--amber-dim);
+    color: var(--hud-dim);
     margin-bottom: 0.7rem;
   }
-  .eva b { color: var(--amber); font-weight: 400; }
+  .eva b { color: var(--hud); font-weight: 400; }
 
   /* ---- the VS plate: two commanders facing each other ------------------- */
   .combatants { display: grid; gap: 0.7rem; align-items: stretch; }
@@ -432,9 +441,9 @@
     overflow-wrap: anywhere;
     color: var(--mark);
   }
-  .combatant .cmdr { font-family: var(--hud); font-size: 0.78rem; color: var(--ink-soft); letter-spacing: 0.04em; }
+  .combatant .cmdr { font-family: var(--hud-font); font-size: 0.78rem; color: var(--ink-soft); letter-spacing: 0.04em; }
   .combatant .role {
-    font-family: var(--hud); font-size: 0.66rem; letter-spacing: 0.18em;
+    font-family: var(--hud-font); font-size: 0.66rem; letter-spacing: 0.18em;
     text-transform: uppercase; color: var(--ink-faint);
   }
   .clash {
@@ -442,10 +451,10 @@
     font-weight: 700;
     font-size: 1.15rem;
     letter-spacing: 0.18em;
-    color: var(--amber);
+    color: var(--hud);
     text-align: center;
     padding: 0.2rem 0.5rem;
-    text-shadow: 0 0 18px var(--amber-glow);
+    text-shadow: 0 0 18px var(--hud-glow);
   }
 
   .assessment {
@@ -453,14 +462,14 @@
     font-size: 1.12rem;
     line-height: 1.5;
     color: var(--ink);
-    border-left: 3px solid var(--amber);
+    border-left: 3px solid var(--hud);
     padding-left: 0.85rem;
     text-wrap: pretty;
   }
 
   .conditions { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.95rem; }
   .cond {
-    font-family: var(--hud);
+    font-family: var(--hud-font);
     font-size: 0.74rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -473,6 +482,46 @@
   .cond.is-medium { border-color: var(--warn); color: var(--warn); }
   .cond.is-hard,
   .cond.is-brutal { border-color: var(--crit); color: var(--crit); }
+
+  /* ---- approach: the plan's chosen line, and the roads not taken -------- */
+  .approach {
+    margin-top: 1rem;
+    border: 1px solid var(--line-hot);
+    border-left: 3px solid var(--hud);
+    background: linear-gradient(90deg, rgba(79,200,240,0.09), transparent 70%);
+    padding: 0.75rem 0.9rem 0.85rem;
+  }
+  .approach-tag {
+    font-family: var(--hud-font);
+    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--hud-dim);
+  }
+  .approach-name {
+    font-family: var(--display);
+    font-weight: 700; font-size: 1.28rem; letter-spacing: 0.05em;
+    text-transform: uppercase; color: var(--hud); line-height: 1.15;
+    margin: 0.15rem 0 0.3rem;
+  }
+  .approach-premise { font-size: 1.04rem; color: var(--ink); margin: 0; text-wrap: pretty; }
+  .approach-risk {
+    font-size: 0.95rem; color: var(--ink-soft); margin: 0.55rem 0 0;
+    padding-left: 0.75rem; border-left: 2px solid var(--crit);
+  }
+  .approach-risk b { color: var(--crit); font-weight: 600; }
+
+  .alts { margin-top: 0.8rem; border-top: 1px solid var(--line); padding-top: 0.6rem; }
+  .alts-title {
+    font-family: var(--hud-font);
+    font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink-faint); margin-bottom: 0.4rem;
+  }
+  .alt { display: grid; gap: 0.1rem; padding: 0.3rem 0; }
+  .alt + .alt { border-top: 1px dashed var(--line); }
+  .alt-name {
+    font-family: var(--display); font-weight: 600; font-size: 0.95rem;
+    letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-soft);
+  }
+  .alt-premise { font-size: 0.92rem; color: var(--ink-faint); }
 
   /* panels */
   section.panel {
@@ -487,7 +536,7 @@
     font-size: 1.08rem;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--amber);
+    color: var(--hud);
     margin: 0 0 0.85rem;
     display: flex;
     align-items: center;
@@ -497,12 +546,12 @@
   .panel > h2::before {
     content: "";
     width: 8px; height: 8px;
-    background: var(--amber);
+    background: var(--hud);
     transform: rotate(45deg);
     flex: none;
   }
   .panel > h2 .count {
-    font-family: var(--hud);
+    font-family: var(--hud-font);
     font-size: 0.72rem;
     letter-spacing: 0.1em;
     color: var(--ink-faint);
@@ -529,7 +578,7 @@
   .segs.warn i.on { background: var(--warn); border-color: var(--warn); box-shadow: 0 0 10px -3px var(--warn); }
   .segs.crit i.on { background: var(--crit); border-color: var(--crit); box-shadow: 0 0 10px -3px var(--crit); }
   .meter-val {
-    font-family: var(--hud); font-size: 0.82rem; color: var(--ink-soft);
+    font-family: var(--hud-font); font-size: 0.82rem; color: var(--ink-soft);
     text-align: right; font-variant-numeric: tabular-nums;
     justify-self: end;
   }
@@ -550,9 +599,9 @@
   }
   ol.queue li::before {
     content: counter(q, decimal-leading-zero);
-    font-family: var(--hud);
+    font-family: var(--hud-font);
     font-size: 0.84rem;
-    color: var(--amber-dim);
+    color: var(--hud-dim);
     background: var(--ground-2);
     border: 1px solid var(--line);
     text-align: center;
@@ -587,7 +636,7 @@
     color: var(--ink);
   }
   .counter-head .pres {
-    margin-left: auto; font-family: var(--hud); font-size: 0.76rem;
+    margin-left: auto; font-family: var(--hud-font); font-size: 0.76rem;
     color: var(--ink-soft); font-variant-numeric: tabular-nums;
   }
 
@@ -636,9 +685,9 @@
     font-family: var(--display); font-weight: 600; font-size: 1rem;
     letter-spacing: 0.04em; color: var(--ink);
   }
-  .unit-cost { font-family: var(--hud); font-size: 0.82rem; color: var(--amber); font-variant-numeric: tabular-nums; }
+  .unit-cost { font-family: var(--hud-font); font-size: 0.82rem; color: var(--hud); font-variant-numeric: tabular-nums; }
   .unit-tier {
-    font-family: var(--hud); font-size: 0.66rem; letter-spacing: 0.08em;
+    font-family: var(--hud-font); font-size: 0.66rem; letter-spacing: 0.08em;
     color: var(--ink-faint); border: 1px solid var(--line); padding: 0 0.3rem;
   }
   .unit-why { font-size: 0.95rem; color: var(--ink-soft); line-height: 1.42; }
@@ -646,17 +695,17 @@
     font-size: 0.95rem; color: var(--ink-soft);
     border-top: 1px solid var(--line); padding-top: 0.55rem;
   }
-  .counter-doctrine::before { content: "▸ "; color: var(--amber); }
+  .counter-doctrine::before { content: "▸ "; color: var(--hud); }
 
   /* timeline */
   .phases { display: grid; gap: 0.7rem; align-items: start; grid-template-columns: repeat(auto-fit, minmax(min(245px, 100%), 1fr)); }
-  .phase { background: var(--panel-2); border: 1px solid var(--line); border-left: 3px solid var(--amber); padding: 0.65rem 0.75rem; min-width: 0; }
+  .phase { background: var(--panel-2); border: 1px solid var(--line); border-left: 3px solid var(--hud); padding: 0.65rem 0.75rem; min-width: 0; }
   .phase h3 {
     font-family: var(--display); font-weight: 600; font-size: 1rem;
     letter-spacing: 0.1em; text-transform: uppercase; margin: 0; color: var(--ink);
   }
   .phase .window {
-    font-family: var(--hud); font-size: 0.76rem; color: var(--amber-dim);
+    font-family: var(--hud-font); font-size: 0.76rem; color: var(--hud-dim);
     display: block; margin-bottom: 0.45rem; letter-spacing: 0.06em;
   }
   .phase ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.4rem; }
@@ -670,9 +719,9 @@
     display: grid; grid-template-columns: 1.3rem minmax(0, 1fr); gap: 0.5rem;
     font-size: 0.98rem; color: var(--ink-soft);
   }
-  ul.advice li::before { content: "▸"; color: var(--amber); font-size: 0.8rem; line-height: 1.8; }
+  ul.advice li::before { content: "▸"; color: var(--hud); font-size: 0.8rem; line-height: 1.8; }
   ul.advice.is-danger li::before { content: "✕"; color: var(--crit); font-size: 0.82rem; }
-  ul.advice.is-intel li::before { content: "!"; color: var(--warn); font-family: var(--hud); line-height: 1.7; }
+  ul.advice.is-intel li::before { content: "!"; color: var(--warn); font-family: var(--hud-font); line-height: 1.7; }
 
   /* ---- lineup ranking, with a face per contender ------------------------ */
   .roster { display: grid; gap: 3px; margin-top: 0.7rem; }
@@ -684,8 +733,8 @@
     padding: 0.2rem 0.25rem;
     border: 1px solid transparent;
   }
-  .roster-row.is-pick { border-color: color-mix(in srgb, var(--amber) 45%, var(--line)); background: rgba(245,177,69,0.06); }
-  .roster-score { font-family: var(--hud); font-size: 0.84rem; color: var(--ink-soft); text-align: right; font-variant-numeric: tabular-nums; }
+  .roster-row.is-pick { border-color: color-mix(in srgb, var(--hud) 45%, var(--line)); background: rgba(245,177,69,0.06); }
+  .roster-score { font-family: var(--hud-font); font-size: 0.84rem; color: var(--ink-soft); text-align: right; font-variant-numeric: tabular-nums; }
   .roster-face {
     width: 34px; height: 34px; border: 1px solid var(--line);
     background: var(--ground-2); overflow: hidden; display: grid; place-items: center;
@@ -696,8 +745,8 @@
   .roster-bar > i { display: block; height: 100%; background: var(--line-hot); }
   .roster-name { color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .roster-row.is-pick .roster-name { color: var(--ink); font-weight: 600; }
-  .roster-row.is-pick .roster-score { color: var(--amber); }
-  .roster-row.is-pick .roster-bar > i { background: var(--amber); box-shadow: 0 0 12px -3px var(--amber); }
+  .roster-row.is-pick .roster-score { color: var(--hud); }
+  .roster-row.is-pick .roster-bar > i { background: var(--hud); box-shadow: 0 0 12px -3px var(--hud); }
 
   .rationale { font-size: 0.98rem; color: var(--ink-soft); margin: 0 0 0.4rem; }
 
@@ -707,7 +756,7 @@
   .terrain-art { border: 1px solid var(--line-hot); background: var(--ground-2); }
   .terrain-art svg { width: 100%; height: auto; display: block; }
   .terrain-legend {
-    font-family: var(--hud); font-size: 0.7rem; letter-spacing: 0.08em;
+    font-family: var(--hud-font); font-size: 0.7rem; letter-spacing: 0.08em;
     text-transform: uppercase; color: var(--ink-faint);
     padding: 0.35rem 0.5rem; border-top: 1px solid var(--line);
     display: flex; flex-wrap: wrap; gap: 0.15rem 0.8rem;
@@ -719,7 +768,7 @@
     margin-top: 1.8rem;
     padding-top: 0.85rem;
     border-top: 1px solid var(--line);
-    font-family: var(--hud);
+    font-family: var(--hud-font);
     font-size: 0.72rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -727,7 +776,7 @@
     display: grid;
     gap: 0.3rem;
   }
-  .colophon a { color: var(--amber-dim); }
+  .colophon a { color: var(--hud-dim); }
 
   @media (max-width: 460px) {
     .armies { grid-template-columns: minmax(0, 1fr); }
@@ -782,7 +831,7 @@
         <div class="theatre-preview" id="theatre-preview"></div>
       </fieldset>
 
-      <button type="button" class="command-btn" id="reroll">Randomize deployment</button>
+      <button type="button" class="command-btn" id="reroll">Reroll the approach</button>
     </form>
 
     <main class="briefing" id="briefing"></main>
@@ -952,6 +1001,304 @@ function coverage(roster, axis) {
     return Math.min(3, best + Math.min(0.75, depth * 0.25));
 }
 
+/* --- engine/doctrine.js --- */
+const VIABLE_FLOOR = 1.5;
+/* ------------------------------------------------------------ helpers --- */
+const has = (roster, role) => roster.some((u) => u.roles.includes(role));
+const countRole = (roster, role) => roster.filter((u) => u.roles.includes(role)).length;
+/** Units that answer an axis at strength >= 2, cheapest first. */
+function answering(roster, axis) {
+    return roster
+        .filter((u) => (u.answers[axis] ?? 0) >= 2)
+        .sort((a, b) => (b.answers[axis] ?? 0) - (a.answers[axis] ?? 0) || a.cost - b.cost);
+}
+/** Cheap early bodies — what any aggressive opening is actually made of. */
+function earlyPunch(roster) {
+    return roster
+        .filter((u) => u.tier === 'early' && u.cost <= 900 && !u.roles.includes('economy'))
+        .sort((a, b) => a.cost - b.cost);
+}
+const named = (u, fallback) => (u ? u.name : fallback);
+/** Map traits, normalised to -1..+1, with a neutral 0 when no map is chosen. */
+function terrain(map) {
+    if (!map)
+        return { open: 0, choke: 0, supply: 0, known: false };
+    return {
+        open: (map.openness - 1.5) / 1.5,
+        choke: (map.chokepoints - 1.5) / 1.5,
+        supply: (map.supplyDensity - 1.5) / 1.5,
+        known: true,
+    };
+}
+/* ---------------------------------------------------------- doctrines --- */
+const EARLY_PRESSURE = {
+    id: 'early_pressure',
+    name: 'Early pressure',
+    tag: 'early pressure',
+    premise: 'Arrive before their tech does, and make the first five minutes their problem instead of yours.',
+    fit(ctx) {
+        const t = terrain(ctx.map);
+        const punch = earlyPunch(ctx.roster).length;
+        if (!punch)
+            return 0;
+        let score = 2;
+        score += (ctx.enemy.vulnerability.early_rush ?? 0) * 1.8;
+        score += Math.min(1.5, punch * 0.35);
+        // A boxed map blunts a rush; open ground and thin supply feed it.
+        score -= t.choke * 1.2;
+        score -= t.supply * 0.8;
+        // Racing an AI that also comes early is a coin flip, not a plan.
+        score -= Math.max(0, ctx.profile.early_rush - 2.2) * 1.1;
+        // Their base defences are what an early attack actually runs into.
+        score -= Math.max(0, ctx.profile.base_defense - 2) * 0.9;
+        return score;
+    },
+    build(ctx) {
+        const punch = earlyPunch(ctx.roster);
+        const first = punch[0];
+        const second = punch[1];
+        return [{
+                at: 1,
+                text: `Open aggressive — ${named(first, 'your cheapest early unit')}${second ? ` backed by ${second.name}` : ''} out of the first production building, before any tech`,
+            }];
+    },
+    phases(ctx) {
+        const t = terrain(ctx.map);
+        return {
+            early: [
+                'Send the first squad the moment it exists — a rush that waits for a second batch is not a rush',
+                t.known && t.choke > 0.3
+                    ? 'Take the long way round the chokepoint; the direct path is where their defences already are'
+                    : 'Go straight at the shortest path and force them to answer on your timing',
+            ],
+            mid: [
+                'Convert the pressure into economy: if they held, expand while they are still rebuilding',
+                `Do not over-commit past the point ${ctx.enemy.name} stabilises — a failed rush that keeps feeding units loses twice`,
+            ],
+        };
+    },
+    risk: (ctx) => `If ${ctx.enemy.name} holds the first attack you are behind on economy, so set a hard cut-off: stop reinforcing the moment it stalls and expand instead.`,
+};
+const HOLD_AND_TECH = {
+    id: 'hold_and_tech',
+    name: 'Hold and tech',
+    tag: 'a defensive line and a tech lead',
+    premise: 'Give up the early map, survive the pressure intact, and win on the strength of what you reach first.',
+    fit(ctx) {
+        const t = terrain(ctx.map);
+        let score = 2;
+        score += Math.max(0, ctx.profile.early_rush - 1.5) * 1.4;
+        score += t.choke * 1.3;
+        score += has(ctx.roster, 'defense') ? 1.0 : -0.5;
+        score += ctx.roster.some((u) => u.tier === 'late') ? 0.8 : -1.0;
+        // Teching while they out-mine you is how you lose slowly.
+        score -= Math.max(0, ctx.profile.economy - 2.2) * 1.0;
+        return score;
+    },
+    build(ctx) {
+        const def = ctx.roster.filter((u) => u.roles.includes('defense')).sort((a, b) => a.cost - b.cost)[0];
+        return [{
+                at: 1,
+                text: `Defensive line first — ${named(def, 'a defensive structure')} covering the main approach, then tech behind it`,
+            }];
+    },
+    phases(ctx) {
+        const late = ctx.roster.filter((u) => u.tier === 'late').sort((a, b) => b.cost - a.cost)[0];
+        return {
+            early: ['Hold the shortest approach only — do not try to cover the whole perimeter with structures'],
+            mid: [
+                `Tech while the line holds; the plan is to reach ${named(late, 'your late-tier units')} with your base intact`,
+                'Trade structures for time, never units for pride — a lost defensive building is cheaper than a lost army',
+            ],
+            late: ['You are the one with the stronger army now — leave the base and take the map before they catch up on tech'],
+        };
+    },
+    risk: () => 'Turtling against an economy that is allowed to grow just postpones the fight on worse terms. If they are unharassed by the midgame, you have to come out anyway.',
+};
+const EXPAND_ECONOMY = {
+    id: 'expand_economy',
+    name: 'Expand and out-produce',
+    tag: 'a second income',
+    premise: 'Take a second income before they do and win the game in the supply lines rather than the first fight.',
+    fit(ctx) {
+        const t = terrain(ctx.map);
+        let score = 1.8;
+        score += t.supply * 1.6;
+        score -= Math.max(0, ctx.profile.early_rush - 1.6) * 1.6;
+        score += countRole(ctx.roster, 'economy') * 0.4;
+        if (ctx.difficulty === 'easy')
+            score += 1.2;
+        if (ctx.difficulty === 'brutal')
+            score -= 1.0;
+        return score;
+    },
+    build: () => [{
+            at: 2,
+            text: 'Second supply source before the second production building — income first, army second',
+        }],
+    phases(ctx) {
+        const t = terrain(ctx.map);
+        return {
+            early: [
+                t.known && t.supply > 0.3
+                    ? 'Supply is rich here — claim the nearest uncontested pile immediately, it pays for everything after'
+                    : 'Take the safest expansion you can defend, not the richest one you cannot',
+            ],
+            mid: [
+                'Keep both incomes running: a second pile you cannot defend is worse than the one you had',
+                `Spend the surplus on width — ${ctx.you.name} wants more production buildings, not a bigger bank`,
+            ],
+        };
+    },
+    risk: () => 'An expansion is an undefended second base until you make it otherwise. If it dies you have paid for it and got nothing.',
+};
+const RAID_ECONOMY = {
+    id: 'raid_economy',
+    name: 'Raid their economy',
+    tag: 'sustained raiding on their economy',
+    premise: 'Refuse the straight fight and take their income apart instead, so their army arrives late and smaller.',
+    fit(ctx) {
+        let score = 1.6;
+        score += Math.max(0, ctx.profile.economy - 1.4) * 1.5;
+        score += (ctx.enemy.vulnerability.economy ?? 0) * 1.2;
+        const raiders = countRole(ctx.roster, 'stealth') + countRole(ctx.roster, 'aircraft') + countRole(ctx.roster, 'scout');
+        if (!raiders)
+            return 0;
+        score += Math.min(1.6, raiders * 0.4);
+        // Heavy static defence makes a raider's life short.
+        score -= Math.max(0, ctx.profile.base_defense - 2.2) * 0.8;
+        return score;
+    },
+    build(ctx) {
+        const raider = ctx.roster.filter((u) => u.roles.includes('stealth')).sort((a, b) => a.cost - b.cost)[0] ??
+            ctx.roster.filter((u) => u.roles.includes('aircraft')).sort((a, b) => a.cost - b.cost)[0];
+        return [{
+                at: 2,
+                text: `Raiding element — ${named(raider, 'your fastest harass unit')} kept separate from the main army and aimed at workers, never at their army`,
+            }];
+    },
+    phases: () => ({
+        mid: [
+            'Raid on a timer, not on impulse: every time they push out, something of yours should be in their base',
+            'Kill workers and dozers first. Killing the buildings just tells them where you are',
+        ],
+        late: ['Once their income is behind, the straight fight you were avoiding is the fight you now want'],
+    }),
+    risk: () => 'Harassment that never converts is just a slower loss. Raiding buys tempo — if you never spend it on a push or an expansion, you have bought nothing.',
+};
+const AIR_SUPERIORITY = {
+    id: 'air_superiority',
+    name: 'Take the air',
+    tag: 'air superiority',
+    premise: 'Own the sky, then use it to hit whatever the ground army cannot reach.',
+    fit(ctx) {
+        if (!has(ctx.roster, 'aircraft'))
+            return 0;
+        let score = 1.4;
+        score += (ctx.you.threat.air ?? 0) * 0.9;
+        score += (ctx.enemy.vulnerability.air ?? 0) * 1.4;
+        // Their anti-air, not their aircraft, is what kills this approach.
+        score -= Math.max(0, ctx.profile.air - 1.8) * 0.7;
+        score -= Math.max(0, ctx.profile.base_defense - 1.8) * 0.8;
+        return score;
+    },
+    build(ctx) {
+        const air = ctx.roster.filter((u) => u.roles.includes('aircraft')).sort((a, b) => a.cost - b.cost)[0];
+        return [{
+                at: 3,
+                text: `Air first — ${named(air, 'your first aircraft')} as the core of the army rather than a supplement to it`,
+            }];
+    },
+    phases: (ctx) => ({
+        mid: [
+            'Pick off what the ground army cannot reach: artillery, workers, and anything caught out of anti-air cover',
+            `Do not fly over ${ctx.enemy.name}'s base until you know where the anti-air is — one pass into it costs the whole squadron`,
+        ],
+        late: ['Aircraft are the map control here; keep them alive and their army cannot move freely'],
+    }),
+    risk: () => 'Aircraft are expensive and die instantly to massed anti-air. One careless pass can undo the entire investment.',
+};
+const SIEGE_LINE = {
+    id: 'siege_line',
+    name: 'Out-range the line',
+    tag: 'siege that out-ranges them',
+    premise: 'Never enter their defensive envelope — dismantle it from outside its reach and walk in afterwards.',
+    fit(ctx) {
+        if (!has(ctx.roster, 'artillery'))
+            return 0;
+        const t = terrain(ctx.map);
+        let score = 1.5;
+        score += Math.max(0, ctx.profile.base_defense - 1.4) * 1.5;
+        score += t.choke * 1.1;
+        score += countRole(ctx.roster, 'artillery') * 0.4;
+        // Artillery is helpless against anything fast that reaches it.
+        score -= Math.max(0, ctx.profile.air - 2.0) * 0.9;
+        return score;
+    },
+    build(ctx) {
+        const arty = ctx.roster.filter((u) => u.roles.includes('artillery')).sort((a, b) => a.cost - b.cost)[0];
+        return [{
+                at: 3,
+                text: `Tech toward ${named(arty, 'siege units')} deliberately — this plan is built on out-ranging them, so the artillery is the army, not an extra`,
+            }];
+    },
+    phases: () => ({
+        mid: [
+            'Escort the artillery with everything else you own — on its own it is free kills for anything that reaches it',
+            'Grind the defensive line down from outside its range; there is no hurry and no reason to walk in',
+        ],
+        late: ['Move the siege line forward one position at a time, and never leave it without cover'],
+    }),
+    risk: () => 'Siege units are slow, fragile and useless in a surprise engagement. Caught unescorted in the open, they are simply lost.',
+};
+const COMBINED_ARMS = {
+    id: 'combined_arms',
+    name: 'Combined-arms push',
+    tag: 'one massed combined-arms timing',
+    premise: 'Build the counter core the matchup calls for, mass one decisive timing, and take the map with it.',
+    // The dependable middle. Always defensible, rarely the sharpest answer, so it
+    // scores modestly and wins when nothing more specific fits.
+    fit: () => 3.2,
+    build: () => [],
+    phases: (ctx) => ({
+        mid: [`Mass one army rather than trickling units — ${ctx.you.name} wins this on a single committed timing, not on attrition`],
+        late: ['Push on a won engagement, then keep producing from the map control it buys you'],
+    }),
+    risk: () => 'A balanced army that never commits is just an expensive stalemate. This plan needs you to actually take the timing when it arrives.',
+};
+const DOCTRINES = [
+    EARLY_PRESSURE, HOLD_AND_TECH, EXPAND_ECONOMY,
+    RAID_ECONOMY, AIR_SUPERIORITY, SIEGE_LINE, COMBINED_ARMS,
+];
+/** Every approach defensible in this matchup, best fit first. */
+function rankDoctrines(ctx) {
+    return DOCTRINES
+        .map((doctrine) => ({ doctrine, fit: Math.round(doctrine.fit(ctx) * 100) / 100 }))
+        .filter((d) => d.fit > VIABLE_FLOOR)
+        .sort((a, b) => b.fit - a.fit);
+}
+/**
+ * Choose among the defensible approaches, weighted by fit.
+ *
+ * Weighted rather than top-scoring, because that is what makes a reroll worth
+ * pressing: a clearly better approach still wins most of the time, but a close
+ * second genuinely comes up. Squaring the margin above the floor keeps a weak
+ * approach from being chosen at the same rate as a strong one.
+ */
+function chooseDoctrine(ranked, rand) {
+    if (!ranked.length)
+        return { doctrine: COMBINED_ARMS, fit: COMBINED_ARMS.fit({}) };
+    const weights = ranked.map((d) => (d.fit - VIABLE_FLOOR + 0.4) ** 2);
+    const total = weights.reduce((a, b) => a + b, 0);
+    let roll = rand() * total;
+    for (let i = 0; i < ranked.length; i++) {
+        roll -= weights[i];
+        if (roll <= 0)
+            return ranked[i];
+    }
+    return ranked[0];
+}
+
 /* --- engine/lineup.js --- */
 /**
  * Map a raw score onto 0-100.
@@ -1035,78 +1382,112 @@ const PHASE_WINDOWS = {
 function hasRole(u, role) {
     return u.roles.includes(role);
 }
-/** Cheapest, earliest unit in the roster that satisfies a predicate. */
-function pickUnit(roster, pred) {
-    const tierRank = { early: 0, mid: 1, late: 2 };
-    return roster
-        .filter(pred)
-        .sort((a, b) => tierRank[a.tier] - tierRank[b.tier] || a.cost - b.cost)[0];
+/**
+ * Choose among options that are genuinely close, rather than always the single
+ * best one.
+ *
+ * Every selection in this file used to be a sort followed by `[0]`, which is
+ * why one matchup produced exactly one plan. Where two units are near enough in
+ * merit that a good player would take either, the seed decides — so a reroll
+ * changes the advice without ever degrading it. `band` is how much worse than
+ * the leader a candidate may be and still be offered.
+ */
+function amongBest(items, score, rand, band) {
+    if (!items.length)
+        return undefined;
+    const scored = items.map((item) => ({ item, s: score(item) })).sort((a, b) => b.s - a.s);
+    const top = scored[0].s;
+    const close = scored.filter((x) => x.s >= top - band);
+    return close[Math.floor(rand() * close.length)].item;
 }
-function bestAgainst(roster, axis) {
-    return roster
-        .filter((u) => (u.answers[axis] ?? 0) >= 2)
-        .sort((a, b) => (b.answers[axis] ?? 0) - (a.answers[axis] ?? 0) || a.cost - b.cost)[0];
+/** One of several equivalent phrasings, so two plans never read identically. */
+function variant(rand, options) {
+    return options[Math.floor(rand() * options.length)];
+}
+const TIER_RANK = { early: 0, mid: 1, late: 2 };
+/** An early, cheap unit satisfying a predicate — no longer always the same one. */
+function pickUnit(roster, pred, rand) {
+    // Negated so higher is better: earlier tier and lower cost win.
+    return amongBest(roster.filter(pred), (u) => -TIER_RANK[u.tier] * 1000 - u.cost, rand, 250);
+}
+function bestAgainst(roster, axis, rand) {
+    return amongBest(roster.filter((u) => (u.answers[axis] ?? 0) >= 2), (u) => (u.answers[axis] ?? 0) * 1000 - u.cost, rand, 300);
 }
 /**
- * Start from the faction's stock opening, then splice in the things this
- * particular enemy forces you to build.
+ * Start from the faction's stock opening, splice in what this enemy forces, and
+ * let the chosen approach add the steps that make it that approach.
  */
-function buildOrder(you, roster, profile, enemy) {
+function buildOrder(you, roster, profile, enemy, doctrine, ctx, rand) {
     const steps = [...you.opening];
     const insertions = [];
+    // Forced by the matchup: these are answers to what the enemy actually does,
+    // and hold whatever approach you take.
     if (profile.early_rush >= 2.2) {
-        const def = pickUnit(roster, (u) => hasRole(u, 'defense'));
+        const def = pickUnit(roster, (u) => hasRole(u, 'defense'), rand);
         insertions.push({
             at: 1,
             text: `PRIORITY — ${enemy.name} attacks early: get ${def ? `a ${def.name}` : 'a defensive structure'} and a few cheap units up before anything else`,
         });
     }
     if (profile.air >= 2.2) {
-        const aa = bestAgainst(roster, 'air');
+        const aa = bestAgainst(roster, 'air', rand);
         insertions.push({
             at: 2,
             text: `Anti-air early — ${aa ? aa.name : 'your best AA'} before their first air wave, and keep it moving with the army`,
         });
     }
     if (profile.stealth >= 2.2) {
-        const det = pickUnit(roster, (u) => hasRole(u, 'detector'));
+        const det = pickUnit(roster, (u) => hasRole(u, 'detector'), rand);
         insertions.push({
             at: 3,
             text: `Detection is mandatory here — build ${det ? `a ${det.name}` : 'a detector'} and attach it to every push`,
         });
     }
     if (profile.infantry_swarm >= 2.2) {
-        const clear = bestAgainst(roster, 'infantry_swarm');
+        const clear = bestAgainst(roster, 'infantry_swarm', rand);
         insertions.push({
             at: 4,
             text: `Area damage for their hordes — ${clear ? clear.name : 'your best area-damage unit'} rather than more single-target fire`,
         });
     }
     if (profile.armor >= 2.5) {
-        const at = bestAgainst(roster, 'armor');
+        const at = bestAgainst(roster, 'armor', rand);
         insertions.push({
             at: 4,
             text: `Anti-armour core — ${at ? at.name : 'your best anti-tank unit'}, in numbers, before their tank ball arrives`,
         });
     }
+    // Chosen, not forced: what this approach does differently.
+    insertions.push(...doctrine.build(ctx));
     for (const ins of insertions.sort((a, b) => b.at - a.at)) {
         steps.splice(Math.min(ins.at, steps.length), 0, ins.text);
     }
     if (profile.base_defense >= 2.2) {
-        const arty = pickUnit(roster, (u) => hasRole(u, 'artillery'));
+        const arty = pickUnit(roster, (u) => hasRole(u, 'artillery'), rand);
         steps.push(`Tech toward ${arty ? arty.name : 'siege units'} — their defensive line has to be out-ranged, not charged`);
     }
     if (profile.superweapon >= 2.2) {
-        steps.push('Spread your production buildings apart now, and plan a raid on the superweapon rather than racing its timer');
+        steps.push(variant(rand, [
+            'Spread your production buildings apart now, and plan a raid on the superweapon rather than racing its timer',
+            'Superweapon is coming: separate your production, and put a raid on the launcher in the plan rather than hoping to out-build it',
+        ]));
     }
     return steps;
 }
-function timeline(you, profile, difficulty, enemy, map) {
+function timeline(you, profile, difficulty, enemy, doctrine, ctx, rand, map) {
     const [w1, w2, w3] = PHASE_WINDOWS[difficulty];
     const top = rankedAxes(profile).slice(0, 2);
+    const fromDoctrine = doctrine.phases(ctx);
     const early = [
-        'Get every worker or supply unit mining before you build anything else',
-        'Scout with your first cheap unit — you need to see their opening, not guess it',
+        variant(rand, [
+            'Get every worker or supply unit mining before you build anything else',
+            'Everything that can gather should be gathering before the first structure goes down',
+            'Income first: no build decision matters until every worker is on supply',
+        ]),
+        variant(rand, [
+            'Scout with your first cheap unit — you need to see their opening, not guess it',
+            'Send the first cheap unit out to look; playing blind against a known army list is a choice, not bad luck',
+        ]),
     ];
     if (profile.early_rush >= 2.2)
         early.push(`Expect contact inside this window — ${enemy.name} does not wait`);
@@ -1116,21 +1497,26 @@ function timeline(you, profile, difficulty, enemy, map) {
         early.push('Supply is thin on this map — claim a second pile before they do');
     const mid = [
         `Build the counter core: ${top.map((a) => AXIS_LABEL[a].toLowerCase()).join(' and ')} are what they will actually apply`,
-        'Raid their supply line at least once — economy damage compounds, army damage does not',
     ];
-    if (map && map.chokepoints >= 2)
-        mid.push('Hold the chokepoint rather than the map; it is worth more than territory here');
-    else
-        mid.push('There is no chokepoint to hold — keep the army mobile and pick your engagements');
+    // Only assert something about the terrain when a theatre was actually chosen.
+    // Without one the planner used to state "there is no chokepoint to hold",
+    // which is a claim about a map the user never picked.
+    if (map) {
+        mid.push(map.chokepoints >= 2
+            ? 'Hold the chokepoint rather than the map; it is worth more than territory here'
+            : 'Nothing on this map funnels them — keep the army mobile and pick your engagements');
+    }
+    else {
+        mid.push('Pick a theatre for terrain-specific timing; without one, assume open ground and stay mobile');
+    }
     const late = [];
     if (profile.superweapon >= 2)
         late.push('Their superweapon comes online in this window — kill the launcher or be somewhere else');
     late.push(`Commit with ${you.name}'s late-game units once you have map control, not before`);
-    late.push('Push when their army is dead, not when yours is full — the window is after a won engagement');
     return [
-        { label: 'Opening', window: w1, objectives: early },
-        { label: 'Midgame', window: w2, objectives: mid },
-        { label: 'Late game', window: w3, objectives: late },
+        { label: 'Opening', window: w1, objectives: [...early, ...(fromDoctrine.early ?? [])] },
+        { label: 'Midgame', window: w2, objectives: [...mid, ...(fromDoctrine.mid ?? [])] },
+        { label: 'Late game', window: w3, objectives: [...late, ...(fromDoctrine.late ?? [])] },
     ];
 }
 function matchesSelector(sel, f) {
@@ -1201,12 +1587,26 @@ function planFrom(ds, input) {
     const roster = unitsFor(you.id);
     const counters = recommendCounters(you, roster, profile);
     const top = rankedAxes(profile);
+    // Which approaches hold up here, and which one this plan commits to. The
+    // choice is weighted by fit and driven by the seed, so rerolling a pinned
+    // matchup produces a different but equally defensible plan.
+    const ctx = {
+        you, enemy, roster, profile,
+        difficulty: input.difficulty,
+        ...(map ? { map } : {}),
+    };
+    const ranked = rankDoctrines(ctx);
+    const chosen = chooseDoctrine(ranked, rand);
+    const alternatives = ranked
+        .filter((d) => d.doctrine.id !== chosen.doctrine.id)
+        .slice(0, 3)
+        .map((d) => ({ id: d.doctrine.id, name: d.doctrine.name, premise: d.doctrine.premise, fit: d.fit }));
     const headline = `${you.name} vs ${enemy.name}` +
         (map ? ` on ${map.name}` : '') +
         ` — ${input.difficulty.toUpperCase()}. ` +
         (top[0]
-            ? `Their game is ${AXIS_LABEL[top[0]].toLowerCase()}; answer that first and the rest follows.`
-            : 'A soft matchup — play your standard opening and take the map.');
+            ? `Their game is ${AXIS_LABEL[top[0]].toLowerCase()}; this plan answers it with ${chosen.doctrine.tag}.`
+            : `A soft matchup — this plan takes it with ${chosen.doctrine.tag}.`);
     const watchFor = [
         ...enemy.signatureTactics,
         ...enemy.quirks.slice(0, 1),
@@ -1223,9 +1623,17 @@ function planFrom(ds, input) {
         ...(rationale ? { lineupRationale: rationale } : {}),
         ...(ranking ? { lineupRanking: ranking } : {}),
         headline,
-        buildOrder: buildOrder(you, roster, profile, enemy),
+        doctrine: {
+            id: chosen.doctrine.id,
+            name: chosen.doctrine.name,
+            premise: chosen.doctrine.premise,
+            fit: chosen.fit,
+            risk: chosen.doctrine.risk(ctx),
+        },
+        alternatives,
+        buildOrder: buildOrder(you, roster, profile, enemy, chosen.doctrine, ctx, rand),
         counters,
-        timeline: timeline(you, profile, input.difficulty, enemy, map),
+        timeline: timeline(you, profile, input.difficulty, enemy, chosen.doctrine, ctx, rand, map),
         watchFor,
         doNot: doNotList(you, profile),
         mapNotes,
@@ -1288,7 +1696,7 @@ const mark = (side, size) => {
   const holder = el('span');
   holder.innerHTML = MARKS[side] ?? MARKS.usa;   // static strings defined above
   const svg = holder.firstChild;
-  svg.style.color = SIDE_COLOR[side] ?? 'var(--amber)';   // currentColor source
+  svg.style.color = SIDE_COLOR[side] ?? 'var(--hud)';   // currentColor source
   if (size) { svg.setAttribute('width', size); svg.setAttribute('height', size); }
   return svg;
 };
@@ -1352,13 +1760,18 @@ function seedOf(text) {
   return h >>> 0;
 }
 
+/*
+ * Terrain still reads as terrain — desert warm, jungle green, snow pale — but
+ * every tone is pulled toward the console's blue so the diagram sits inside the
+ * HUD rather than looking like a photograph dropped into it.
+ */
 const TERRAIN_INK = {
-  desert:    { base: '#3E3524', ridge: '#5A4A2C' },
-  snow:      { base: '#333B42', ridge: '#4B565E' },
-  urban:     { base: '#2F3335', ridge: '#454B4E' },
-  temperate: { base: '#28331F', ridge: '#3C4B2E' },
-  jungle:    { base: '#1F2E1B', ridge: '#314727' },
-  mixed:     { base: '#2C3327', ridge: '#424C3A' },
+  desert:    { base: '#3A3328', ridge: '#544733' },
+  snow:      { base: '#2C3A47', ridge: '#425667' },
+  urban:     { base: '#282F38', ridge: '#3C4653' },
+  temperate: { base: '#22321F', ridge: '#35492F' },
+  jungle:    { base: '#1B2C1E', ridge: '#2A4230' },
+  mixed:     { base: '#26302F', ridge: '#384744' },
 };
 
 const svgEl = (name, attrs) => {
@@ -1400,10 +1813,10 @@ function mapDiagram(map) {
 
   // Tactical grid.
   for (let x = 30; x < W; x += 30) {
-    svg.append(svgEl('line', { x1: x, y1: 0, x2: x, y2: H, stroke: '#7E8F76', 'stroke-width': 0.4, opacity: 0.16 }));
+    svg.append(svgEl('line', { x1: x, y1: 0, x2: x, y2: H, stroke: '#6F93B4', 'stroke-width': 0.4, opacity: 0.16 }));
   }
   for (let y = 30; y < H; y += 30) {
-    svg.append(svgEl('line', { x1: 0, y1: y, x2: W, y2: y, stroke: '#7E8F76', 'stroke-width': 0.4, opacity: 0.16 }));
+    svg.append(svgEl('line', { x1: 0, y1: y, x2: W, y2: y, stroke: '#6F93B4', 'stroke-width': 0.4, opacity: 0.16 }));
   }
 
   // Chokepoints: opposing wedges pinching a lane. One pair per rating point.
@@ -1413,11 +1826,11 @@ function mapDiagram(map) {
     const gap = 16 + rand() * 10;
     svg.append(svgEl('path', {
       d: `M${x - 26} ${y - 46} L${x + 26} ${y - 46} L${x} ${y - gap} Z`,
-      fill: ink.ridge, opacity: 0.85, stroke: '#8FA083', 'stroke-width': 0.6,
+      fill: ink.ridge, opacity: 0.85, stroke: '#89A9C4', 'stroke-width': 0.6,
     }));
     svg.append(svgEl('path', {
       d: `M${x - 26} ${y + 46} L${x + 26} ${y + 46} L${x} ${y + gap} Z`,
-      fill: ink.ridge, opacity: 0.85, stroke: '#8FA083', 'stroke-width': 0.6,
+      fill: ink.ridge, opacity: 0.85, stroke: '#89A9C4', 'stroke-width': 0.6,
     }));
   }
 
@@ -1428,7 +1841,7 @@ function mapDiagram(map) {
     for (let c = 0; c < 3; c++) {
       svg.append(svgEl('rect', {
         x: cx + (c % 2) * 7 - 3, y: cy + Math.floor(c / 2) * 7 - 3,
-        width: 5.5, height: 5.5, fill: '#E3C558', opacity: 0.9,
+        width: 5.5, height: 5.5, fill: '#E8C766', opacity: 0.9,
       }));
     }
   }
@@ -1438,11 +1851,11 @@ function mapDiagram(map) {
     const a = (i / map.players) * Math.PI * 2 - Math.PI / 2;
     const cx = W / 2 + Math.cos(a) * (W * 0.34);
     const cy = H / 2 + Math.sin(a) * (H * 0.33);
-    svg.append(svgEl('circle', { cx, cy, r: 9, fill: 'none', stroke: '#F5B145', 'stroke-width': 1.6, opacity: 0.95 }));
-    svg.append(svgEl('circle', { cx, cy, r: 3, fill: '#F5B145' }));
+    svg.append(svgEl('circle', { cx, cy, r: 9, fill: 'none', stroke: '#4FC8F0', 'stroke-width': 1.6, opacity: 0.95 }));
+    svg.append(svgEl('circle', { cx, cy, r: 3, fill: '#4FC8F0' }));
   }
 
-  svg.append(svgEl('rect', { x: 0.5, y: 0.5, width: W - 1, height: H - 1, fill: 'none', stroke: '#46552F', 'stroke-width': 1 }));
+  svg.append(svgEl('rect', { x: 0.5, y: 0.5, width: W - 1, height: H - 1, fill: 'none', stroke: '#356B96', 'stroke-width': 1 }));
   return svg;
 }
 
@@ -1486,7 +1899,7 @@ function armyCards(container, side, selected, onPick, anyLabel, anyHint) {
   if (side === null) {
     const btn = el('button', 'army is-any');
     btn.type = 'button';
-    btn.style.setProperty('--mark', 'var(--amber)');
+    btn.style.setProperty('--mark', 'var(--hud)');
     btn.setAttribute('aria-pressed', String(selected === null));
     const body = el('span', 'army-text');
     body.append(el('span', 'army-name', anyLabel));
@@ -1573,13 +1986,46 @@ function advice(items, variant) {
 
 function combatant(faction, role) {
   const box = el('div', 'combatant ' + role);
-  box.style.setProperty('--mark', SIDE_COLOR[faction.side] ?? 'var(--amber)');
+  box.style.setProperty('--mark', SIDE_COLOR[faction.side] ?? 'var(--hud)');
   box.append(frame('mugshot', faction.image, faction.side, faction.general ?? faction.name));
   const who = el('div', 'who');
   who.append(el('div', 'role', role === 'you' ? 'Your command' : 'Hostile force'));
   who.append(el('div', 'army-title', faction.name));
   who.append(el('div', 'cmdr', faction.general ?? 'Standard doctrine'));
   box.append(who);
+  return box;
+}
+
+/**
+ * The approach this plan commits to, what makes it fail, and the alternatives
+ * it passed over.
+ *
+ * The alternatives are the point. A matchup usually has several defensible
+ * answers, and showing only the chosen one made the planner read as though it
+ * were reporting the single correct play rather than making a call.
+ */
+function renderApproach(plan) {
+  const box = el('div', 'approach');
+  box.append(el('div', 'approach-tag', 'Approach'));
+  box.append(el('div', 'approach-name', plan.doctrine.name));
+  box.append(el('p', 'approach-premise', plan.doctrine.premise));
+
+  const risk = el('p', 'approach-risk');
+  risk.append(el('b', null, 'Fails if: '));
+  risk.append(document.createTextNode(plan.doctrine.risk));
+  box.append(risk);
+
+  if (plan.alternatives && plan.alternatives.length) {
+    const alts = el('div', 'alts');
+    alts.append(el('div', 'alts-title', `Also defensible here — ${plan.alternatives.length} other approaches`));
+    for (const a of plan.alternatives) {
+      const row = el('div', 'alt');
+      row.append(el('div', 'alt-name', a.name));
+      row.append(el('div', 'alt-premise', a.premise));
+      alts.append(row);
+    }
+    box.append(alts);
+  }
   return box;
 }
 
@@ -1599,6 +2045,7 @@ function renderDossier(plan) {
   box.append(row);
 
   box.append(el('p', 'assessment', plan.headline));
+  box.append(renderApproach(plan));
 
   const conds = el('div', 'conditions');
   conds.append(el('span', `cond is-${plan.difficulty}`, `Rank: ${plan.difficulty}`));
@@ -1861,10 +2308,41 @@ dataChip.append(chipVal);
 dataChip.title = src.line;
 readiness.append(dataChip);
 
-$('reroll').addEventListener('click', () => {
-  state.seed = Math.floor(Math.random() * 1e9);
+/**
+ * Reroll until the plan visibly differs from the one on screen.
+ *
+ * The approach is chosen by weighted draw, so consecutive random seeds can land
+ * on the same one — and a button that sometimes does nothing reads as broken
+ * rather than as chance. This keeps the engine's per-seed determinism intact
+ * (the same seed still gives the same plan) and only rejects seeds that would
+ * repeat the current approach, giving up after a bounded number of tries so a
+ * matchup with just one defensible approach still responds.
+ */
+function reroll() {
+  const before = currentDoctrineId();
+  for (let attempt = 0; attempt < 12; attempt++) {
+    state.seed = Math.floor(Math.random() * 1e9);
+    if (currentDoctrineId() !== before) break;
+  }
   render();
-});
+}
+
+/** The approach the current state would produce, without drawing anything. */
+function currentDoctrineId() {
+  try {
+    return planFrom(DATA, {
+      you: state.you ?? undefined,
+      enemy: state.enemy ?? undefined,
+      difficulty: state.difficulty,
+      mapId: state.mapId ?? undefined,
+      seed: state.seed,
+    }).doctrine.id;
+  } catch {
+    return null;   // an unplannable selection is the render path's problem
+  }
+}
+
+$('reroll').addEventListener('click', reroll);
 
 $('colophon').replaceChildren(
   el('span', null, `Curated dossier ${DATA.provenance.curatedAt} · strategy engine runs in this page`),
