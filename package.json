@@ -4,15 +4,20 @@
   "private": true,
   "description": "Skirmish battle-lineup and strategy suggester for Command & Conquer: Generals - Zero Hour",
   "type": "module",
-  "engines": { "node": ">=22" },
-  "bin": { "battle-lineup": "./dist/src/cli/index.js" },
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "battle-lineup": "./dist/src/cli/index.js"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "build:web": "npm run build --silent && node web/build.mjs",
     "plan": "npm run build --silent && node dist/src/cli/index.js",
     "ingest": "npm run build --silent && node dist/src/ingest/run.js",
     "test": "npm run build --silent && node --test \"dist/test/*.test.js\"",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "vercel-build": "npm run build --silent && node dist/src/ingest/run.js --soft-fail && node web/build.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

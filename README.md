@@ -27,13 +27,29 @@ npm run plan -- --list-factions
 npm run plan -- --list-maps
 ```
 
-There is also a browser version, which runs the same engine entirely client-side:
+There is also a browser version — a command terminal that runs the same engine
+entirely client-side:
 
 ```bash
-npm run build:web   # bakes web/index.html
+npm run build:web   # bakes public/index.html
 ```
 
-Open `web/index.html` in a browser. No server needed.
+Open `public/index.html` in a browser. No server needed.
+
+## Deploy
+
+```bash
+vercel --prod
+```
+
+Or import the repo at <https://vercel.com/new> and accept every default —
+`vercel.json` supplies the build.
+
+The deploy is also how the data stays current: Vercel's build network is
+unrestricted, so `npm run vercel-build` runs the wiki crawl before baking the
+page. If the wiki is unreachable the ingest exits cleanly and the build ships the
+curated dataset instead, so a bad day at the wiki never breaks the site. Full
+detail in [`docs/deploy.md`](docs/deploy.md).
 
 ## What it knows
 
@@ -113,8 +129,15 @@ the planner works offline and out of the box.
 
 `data/wiki-cache/` is empty in this repository: the network this was built on blocks
 `cnc.fandom.com` at the egress proxy, so the crawl could not be run here. The
-connector is written and tested against sample wiki markup — run it anywhere the
-wiki is reachable and the overlay appears on the next command.
+connector is written and tested against sample wiki markup. Three ways to fill it:
+
+1. **Deploy to Vercel** — the build runs the crawl on Vercel's unrestricted
+   network, and the reconciliation report lands in the build log.
+2. **Run it locally** — `npm run ingest`, then commit `data/wiki-cache/*.json`.
+3. **Allowlist the host** — add `cnc.fandom.com` to the sandbox's egress policy.
+
+After a crawl, `npm run ingest` prints a reconciliation report: how many curated
+units matched a wiki page, and every cost the wiki disagrees with.
 
 Every record carries a `source` field of `curated`, `wiki` or `merged`, and both the
 CLI and the web page print the provenance line so you always know which you are
@@ -130,7 +153,8 @@ src/data/           loader and the curated/wiki merge
 src/engine/         threat profiling, counters, lineup scoring, plan assembly
 src/ingest/         MediaWiki client, wikitext parser, crawl runner
 src/cli/            terminal interface and renderer
-web/                template, bundler, and the baked single-file page
+web/                page template and the bundler that inlines engine + data
+public/             the baked single-file site (Vercel's static root)
 test/               38 tests
 ```
 

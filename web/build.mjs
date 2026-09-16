@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * Bake web/index.html: the compiled strategy engine plus the dataset, inlined
+ * Bake public/index.html: the compiled strategy engine plus the dataset, inlined
  * into a single self-contained page.
  *
  * The browser runs the same engine the CLI does — the modules in
  * dist/src/engine are free of Node imports precisely so this can concatenate
  * them instead of maintaining a second implementation.
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadDataset } from '../dist/src/data/index.js';
@@ -63,7 +63,10 @@ if (html.includes('__ENGINE__') || html.includes('__DATASET__')) {
   throw new Error('Template placeholders were not substituted.');
 }
 
-const out = join(HERE, 'index.html');
+// public/ is the static root Vercel serves, and the file the artifact publishes.
+const outDir = join(ROOT, 'public');
+mkdirSync(outDir, { recursive: true });
+const out = join(outDir, 'index.html');
 writeFileSync(out, html);
 
 const kb = (Buffer.byteLength(html) / 1024).toFixed(0);

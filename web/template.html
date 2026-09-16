@@ -1,404 +1,593 @@
 <title>Battle Lineup</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Chakra+Petch:wght@500;600;700&family=Share+Tech+Mono&display=swap">
 
 <style>
+  /*
+    Single-theme by intent: this is an instrument panel, and the game it serves
+    is a dark command console. Every colour is painted explicitly so the page
+    holds on any host ground.
+  */
   :root {
-    --ground:    #EBE7D9;
-    --surface:   #F7F4EC;
-    --surface-2: #E1DBC8;
-    --ink:       #1E2018;
-    --ink-soft:  #55584A;
-    --ink-faint: #82856F;
-    --line:      #C7C1AB;
-    --line-soft: #DBD5C2;
-    --accent:    #A85B18;
-    --accent-2:  #8A4B14;
-    --usa:       #3F6E9E;
-    --china:     #A93226;
-    --gla:       #6B7830;
-    --crit:      #A8382C;
-    --warn:      #B27E1B;
-    --ok:        #55784A;
+    color-scheme: dark;
 
-    --step--1: 0.78rem;
-    --step-0:  0.95rem;
-    --step-1:  1.15rem;
-    --step-2:  1.55rem;
-    --step-3:  2.3rem;
+    --ground:     #0A0D0A;
+    --ground-2:   #0E120D;
+    --panel:      #151B14;
+    --panel-2:    #1D251B;
+    --panel-hi:   #27311F;
 
-    --display: "Barlow Condensed", "Oswald", "Arial Narrow", sans-serif;
-    --body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
-    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
-  }
+    --ink:        #DCE4D4;
+    --ink-soft:   #93A28B;
+    --ink-faint:  #6B7A65;
 
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --ground:    #14160E;
-      --surface:   #1C1F15;
-      --surface-2: #262A1C;
-      --ink:       #E9E5D5;
-      --ink-soft:  #A2A48E;
-      --ink-faint: #7C7F6A;
-      --line:      #383D2A;
-      --line-soft: #2B3020;
-      --accent:    #DE9142;
-      --accent-2:  #EFB673;
-      --usa:       #77A3CD;
-      --china:     #DB6A60;
-      --gla:       #A7B55A;
-      --crit:      #DB6A60;
-      --warn:      #E0B04A;
-      --ok:        #8FB87F;
-    }
-  }
+    --line:       #2E3A29;
+    --line-hot:   #46552F;
 
-  :root[data-theme="dark"] {
-    --ground:    #14160E;
-    --surface:   #1C1F15;
-    --surface-2: #262A1C;
-    --ink:       #E9E5D5;
-    --ink-soft:  #A2A48E;
-    --ink-faint: #7C7F6A;
-    --line:      #383D2A;
-    --line-soft: #2B3020;
-    --accent:    #DE9142;
-    --accent-2:  #EFB673;
-    --usa:       #77A3CD;
-    --china:     #DB6A60;
-    --gla:       #A7B55A;
-    --crit:      #DB6A60;
-    --warn:      #E0B04A;
-    --ok:        #8FB87F;
+    --amber:      #E8A33D;
+    --amber-dim:  #A8762A;
+    --amber-glow: rgba(232, 163, 61, 0.14);
+
+    --usa:        #59A0E0;
+    --china:      #DE5548;
+    --gla:        #A9BC50;
+
+    --crit:       #E0604C;
+    --warn:       #E8A33D;
+    --ok:         #74C077;
+
+    --display: "Chakra Petch", "Barlow Condensed", "Arial Narrow", sans-serif;
+    --body: "Barlow", ui-sans-serif, system-ui, sans-serif;
+    --hud: "Share Tech Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+    --chamfer: 9px;
   }
 
   * { box-sizing: border-box; }
 
   body {
-    background: var(--ground);
+    background:
+      radial-gradient(120% 70% at 50% 0%, #131A12 0%, var(--ground) 62%),
+      repeating-linear-gradient(0deg, rgba(120,150,110,0.030) 0 1px, transparent 1px 3px),
+      var(--ground);
+    background-attachment: fixed;
     color: var(--ink);
     font-family: var(--body);
-    font-size: var(--step-0);
+    font-size: 15px;
     line-height: 1.55;
     margin: 0;
-    padding-block: 0 3rem;
+    padding-block: 0 4rem;
     padding-inline: 16px;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
-  .shell { max-width: 1180px; margin-inline: auto; }
+  .shell { max-width: 1240px; margin-inline: auto; }
 
-  /* ---------- masthead ---------- */
+  /* Chamfered corners: the signature RTS panel edge. */
+  .cut {
+    clip-path: polygon(
+      var(--chamfer) 0, 100% 0, 100% calc(100% - var(--chamfer)),
+      calc(100% - var(--chamfer)) 100%, 0 100%, 0 var(--chamfer));
+  }
+
+  /* ---------------------------------------------------------- masthead --- */
   .masthead {
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-end;
+    align-items: center;
     justify-content: space-between;
-    gap: 0.75rem 1.5rem;
-    padding-block: 1.6rem 1rem;
-    border-bottom: 2px solid var(--ink);
-    margin-bottom: 1.5rem;
+    gap: 0.6rem 1.5rem;
+    padding-block: 1.4rem 0.9rem;
+    border-bottom: 1px solid var(--line-hot);
+    margin-bottom: 1.4rem;
+    position: relative;
+  }
+  .masthead::after {
+    content: "";
+    position: absolute;
+    left: 0; bottom: -1px;
+    width: clamp(90px, 22%, 220px); height: 3px;
+    background: var(--amber);
   }
   .wordmark {
     font-family: var(--display);
     font-weight: 700;
-    font-size: var(--step-3);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    line-height: 0.95;
-    margin: 0;
-  }
-  .wordmark span { color: var(--accent); }
-  .masthead p {
-    margin: 0.15rem 0 0;
-    color: var(--ink-soft);
-    font-size: var(--step--1);
-    letter-spacing: 0.02em;
-  }
-  .stamp {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    text-transform: uppercase;
+    font-size: clamp(1.7rem, 7vw, 2.6rem);
     letter-spacing: 0.14em;
-    color: var(--ink-faint);
+    text-transform: uppercase;
+    line-height: 1;
+    margin: 0;
+    color: var(--ink);
+  }
+  .wordmark span { color: var(--amber); }
+  .masthead .sub {
+    margin: 0.3rem 0 0;
+    color: var(--ink-soft);
+    font-family: var(--hud);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .readiness {
+    display: flex; flex-wrap: wrap; gap: 0.35rem;
+  }
+  .readout {
+    font-family: var(--hud);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: var(--panel);
     border: 1px solid var(--line);
-    padding: 0.3rem 0.55rem;
+    padding: 0.25rem 0.5rem;
     white-space: nowrap;
   }
+  .readout b { color: var(--amber); font-weight: 400; }
 
-  /* ---------- layout ---------- */
+  /* ------------------------------------------------------------ layout --- */
   .board {
     display: grid;
-    grid-template-columns: 300px minmax(0, 1fr);
-    gap: 2rem;
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 1.6rem;
     align-items: start;
   }
-  @media (max-width: 860px) {
-    .board { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+  @media (max-width: 900px) {
+    .board { grid-template-columns: minmax(0, 1fr); gap: 1.2rem; }
     .rail { position: static; }
   }
 
-  .rail { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 1rem); display: grid; gap: 1.4rem; }
+  .rail {
+    position: sticky;
+    top: calc(env(safe-area-inset-top, 0px) + 0.75rem);
+    display: grid;
+    gap: 0.9rem;
+    min-width: 0;
+  }
 
-  /* ---------- controls ---------- */
-  .field > legend,
-  .eyebrow {
-    font-family: var(--mono);
-    font-size: 0.66rem;
-    letter-spacing: 0.16em;
+  /* ---------------------------------------------------------- controls --- */
+  .console {
+    background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    border: 1px solid var(--line);
+    padding: 0.75rem 0.8rem 0.85rem;
+    min-width: 0;
+  }
+  .console > legend,
+  .console-title {
+    font-family: var(--hud);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--ink-faint);
+    color: var(--amber);
     padding: 0;
-    margin-bottom: 0.5rem;
-  }
-  .field { border: 0; padding: 0; margin: 0; }
-
-  .side-group + .side-group { margin-top: 0.5rem; }
-  .side-label {
-    font-family: var(--mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.14em;
-    color: var(--ink-faint);
-    margin-bottom: 0.25rem;
-  }
-
-  .chips { display: grid; gap: 3px; }
-
-  .chip {
+    margin: 0 0 0.55rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    width: 100%;
+  }
+  .console-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line-hot);
+  }
+  fieldset.console { border: 1px solid var(--line); margin: 0; }
+
+  /* side tabs */
+  .sides { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-bottom: 0.5rem; }
+  .side-tab {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 0.74rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-bottom: 2px solid var(--tab, var(--line));
+    padding: 0.42rem 0.15rem;
+    min-height: 34px;
+    cursor: pointer;
+    transition: color 120ms ease, background 120ms ease;
+  }
+  .side-tab:hover { color: var(--ink); background: var(--panel-hi); }
+  .side-tab[aria-selected="true"] {
+    color: var(--ink);
+    background: var(--panel-hi);
+    border-bottom-color: var(--tab, var(--amber));
+  }
+  .side-tab:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+
+  /* army cards */
+  .armies { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px; }
+  .armies.is-wide { grid-template-columns: minmax(0, 1fr); }
+
+  .army {
+    position: relative;
+    display: grid;
+    gap: 0.05rem;
     text-align: left;
     font: inherit;
-    font-size: var(--step--1);
+    min-height: 52px;
+    padding: 0.4rem 0.5rem 0.42rem 0.62rem;
     color: var(--ink-soft);
-    background: var(--surface);
-    border: 1px solid var(--line-soft);
-    border-left: 3px solid var(--sidecolor, var(--line));
-    padding: 0.28rem 0.5rem;
+    background: var(--panel);
+    border: 1px solid var(--line);
     cursor: pointer;
+    overflow: hidden;
     transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
   }
-  .chip:hover { background: var(--surface-2); color: var(--ink); }
-  .chip[aria-pressed="true"] {
-    background: var(--ink);
-    color: var(--ground);
-    border-color: var(--ink);
-    border-left-color: var(--sidecolor, var(--accent));
-    font-weight: 600;
+  .army::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--mark, var(--line-hot));
   }
-  .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
-  .chip .chip-sub { margin-left: auto; font-family: var(--mono); font-size: 0.62rem; opacity: 0.65; }
-
-  .chip-any { --sidecolor: var(--accent); font-style: italic; }
-
-  .segmented { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; }
-  .seg {
-    font-family: var(--display);
-    font-weight: 600;
-    font-size: 0.85rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    background: var(--surface);
-    border: 1px solid var(--line-soft);
-    padding: 0.4rem 0.2rem;
-    cursor: pointer;
-  }
-  .seg:hover { background: var(--surface-2); color: var(--ink); }
-  .seg[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--surface); }
-  .seg:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
-
-  select, .ghost-btn {
-    width: 100%;
-    font: inherit;
-    font-size: var(--step--1);
+  .army:hover { background: var(--panel-hi); color: var(--ink); border-color: var(--line-hot); }
+  .army[aria-pressed="true"] {
+    background: var(--panel-hi);
+    border-color: var(--mark, var(--amber));
     color: var(--ink);
-    background: var(--surface);
-    border: 1px solid var(--line);
-    padding: 0.4rem 0.5rem;
   }
-  .ghost-btn {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    cursor: pointer;
-    color: var(--ink-soft);
+  .army[aria-pressed="true"]::after {
+    content: "";
+    position: absolute;
+    right: -1px; top: -1px;
+    border-width: 0 12px 12px 0;
+    border-style: solid;
+    border-color: transparent var(--mark, var(--amber)) transparent transparent;
   }
-  .ghost-btn:hover { background: var(--surface-2); color: var(--ink); }
-  select:focus-visible, .ghost-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
-
-  /* ---------- briefing ---------- */
-  .briefing { display: grid; gap: 1.75rem; min-width: 0; }
-
-  .matchup {
-    border: 1px solid var(--line);
-    border-top: 3px solid var(--accent);
-    background: var(--surface);
-    padding: 1.1rem 1.2rem;
-  }
-  .versus {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.4rem 0.8rem;
+  .army:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+  .army-name {
     font-family: var(--display);
-    font-size: var(--step-2);
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    line-height: 1.1;
-    text-wrap: balance;
+    font-weight: 600;
+    font-size: 0.86rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    line-height: 1.15;
+    color: inherit;
   }
-  .versus .vs { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.2em; color: var(--ink-faint); text-transform: uppercase; }
-  .army-you { color: var(--accent-2); }
-  .army-them { color: var(--crit); }
-  .commanders {
-    display: flex; flex-wrap: wrap; gap: 0.2rem 1.2rem;
-    font-size: var(--step--1); color: var(--ink-soft); margin-top: 0.35rem;
-  }
-  .commanders b { font-weight: 600; color: var(--ink); }
-  .headline { margin: 0.8rem 0 0; font-size: var(--step-1); line-height: 1.4; text-wrap: balance; }
+  .army[aria-pressed="true"] .army-name { color: var(--mark, var(--amber)); }
+  .army-who { font-family: var(--hud); font-size: 0.63rem; letter-spacing: 0.04em; color: var(--ink-faint); }
 
-  .conditions { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.8rem; }
-  .tag {
-    font-family: var(--mono);
-    font-size: 0.65rem;
+  /* rank / difficulty */
+  .ranks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px; }
+  .rank {
+    display: grid;
+    justify-items: center;
+    gap: 0.05rem;
+    font: inherit;
+    min-height: 48px;
+    padding: 0.35rem 0.1rem;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    color: var(--ink-faint);
+    cursor: pointer;
+    transition: background 120ms ease, color 120ms ease;
+  }
+  .rank:hover { background: var(--panel-hi); color: var(--ink); }
+  .rank .stars { font-size: 0.7rem; letter-spacing: 0.04em; line-height: 1.2; }
+  .rank .rank-label {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 0.68rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+  .rank[aria-pressed="true"] { background: var(--panel-hi); color: var(--ink); border-color: var(--tone, var(--amber)); }
+  .rank[aria-pressed="true"] .stars { color: var(--tone, var(--amber)); }
+  .rank:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+
+  select, .command-btn {
+    width: 100%;
+    font-family: var(--body);
+    font-size: 0.85rem;
+    color: var(--ink);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 0.5rem 0.55rem;
+    min-height: 42px;
+  }
+  select:hover, .command-btn:hover { background: var(--panel-hi); border-color: var(--line-hot); }
+  .command-btn {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--amber);
+    cursor: pointer;
+  }
+  select:focus-visible, .command-btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+
+  /* ---------------------------------------------------------- briefing --- */
+  .briefing { display: grid; gap: 1.1rem; min-width: 0; }
+
+  .dossier {
+    position: relative;
+    background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    border: 1px solid var(--line-hot);
+    padding: 1rem 1.1rem 1.1rem;
+    min-width: 0;
+  }
+  .dossier::before {
+    content: "";
+    position: absolute; inset: 0 0 auto 0; height: 2px;
+    background: linear-gradient(90deg, var(--amber), transparent 70%);
+  }
+  .eva {
+    font-family: var(--hud);
+    font-size: 0.66rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--amber-dim);
+    margin-bottom: 0.5rem;
+  }
+  .eva b { color: var(--amber); font-weight: 400; }
+
+  .combatants { display: grid; gap: 0.5rem; }
+  @media (min-width: 620px) {
+    .combatants { grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); align-items: center; }
+  }
+  .combatant { display: flex; align-items: center; gap: 0.55rem; min-width: 0; }
+  .combatant.them { justify-self: end; }
+  @media (min-width: 620px) { .combatant.them { flex-direction: row-reverse; text-align: right; } }
+  .combatant svg { width: 30px; height: 30px; flex: none; }
+  .combatant .who { min-width: 0; }
+  .combatant .army-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(1.02rem, 3.6vw, 1.42rem);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.12;
+    overflow-wrap: anywhere;
+  }
+  .combatant .cmdr { font-family: var(--hud); font-size: 0.66rem; color: var(--ink-faint); letter-spacing: 0.05em; }
+  .clash {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.24em;
+    color: var(--ink-faint);
+    text-align: center;
+    padding: 0 0.3rem;
+  }
+
+  .assessment {
+    margin: 0.9rem 0 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--ink);
+    border-left: 2px solid var(--amber);
+    padding-left: 0.7rem;
+    text-wrap: pretty;
+  }
+
+  .conditions { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.85rem; }
+  .cond {
+    font-family: var(--hud);
+    font-size: 0.64rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    border: 1px solid var(--line);
+    border: 1px solid var(--line-hot);
+    background: var(--panel);
     padding: 0.2rem 0.45rem;
     color: var(--ink-soft);
   }
-  .tag-diff-easy   { border-color: var(--ok);    color: var(--ok); }
-  .tag-diff-medium { border-color: var(--warn);  color: var(--warn); }
-  .tag-diff-hard,
-  .tag-diff-brutal { border-color: var(--crit);  color: var(--crit); }
+  .cond.is-easy   { border-color: var(--ok);   color: var(--ok); }
+  .cond.is-medium { border-color: var(--warn); color: var(--warn); }
+  .cond.is-hard,
+  .cond.is-brutal { border-color: var(--crit); color: var(--crit); }
 
-  section.panel { min-width: 0; }
+  /* panels */
+  section.panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 0.85rem 0.9rem 0.95rem;
+    min-width: 0;
+  }
   .panel > h2 {
     font-family: var(--display);
-    font-weight: 600;
-    font-size: var(--step-1);
-    letter-spacing: 0.1em;
+    font-weight: 700;
+    font-size: 0.92rem;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    margin: 0 0 0.7rem;
-    padding-bottom: 0.3rem;
-    border-bottom: 1px solid var(--line);
+    color: var(--amber);
+    margin: 0 0 0.75rem;
     display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
+    align-items: center;
+    gap: 0.55rem;
+    flex-wrap: wrap;
+  }
+  .panel > h2::before {
+    content: "";
+    width: 7px; height: 7px;
+    background: var(--amber);
+    transform: rotate(45deg);
+    flex: none;
   }
   .panel > h2 .count {
-    font-family: var(--mono);
-    font-size: 0.65rem;
+    font-family: var(--hud);
+    font-size: 0.62rem;
     letter-spacing: 0.1em;
     color: var(--ink-faint);
     margin-left: auto;
+    text-transform: uppercase;
   }
 
-  /* threat meters */
-  .meters { display: grid; gap: 0.4rem; }
-  .meter { display: grid; grid-template-columns: minmax(96px, 8.5rem) minmax(0, 1fr) 2.4rem; gap: 0.6rem; align-items: center; }
-  .meter-name { font-size: var(--step--1); color: var(--ink-soft); }
-  .meter-track { height: 8px; background: var(--surface-2); border: 1px solid var(--line-soft); }
-  .meter-fill { height: 100%; background: var(--ok); }
-  .meter-fill.is-warn { background: var(--warn); }
-  .meter-fill.is-crit { background: var(--crit); }
-  .meter-val { font-family: var(--mono); font-size: 0.7rem; color: var(--ink-faint); text-align: right; font-variant-numeric: tabular-nums; }
+  /* segmented threat meters, RTS power-bar style */
+  .meters { display: grid; gap: 0.5rem; }
+  .meter { display: grid; gap: 0.2rem 0.7rem; grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  @media (min-width: 560px) { .meter { grid-template-columns: 8.5rem minmax(0, 1fr) 2.2rem; } }
+  .meter-name {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .segs { display: flex; gap: 2px; grid-column: 1 / -1; }
+  @media (min-width: 560px) { .segs { grid-column: auto; } }
+  .segs i { flex: 1; height: 9px; background: var(--panel-hi); border: 1px solid var(--line); }
+  .segs i.on { background: var(--ok); border-color: var(--ok); }
+  .segs.warn i.on { background: var(--warn); border-color: var(--warn); }
+  .segs.crit i.on { background: var(--crit); border-color: var(--crit); }
+  .meter-val {
+    font-family: var(--hud); font-size: 0.7rem; color: var(--ink-faint);
+    text-align: right; font-variant-numeric: tabular-nums;
+    justify-self: end;
+  }
 
-  /* build order */
-  ol.steps { list-style: none; counter-reset: step; margin: 0; padding: 0; display: grid; gap: 0.35rem; }
-  ol.steps li {
-    counter-increment: step;
+  /* build queue */
+  ol.queue { list-style: none; counter-reset: q; margin: 0; padding: 0; display: grid; gap: 2px; }
+  ol.queue li {
+    counter-increment: q;
     display: grid;
-    grid-template-columns: 1.8rem minmax(0, 1fr);
-    gap: 0.5rem;
-    align-items: baseline;
-    padding: 0.35rem 0;
-    border-bottom: 1px dashed var(--line-soft);
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0.6rem;
+    align-items: start;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    padding: 0.42rem 0.55rem;
+    font-size: 0.88rem;
+    color: var(--ink-soft);
   }
-  ol.steps li::before {
-    content: counter(step, decimal-leading-zero);
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    color: var(--accent);
+  ol.queue li::before {
+    content: counter(q, decimal-leading-zero);
+    font-family: var(--hud);
+    font-size: 0.72rem;
+    color: var(--amber-dim);
+    background: var(--ground-2);
+    border: 1px solid var(--line);
+    text-align: center;
+    line-height: 1.5;
     font-variant-numeric: tabular-nums;
   }
-  ol.steps li.is-priority { background: color-mix(in srgb, var(--accent) 10%, transparent); }
-  ol.steps li.is-priority::before { color: var(--crit); }
+  ol.queue li.is-priority { border-color: var(--crit); background: rgba(224, 96, 76, 0.07); color: var(--ink); }
+  ol.queue li.is-priority::before { color: var(--crit); border-color: var(--crit); }
 
-  /* counters */
-  .counter-grid { display: grid; gap: 0.9rem; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); }
+  /* countermeasures */
+  .counters { display: grid; gap: 0.6rem; align-items: start; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); }
   .counter {
+    background: var(--panel-2);
     border: 1px solid var(--line);
-    background: var(--surface);
-    padding: 0.7rem 0.8rem;
+    border-top: 2px solid var(--line-hot);
+    padding: 0.6rem 0.7rem 0.7rem;
     display: grid;
     gap: 0.5rem;
     align-content: start;
+    min-width: 0;
   }
-  .counter-head { display: flex; align-items: baseline; gap: 0.5rem; }
+  .counter.is-crit { border-top-color: var(--crit); }
+  .counter.is-warn { border-top-color: var(--warn); }
+  .counter-head { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
   .counter-head h3 {
     font-family: var(--display);
     font-weight: 600;
-    font-size: 1.05rem;
-    letter-spacing: 0.05em;
+    font-size: 0.86rem;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     margin: 0;
+    color: var(--ink);
   }
-  .counter-head .pressure { margin-left: auto; font-family: var(--mono); font-size: 0.68rem; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
-  .units { display: grid; gap: 0.4rem; margin: 0; padding: 0; list-style: none; }
-  .unit { display: grid; gap: 0.1rem; }
-  .unit-name { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem; font-weight: 600; font-size: var(--step--1); }
-  .unit-cost { font-family: var(--mono); font-size: 0.65rem; color: var(--accent); font-variant-numeric: tabular-nums; }
-  .unit-tier { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
-  .unit-why { font-size: var(--step--1); color: var(--ink-soft); line-height: 1.4; }
-  .counter-guide { font-size: var(--step--1); color: var(--ink-soft); border-top: 1px dashed var(--line-soft); padding-top: 0.45rem; font-style: italic; }
+  .counter-head .pres {
+    margin-left: auto; font-family: var(--hud); font-size: 0.64rem;
+    color: var(--ink-faint); font-variant-numeric: tabular-nums;
+  }
+  .units { display: grid; gap: 0.45rem; margin: 0; padding: 0; list-style: none; }
+  .unit { display: grid; gap: 0.1rem; min-width: 0; }
+  .unit-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.3rem 0.45rem; }
+  .unit-name {
+    font-family: var(--display); font-weight: 600; font-size: 0.85rem;
+    letter-spacing: 0.04em; color: var(--ink);
+  }
+  .unit-cost { font-family: var(--hud); font-size: 0.68rem; color: var(--amber); font-variant-numeric: tabular-nums; }
+  .unit-tier {
+    font-family: var(--hud); font-size: 0.58rem; letter-spacing: 0.08em;
+    color: var(--ink-faint); border: 1px solid var(--line); padding: 0 0.25rem;
+  }
+  .unit-why { font-size: 0.83rem; color: var(--ink-soft); line-height: 1.42; }
+  .counter-doctrine {
+    font-size: 0.82rem; color: var(--ink-soft);
+    border-top: 1px solid var(--line); padding-top: 0.45rem;
+  }
+  .counter-doctrine::before { content: "▸ "; color: var(--amber); }
 
   /* timeline */
-  .phases { display: grid; gap: 0.9rem; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
-  .phase { border-left: 2px solid var(--accent); padding-left: 0.7rem; }
-  .phase h3 { font-family: var(--display); font-weight: 600; font-size: 1.05rem; letter-spacing: 0.06em; text-transform: uppercase; margin: 0; }
-  .phase .window { font-family: var(--mono); font-size: 0.68rem; color: var(--ink-faint); display: block; margin-bottom: 0.35rem; }
-  .phase ul { margin: 0; padding-left: 1rem; display: grid; gap: 0.3rem; }
-  .phase li { font-size: var(--step--1); color: var(--ink-soft); }
+  .phases { display: grid; gap: 0.6rem; align-items: start; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); }
+  .phase { background: var(--panel-2); border: 1px solid var(--line); border-left: 2px solid var(--amber); padding: 0.55rem 0.65rem; min-width: 0; }
+  .phase h3 {
+    font-family: var(--display); font-weight: 600; font-size: 0.85rem;
+    letter-spacing: 0.1em; text-transform: uppercase; margin: 0; color: var(--ink);
+  }
+  .phase .window {
+    font-family: var(--hud); font-size: 0.64rem; color: var(--amber-dim);
+    display: block; margin-bottom: 0.35rem; letter-spacing: 0.06em;
+  }
+  .phase ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.35rem; }
+  .phase li { font-size: 0.83rem; color: var(--ink-soft); padding-left: 0.75rem; position: relative; }
+  .phase li::before { content: "–"; position: absolute; left: 0; color: var(--ink-faint); }
 
-  /* advice lists */
-  .split { display: grid; gap: 1.75rem; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); }
+  /* advice */
+  .duo { display: grid; gap: 1.1rem; grid-template-columns: repeat(auto-fit, minmax(275px, 1fr)); }
   ul.advice { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.45rem; }
-  ul.advice li { display: grid; grid-template-columns: 1.1rem minmax(0, 1fr); gap: 0.4rem; font-size: var(--step--1); color: var(--ink-soft); }
-  ul.advice li::before { content: "▸"; color: var(--accent); font-size: 0.75rem; line-height: 1.7; }
-  ul.advice.is-danger li::before { content: "✕"; color: var(--crit); }
-  ul.advice.is-watch li::before { content: "!"; color: var(--warn); font-family: var(--mono); font-weight: 700; }
+  ul.advice li {
+    display: grid; grid-template-columns: 1.15rem minmax(0, 1fr); gap: 0.45rem;
+    font-size: 0.85rem; color: var(--ink-soft);
+  }
+  ul.advice li::before { content: "▸"; color: var(--amber); font-size: 0.7rem; line-height: 1.85; }
+  ul.advice.is-danger li::before { content: "✕"; color: var(--crit); font-size: 0.72rem; }
+  ul.advice.is-intel li::before { content: "!"; color: var(--warn); font-family: var(--hud); line-height: 1.7; }
 
   /* lineup ranking */
-  .ranking { display: grid; gap: 2px; margin-top: 0.7rem; }
-  .rank-row { display: grid; grid-template-columns: 2.4rem minmax(48px, 9rem) minmax(0, 1fr); gap: 0.6rem; align-items: center; font-size: var(--step--1); }
-  .rank-score { font-family: var(--mono); font-size: 0.7rem; color: var(--ink-faint); text-align: right; font-variant-numeric: tabular-nums; }
-  .rank-row.is-pick .rank-score { color: var(--accent); }
-  .rank-bar { height: 6px; background: var(--surface-2); border: 1px solid var(--line-soft); }
-  .rank-bar > i { display: block; height: 100%; background: var(--accent); }
-  .rank-row.is-pick .rank-name { font-weight: 600; color: var(--ink); }
-  .rank-name { color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .roster { display: grid; gap: 2px; margin-top: 0.6rem; }
+  .roster-row {
+    display: grid;
+    grid-template-columns: 2.1rem minmax(50px, 7rem) minmax(0, 1fr);
+    gap: 0.55rem; align-items: center;
+    font-size: 0.83rem;
+    padding: 0.12rem 0;
+  }
+  .roster-score { font-family: var(--hud); font-size: 0.7rem; color: var(--ink-faint); text-align: right; font-variant-numeric: tabular-nums; }
+  .roster-bar { height: 7px; background: var(--panel-hi); border: 1px solid var(--line); }
+  .roster-bar > i { display: block; height: 100%; background: var(--line-hot); }
+  .roster-name { color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .roster-row.is-pick .roster-name { color: var(--ink); font-weight: 600; }
+  .roster-row.is-pick .roster-score { color: var(--amber); }
+  .roster-row.is-pick .roster-bar > i { background: var(--amber); }
 
+  .rationale { font-size: 0.86rem; color: var(--ink-soft); margin: 0 0 0.35rem; }
+
+  /* colophon */
   .colophon {
-    margin-top: 2.5rem;
-    padding-top: 0.8rem;
+    margin-top: 1.6rem;
+    padding-top: 0.75rem;
     border-top: 1px solid var(--line);
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.06em;
+    font-family: var(--hud);
+    font-size: 0.63rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: var(--ink-faint);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem 1.2rem;
+    display: grid;
+    gap: 0.25rem;
+  }
+  .colophon a { color: var(--amber-dim); }
+
+  @media (max-width: 420px) {
+    .armies { grid-template-columns: minmax(0, 1fr); }
+    .ranks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    * { transition: none !important; animation: none !important; }
+  @media (prefers-reduced-motion: no-preference) {
+    .dossier::before { animation: sweep 5s ease-in-out infinite; }
+    @keyframes sweep {
+      0%, 100% { opacity: 0.55; }
+      50% { opacity: 1; }
+    }
   }
 </style>
 
@@ -406,34 +595,36 @@
   <header class="masthead">
     <div>
       <h1 class="wordmark">Battle <span>Lineup</span></h1>
-      <p>Command &amp; Conquer: Generals &mdash; Zero Hour &middot; skirmish planner</p>
+      <p class="sub">Generals: Zero Hour &mdash; skirmish command terminal</p>
     </div>
-    <div class="stamp" id="stamp">12 armies &middot; 61 units</div>
+    <div class="readiness" id="readiness"></div>
   </header>
 
   <div class="board">
     <form class="rail" id="controls" autocomplete="off">
-      <fieldset class="field">
-        <legend>Your army</legend>
-        <div id="you-chips"></div>
+      <fieldset class="console">
+        <legend>Your command</legend>
+        <div class="sides" id="you-sides" role="tablist" aria-label="Your side"></div>
+        <div class="armies" id="you-armies"></div>
       </fieldset>
 
-      <fieldset class="field">
-        <legend>Enemy army</legend>
-        <div id="enemy-chips"></div>
+      <fieldset class="console">
+        <legend>Hostile force</legend>
+        <div class="sides" id="enemy-sides" role="tablist" aria-label="Enemy side"></div>
+        <div class="armies" id="enemy-armies"></div>
       </fieldset>
 
-      <fieldset class="field">
-        <legend>Difficulty</legend>
-        <div class="segmented" id="difficulty"></div>
+      <fieldset class="console">
+        <legend>Enemy rank</legend>
+        <div class="ranks" id="ranks"></div>
       </fieldset>
 
-      <fieldset class="field">
-        <legend>Map</legend>
-        <select id="map-select"></select>
+      <fieldset class="console">
+        <legend>Theatre</legend>
+        <select id="map-select" aria-label="Map"></select>
       </fieldset>
 
-      <button type="button" class="ghost-btn" id="reroll">Reroll unset picks</button>
+      <button type="button" class="command-btn" id="reroll">Randomize deployment</button>
     </form>
 
     <main class="briefing" id="briefing"></main>
@@ -447,248 +638,313 @@
 
 const DATA = /*__DATASET__*/;
 
+const SIDES = ['usa', 'china', 'gla'];
 const SIDE_COLOR = { usa: 'var(--usa)', china: 'var(--china)', gla: 'var(--gla)' };
-const SIDE_NAME = { usa: 'USA', china: 'China', gla: 'GLA' };
-const DIFFICULTIES = ['easy', 'medium', 'hard', 'brutal'];
+const SIDE_LABEL = { usa: 'USA', china: 'China', gla: 'GLA' };
+
+/* Abstract faction marks — geometry, not insignia. */
+const MARKS = {
+  usa: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.2 6.6.9-4.8 4.7 1.2 6.7L12 17.3 6.1 20.5l1.2-6.7L2.5 9.1l6.6-.9z" fill="currentColor"/></svg>',
+  china: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8.7 5v10L12 22 3.3 17V7z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3.4" fill="currentColor"/></svg>',
+  gla: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5L22 20H2z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9l4.8 8.4H7.2z" fill="currentColor"/></svg>',
+};
+
+const RANKS = [
+  { id: 'easy',   label: 'Recruit',   stars: 1, tone: 'var(--ok)' },
+  { id: 'medium', label: 'Veteran',   stars: 2, tone: 'var(--warn)' },
+  { id: 'hard',   label: 'Elite',     stars: 3, tone: 'var(--crit)' },
+  { id: 'brutal', label: 'Heroic',    stars: 4, tone: 'var(--crit)' },
+];
+
+/* Section names in the game's own register. */
+const SECTION = {
+  roster: 'General selection',
+  intel: 'Enemy threat assessment',
+  queue: 'Build queue',
+  counters: 'Countermeasures',
+  timeline: 'Operational timeline',
+  doctrine: 'Enemy doctrine',
+  rules: 'Rules of engagement',
+  field: 'Field notes',
+  terrain: 'Terrain analysis',
+};
 
 const state = {
-  you: null,            // null = let the planner choose
+  you: null,
   enemy: 'china_tank',
   difficulty: 'hard',
   mapId: null,
-  seed: 20030922,       // Zero Hour's release date, as a seed
+  seed: 20030922,          // Zero Hour's release date
+  youSide: null,
+  enemySide: 'china',
 };
 
 const $ = (id) => document.getElementById(id);
 const el = (tag, className, text) => {
-  const node = document.createElement(tag);
-  if (className) node.className = className;
-  if (text !== undefined) node.textContent = text;
-  return node;
+  const n = document.createElement(tag);
+  if (className) n.className = className;
+  if (text !== undefined) n.textContent = text;
+  return n;
 };
+const mark = (side, size) => {
+  const holder = el('span');
+  holder.innerHTML = MARKS[side] ?? MARKS.usa;   // static strings defined above
+  const svg = holder.firstChild;
+  svg.style.color = SIDE_COLOR[side] ?? 'var(--amber)';   // currentColor source
+  if (size) { svg.setAttribute('width', size); svg.setAttribute('height', size); }
+  return svg;
+};
+
+/** "USA Air Force General" -> "Air Force"; base factions get their short name. */
+const SHORT = {
+  usa: 'USA', china: 'China', gla: 'GLA',
+};
+function armyName(f) {
+  if (SHORT[f.id]) return SHORT[f.id];
+  return f.name.replace(/^(USA|China|GLA)\s+/, '').replace(/\s+General$/, '');
+}
+function commander(f) {
+  if (!f.general) return 'Standard doctrine';
+  return f.general.replace(/^(Gen\.|Dr\.|Prince)\s+/, '');
+}
 
 /* ---------------------------------------------------------- controls --- */
 
-function buildChips(container, selected, onPick, anyLabel) {
+function sideTabs(container, currentSide, onSide) {
   container.replaceChildren();
-
-  const anyWrap = el('div', 'chips');
-  const anyBtn = el('button', 'chip chip-any', anyLabel);
-  anyBtn.type = 'button';
-  anyBtn.setAttribute('aria-pressed', String(selected === null));
-  anyBtn.addEventListener('click', () => onPick(null));
-  anyWrap.append(anyBtn);
-  container.append(anyWrap);
-
-  for (const side of ['usa', 'china', 'gla']) {
-    const group = el('div', 'side-group');
-    group.append(el('div', 'side-label', SIDE_NAME[side]));
-    const chips = el('div', 'chips');
-    for (const f of DATA.factions.filter((x) => x.side === side)) {
-      const btn = el('button', 'chip');
-      btn.type = 'button';
-      btn.style.setProperty('--sidecolor', SIDE_COLOR[side]);
-      btn.setAttribute('aria-pressed', String(selected === f.id));
-      btn.append(el('span', null, f.general ? f.name.replace(/^(USA|China|GLA) /, '') : f.name));
-      if (f.general) btn.append(el('span', 'chip-sub', f.general.replace(/^(Gen\.|Dr\.|Prince) /, '').split(' ')[0]));
-      btn.addEventListener('click', () => onPick(f.id));
-      chips.append(btn);
-    }
-    group.append(chips);
-    container.append(group);
+  const tabs = [{ id: null, label: 'Any' }, ...SIDES.map((s) => ({ id: s, label: SIDE_LABEL[s] }))];
+  for (const t of tabs) {
+    const btn = el('button', 'side-tab', t.label);
+    btn.type = 'button';
+    btn.setAttribute('role', 'tab');
+    btn.setAttribute('aria-selected', String(currentSide === t.id));
+    if (t.id) btn.style.setProperty('--tab', SIDE_COLOR[t.id]);
+    btn.addEventListener('click', () => onSide(t.id));
+    container.append(btn);
   }
 }
 
-function buildDifficulty() {
-  const box = $('difficulty');
-  box.replaceChildren();
-  for (const d of DIFFICULTIES) {
-    const btn = el('button', 'seg', d);
+function armyCards(container, side, selected, onPick, anyLabel, anyHint) {
+  container.replaceChildren();
+  container.classList.toggle('is-wide', side === null);
+
+  if (side === null) {
+    const btn = el('button', 'army');
     btn.type = 'button';
-    btn.setAttribute('aria-pressed', String(state.difficulty === d));
-    btn.addEventListener('click', () => { state.difficulty = d; render(); });
+    btn.style.setProperty('--mark', 'var(--amber)');
+    btn.setAttribute('aria-pressed', String(selected === null));
+    btn.append(el('span', 'army-name', anyLabel));
+    btn.append(el('span', 'army-who', anyHint));
+    btn.addEventListener('click', () => onPick(null));
+    container.append(btn);
+    return;
+  }
+
+  for (const f of DATA.factions.filter((x) => x.side === side)) {
+    const btn = el('button', 'army');
+    btn.type = 'button';
+    btn.style.setProperty('--mark', SIDE_COLOR[side]);
+    btn.setAttribute('aria-pressed', String(selected === f.id));
+    btn.title = f.tagline;
+    btn.append(el('span', 'army-name', armyName(f)));
+    btn.append(el('span', 'army-who', commander(f)));
+    btn.addEventListener('click', () => onPick(f.id));
+    container.append(btn);
+  }
+}
+
+function rankButtons() {
+  const box = $('ranks');
+  box.replaceChildren();
+  for (const r of RANKS) {
+    const btn = el('button', 'rank');
+    btn.type = 'button';
+    btn.style.setProperty('--tone', r.tone);
+    btn.setAttribute('aria-pressed', String(state.difficulty === r.id));
+    btn.setAttribute('aria-label', `${r.id} difficulty`);
+    btn.append(el('span', 'stars', '★'.repeat(r.stars)));
+    btn.append(el('span', 'rank-label', r.id));
+    btn.addEventListener('click', () => { state.difficulty = r.id; render(); });
     box.append(btn);
   }
 }
 
-function buildMapSelect() {
+function mapSelect() {
   const sel = $('map-select');
   sel.replaceChildren();
-  const any = el('option', null, 'No map — general advice');
+  const any = el('option', null, 'Unspecified theatre');
   any.value = '';
   sel.append(any);
-  const sorted = [...DATA.maps].sort((a, b) => a.players - b.players || a.name.localeCompare(b.name));
-  for (const m of sorted) {
-    const opt = el('option', null, `${m.name} — ${m.players}p, ${m.terrain}`);
+  for (const m of [...DATA.maps].sort((a, b) => a.players - b.players || a.name.localeCompare(b.name))) {
+    const opt = el('option', null, `${m.name} — ${m.players} players, ${m.terrain}`);
     opt.value = m.id;
     sel.append(opt);
   }
   sel.value = state.mapId ?? '';
-  sel.addEventListener('change', () => {
-    state.mapId = sel.value || null;
-    render();
-  });
+  sel.addEventListener('change', () => { state.mapId = sel.value || null; render(); });
 }
 
 /* ---------------------------------------------------------- briefing --- */
 
-function pressureClass(v) {
-  return v >= 2.4 ? 'is-crit' : v >= 1.6 ? 'is-warn' : '';
-}
+const toneOf = (v) => (v >= 2.4 ? 'crit' : v >= 1.6 ? 'warn' : '');
 
 function panel(title, count) {
-  const section = el('section', 'panel');
-  const h2 = el('h2');
-  h2.append(document.createTextNode(title));
-  if (count) h2.append(el('span', 'count', count));
-  section.append(h2);
-  return section;
+  const s = el('section', 'panel');
+  const h = el('h2');
+  h.append(document.createTextNode(title));
+  if (count) h.append(el('span', 'count', count));
+  s.append(h);
+  return s;
 }
 
-function adviceList(items, variant) {
+function advice(items, variant) {
   const ul = el('ul', 'advice' + (variant ? ' ' + variant : ''));
-  for (const item of items) ul.append(el('li', null, item));
+  for (const i of items) ul.append(el('li', null, i));
   return ul;
 }
 
-function renderMatchup(plan) {
-  const box = el('div', 'matchup');
-
-  const versus = el('div', 'versus');
-  versus.append(el('span', 'army-you', plan.you.name));
-  versus.append(el('span', 'vs', 'versus'));
-  versus.append(el('span', 'army-them', plan.enemy.name));
-  box.append(versus);
-
-  if (plan.you.general || plan.enemy.general) {
-    const line = el('div', 'commanders');
-    if (plan.you.general) {
-      const s = el('span');
-      s.append(el('b', null, 'You: '), document.createTextNode(plan.you.general));
-      line.append(s);
-    }
-    if (plan.enemy.general) {
-      const s = el('span');
-      s.append(el('b', null, 'Them: '), document.createTextNode(plan.enemy.general));
-      line.append(s);
-    }
-    box.append(line);
-  }
-
-  box.append(el('p', 'headline', plan.headline));
-
-  const tags = el('div', 'conditions');
-  tags.append(el('span', `tag tag-diff-${plan.difficulty}`, plan.difficulty));
-  tags.append(el('span', 'tag', plan.map ? plan.map.name : 'any map'));
-  if (plan.map) {
-    tags.append(el('span', 'tag', `${plan.map.players} players`));
-    tags.append(el('span', 'tag', `chokepoints ${plan.map.chokepoints}/3`));
-    tags.append(el('span', 'tag', `supply ${plan.map.supplyDensity}/3`));
-  }
-  box.append(tags);
-
+function combatant(faction, role) {
+  const box = el('div', 'combatant ' + role);
+  box.append(mark(faction.side, 30));
+  const who = el('div', 'who');
+  const title = el('div', 'army-title', faction.name);
+  title.style.color = SIDE_COLOR[faction.side];
+  who.append(title);
+  who.append(el('div', 'cmdr', faction.general ?? 'Standard doctrine'));
+  box.append(who);
   return box;
 }
 
-function renderLineup(plan) {
-  if (!plan.lineupRationale) return null;
-  const section = panel('Why this lineup', 'scored against their army');
-  for (const line of plan.lineupRationale) section.append(el('p', 'unit-why', line));
+function renderDossier(plan) {
+  const box = el('div', 'dossier cut');
 
-  const ranking = el('div', 'ranking');
+  const eva = el('div', 'eva');
+  eva.append(document.createTextNode('▸ Battle plan established — '));
+  eva.append(el('b', null, plan.you.name));
+  eva.append(document.createTextNode(' deployed'));
+  box.append(eva);
+
+  const row = el('div', 'combatants');
+  row.append(combatant(plan.you, 'you'));
+  row.append(el('div', 'clash', 'VS'));
+  row.append(combatant(plan.enemy, 'them'));
+  box.append(row);
+
+  box.append(el('p', 'assessment', plan.headline));
+
+  const conds = el('div', 'conditions');
+  conds.append(el('span', `cond is-${plan.difficulty}`, `Rank: ${plan.difficulty}`));
+  conds.append(el('span', 'cond', plan.map ? plan.map.name : 'Any theatre'));
+  if (plan.map) {
+    conds.append(el('span', 'cond', `${plan.map.players} players`));
+    conds.append(el('span', 'cond', `${plan.map.terrain} terrain`));
+    conds.append(el('span', 'cond', `Chokepoints ${plan.map.chokepoints}/3`));
+    conds.append(el('span', 'cond', `Supply ${plan.map.supplyDensity}/3`));
+  }
+  box.append(conds);
+  return box;
+}
+
+function renderRoster(plan) {
+  if (!plan.lineupRationale) return null;
+  const s = panel(SECTION.roster, 'scored vs their doctrine');
+  for (const line of plan.lineupRationale) s.append(el('p', 'rationale', line));
+
+  const list = el('div', 'roster');
   const top = plan.lineupRanking.slice(0, 6);
   const max = Math.max(1, ...top.map((r) => r.score));
-  for (const row of top) {
-    const line = el('div', 'rank-row' + (row.faction.id === plan.you.id ? ' is-pick' : ''));
-    line.append(el('div', 'rank-score', String(row.score)));
-    const bar = el('div', 'rank-bar');
+  for (const r of top) {
+    const row = el('div', 'roster-row' + (r.faction.id === plan.you.id ? ' is-pick' : ''));
+    row.append(el('div', 'roster-score', String(r.score)));
+    const bar = el('div', 'roster-bar');
     const fill = el('i');
-    fill.style.width = `${(row.score / max) * 100}%`;
-    if (row.faction.id !== plan.you.id) fill.style.background = 'var(--line)';
+    fill.style.width = `${(r.score / max) * 100}%`;
     bar.append(fill);
-    line.append(bar);
-    line.append(el('div', 'rank-name', row.faction.name));
-    ranking.append(line);
+    row.append(bar);
+    row.append(el('div', 'roster-name', r.faction.name));
+    list.append(row);
   }
-  section.append(ranking);
-  return section;
+  s.append(list);
+  return s;
 }
 
-function renderThreat(plan) {
-  const section = panel('Their threat profile', 'pressure on each axis');
+function renderIntel(plan) {
+  const s = panel(SECTION.intel, 'pressure by axis');
   const meters = el('div', 'meters');
-  for (const counter of plan.counters) {
+  for (const c of plan.counters) {
     const row = el('div', 'meter');
-    row.append(el('div', 'meter-name', AXIS_LABEL[counter.axis]));
-    const track = el('div', 'meter-track');
-    const fill = el('div', 'meter-fill ' + pressureClass(counter.pressure));
-    fill.style.width = `${(Math.min(3, counter.pressure) / 3) * 100}%`;
-    track.append(fill);
-    row.append(track);
-    row.append(el('div', 'meter-val', counter.pressure.toFixed(1)));
+    row.append(el('div', 'meter-name', AXIS_LABEL[c.axis]));
+    const segs = el('div', 'segs ' + toneOf(c.pressure));
+    const lit = Math.round((Math.min(3, c.pressure) / 3) * 10);
+    for (let i = 0; i < 10; i++) segs.append(el('i', i < lit ? 'on' : null));
+    row.append(segs);
+    row.append(el('div', 'meter-val', c.pressure.toFixed(1)));
     meters.append(row);
   }
-  section.append(meters);
-  return section;
+  s.append(meters);
+  return s;
 }
 
-function renderBuildOrder(plan) {
-  const section = panel('Build order', `${plan.buildOrder.length} steps`);
-  const ol = el('ol', 'steps');
+function renderQueue(plan) {
+  const s = panel(SECTION.queue, `${plan.buildOrder.length} orders`);
+  const ol = el('ol', 'queue');
   for (const step of plan.buildOrder) {
     const li = el('li');
     if (/^PRIORITY/.test(step) || /mandatory/i.test(step)) li.className = 'is-priority';
     li.append(el('span', null, step));
     ol.append(li);
   }
-  section.append(ol);
-  return section;
+  s.append(ol);
+  return s;
 }
 
 function renderCounters(plan) {
-  const section = panel('Counter their game', 'what to build, and why');
-  const grid = el('div', 'counter-grid');
-  for (const counter of plan.counters) {
-    const card = el('div', 'counter');
+  const s = panel(SECTION.counters, 'requisition list');
+  const grid = el('div', 'counters');
+  for (const c of plan.counters) {
+    const tone = toneOf(c.pressure);
+    const card = el('div', 'counter' + (tone ? ' is-' + tone : ''));
     const head = el('div', 'counter-head');
-    head.append(el('h3', null, AXIS_LABEL[counter.axis]));
-    head.append(el('span', 'pressure', `${counter.pressure.toFixed(1)} / 3`));
+    head.append(el('h3', null, AXIS_LABEL[c.axis]));
+    head.append(el('span', 'pres', `${c.pressure.toFixed(1)}/3`));
     card.append(head);
 
     const ul = el('ul', 'units');
-    for (const u of counter.units) {
+    for (const u of c.units) {
       const li = el('li', 'unit');
-      const name = el('div', 'unit-name');
-      name.append(el('span', null, u.name));
-      name.append(el('span', 'unit-cost', `${u.cost.toLocaleString()} cr`));
-      name.append(el('span', 'unit-tier', u.tier));
-      li.append(name);
+      const line = el('div', 'unit-line');
+      line.append(el('span', 'unit-name', u.name));
+      line.append(el('span', 'unit-cost', `$${u.cost.toLocaleString()}`));
+      line.append(el('span', 'unit-tier', u.tier === 'early' ? 'Tier 1' : u.tier === 'mid' ? 'Tier 2' : 'Tier 3'));
+      li.append(line);
       li.append(el('div', 'unit-why', u.why));
       ul.append(li);
     }
     card.append(ul);
-    card.append(el('div', 'counter-guide', counter.guidance));
+    card.append(el('div', 'counter-doctrine', c.guidance));
     grid.append(card);
   }
-  section.append(grid);
-  return section;
+  s.append(grid);
+  return s;
 }
 
 function renderTimeline(plan) {
-  const section = panel('Timeline', 'what to be doing, and when');
-  const phases = el('div', 'phases');
-  for (const phase of plan.timeline) {
-    const box = el('div', 'phase');
-    box.append(el('h3', null, phase.label));
-    box.append(el('span', 'window', phase.window));
+  const s = panel(SECTION.timeline, 'mission clock');
+  const box = el('div', 'phases');
+  for (const p of plan.timeline) {
+    const card = el('div', 'phase');
+    card.append(el('h3', null, p.label));
+    card.append(el('span', 'window', p.window));
     const ul = el('ul');
-    for (const o of phase.objectives) ul.append(el('li', null, o));
-    box.append(ul);
-    phases.append(box);
+    for (const o of p.objectives) ul.append(el('li', null, o));
+    card.append(ul);
+    box.append(card);
   }
-  section.append(phases);
-  return section;
+  s.append(box);
+  return s;
 }
+
+/* -------------------------------------------------------------- render --- */
 
 function render() {
   let plan;
@@ -701,55 +957,70 @@ function render() {
       seed: state.seed,
     });
   } catch (err) {
-    const box = $('briefing');
-    box.replaceChildren(el('p', 'headline', `Could not build a plan: ${err.message}`));
+    $('briefing').replaceChildren(el('p', 'assessment', `Unable to establish a battle plan: ${err.message}`));
     return;
   }
 
-  buildChips($('you-chips'), state.you, (id) => { state.you = id; render(); }, 'Let the planner choose');
-  buildChips($('enemy-chips'), state.enemy, (id) => { state.enemy = id; render(); }, 'Surprise me');
-  buildDifficulty();
+  sideTabs($('you-sides'), state.youSide, (s) => {
+    state.youSide = s;
+    if (s === null) state.you = null;
+    render();
+  });
+  armyCards($('you-armies'), state.youSide, state.you, (id) => { state.you = id; render(); },
+    'Let the planner choose', 'Best answer to their doctrine');
+
+  sideTabs($('enemy-sides'), state.enemySide, (s) => {
+    state.enemySide = s;
+    if (s === null) state.enemy = null;
+    render();
+  });
+  armyCards($('enemy-armies'), state.enemySide, state.enemy, (id) => { state.enemy = id; render(); },
+    'Unknown hostile', 'Draw an opponent at random');
+
+  rankButtons();
   $('map-select').value = state.mapId ?? '';
 
-  const out = $('briefing');
-  const parts = [
-    renderMatchup(plan),
-    renderLineup(plan),
-    renderThreat(plan),
-    renderBuildOrder(plan),
-    renderCounters(plan),
-    renderTimeline(plan),
-  ].filter(Boolean);
+  const parts = [renderDossier(plan), renderRoster(plan), renderIntel(plan), renderQueue(plan), renderCounters(plan), renderTimeline(plan)]
+    .filter(Boolean);
 
-  const split = el('div', 'split');
-  const watch = panel('Watch for');
-  watch.append(adviceList(plan.watchFor, 'is-watch'));
-  const dont = panel('Do not');
-  dont.append(adviceList(plan.doNot, 'is-danger'));
-  split.append(watch, dont);
-  parts.push(split);
+  const duo = el('div', 'duo');
+  const doctrine = panel(SECTION.doctrine);
+  doctrine.append(advice(plan.watchFor, 'is-intel'));
+  const rules = panel(SECTION.rules);
+  rules.append(advice(plan.doNot, 'is-danger'));
+  duo.append(doctrine, rules);
+  parts.push(duo);
 
   if (plan.matchupNotes.length) {
-    const notes = panel('Matchup notes', `${plan.matchupNotes.length} applicable`);
-    notes.append(adviceList(plan.matchupNotes));
+    const notes = panel(SECTION.field, `${plan.matchupNotes.length} applicable`);
+    notes.append(advice(plan.matchupNotes));
     parts.push(notes);
   }
 
-  const mapPanel = panel(plan.map ? `Map — ${plan.map.name}` : 'Map');
-  mapPanel.append(adviceList(plan.mapNotes));
-  if (plan.map && plan.map.features.length) {
+  const terrain = panel(plan.map ? `${SECTION.terrain} — ${plan.map.name}` : SECTION.terrain);
+  terrain.append(advice(plan.mapNotes));
+  if (plan.map?.features.length) {
     const tags = el('div', 'conditions');
-    for (const f of plan.map.features) tags.append(el('span', 'tag', f));
-    mapPanel.append(tags);
+    for (const f of plan.map.features) tags.append(el('span', 'cond', f));
+    terrain.append(tags);
   }
-  parts.push(mapPanel);
+  parts.push(terrain);
 
-  out.replaceChildren(...parts);
+  $('briefing').replaceChildren(...parts);
 }
 
-/* ------------------------------------------------------------- boot --- */
+/* ---------------------------------------------------------------- boot --- */
 
-$('stamp').textContent = `${DATA.factions.length} armies · ${DATA.units.length} units · ${DATA.maps.length} maps`;
+const readiness = $('readiness');
+readiness.replaceChildren(
+  ...[['Armies', DATA.factions.length], ['Units', DATA.units.length], ['Theatres', DATA.maps.length]]
+    .map(([label, n]) => {
+      const box = el('span', 'readout');
+      box.append(document.createTextNode(label + ' '));
+      box.append(el('b', null, String(n)));
+      return box;
+    }),
+);
 
 $('reroll').addEventListener('click', () => {
   state.seed = Math.floor(Math.random() * 1e9);
@@ -758,13 +1029,13 @@ $('reroll').addEventListener('click', () => {
 
 const prov = DATA.provenance;
 $('colophon').replaceChildren(
-  el('span', null, `curated dataset ${prov.curatedAt}`),
+  el('span', null, `Curated dossier ${prov.curatedAt} · strategy engine runs in this page`),
   el('span', null, prov.wikiCache
-    ? `wiki overlay: ${prov.wikiCache.pages} pages from ${prov.wikiCache.source}`
-    : 'no wiki overlay — run npm run ingest to merge live wiki data'),
-  el('span', null, 'strategy engine runs entirely in this page'),
+    ? `Wiki overlay · ${prov.wikiCache.pages} pages from ${prov.wikiCache.source} · ${prov.wikiCache.fetchedAt.slice(0, 10)}`
+    : 'No wiki overlay — run npm run ingest to merge live wiki data'),
+  el('span', null, 'Fan-made planning tool · not affiliated with Electronic Arts'),
 );
 
-buildMapSelect();
+mapSelect();
 render();
 </script>

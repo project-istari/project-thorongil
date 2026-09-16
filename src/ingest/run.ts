@@ -9,13 +9,14 @@
  *   npm run ingest -- --discover "Zero Hour"
  *   npm run ingest -- --category "Zero Hour units" --category "Generals maps"
  */
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parseArgs } from 'node:util';
 import { WikiClient, WikiBlockedError, DEFAULT_ENDPOINT } from './wiki.js';
 import { parsePage, type ParsedPage } from './parse.js';
-import { WIKI_CACHE } from '../data/index.js';
+import { WIKI_CACHE, CURATED } from '../data/index.js';
 import type { WikiCache } from '../data/index.js';
+import type { Unit } from '../types.js';
 
 /**
  * Seed categories. Wiki category names drift, so these are a starting point,
@@ -50,6 +51,7 @@ function parseCli() {
       limit: { type: 'string', default: '600' },
       delay: { type: 'string', default: '250' },
       'dry-run': { type: 'boolean', default: false },
+      'soft-fail': { type: 'boolean', default: false },
       help: { type: 'boolean', default: false },
     },
     allowPositionals: false,
@@ -67,24 +69,61 @@ battle-lineup wiki ingest
   --limit <n>          Maximum pages to fetch (default 600)
   --delay <ms>         Delay between API requests (default 250)
   --dry-run            Fetch and parse, but do not write the cache
+  --soft-fail          Exit 0 when the wiki is unreachable (for CI and deploys)
   --help               This message
 `;
 
-async function discover(client: WikiClient, prefix: string): Promise<void> {
+async function listCategories(client: WikiClient, prefix: string): Promise<string[]> {
   const res = await client.query<{ query?: { allcategories: Array<{ category: string }> } }>({
     action: 'query',
     list: 'allcategories',
     acprefix: prefix,
     aclimit: '200',
   });
-  const cats = res.query?.allcategories ?? [];
+  return (res.query?.allcategories ?? []).map((c) => c.category);
+}
+
+/**
+ * Compare what the wiki says against what we curated.
+ *
+ * This is the point of the crawl: the curated costs are approximations, and
+ * this report is how you see which ones the wiki disagrees with.
+ */
+function reconcile(units: WikiCache['units']): void {
+  if (!units?.length) return;
+  const curated = JSON.parse(readFileSync(join(CURATED, 'units.json'), 'utf8')) as Unit[];
+  const byName = new Map(curated.map((u) => [u.name.toLowerCase(), u]));
+
+  let matched = 0;
+  const costDiffs: string[] = [];
+  for (const w of units) {
+    const c = byName.get(w.name.toLowerCase());
+    if (!c) continue;
+    matched++;
+    if (typeof w.cost === 'number' && w.cost !== c.cost) {
+      costDiffs.push(`    ${c.name}: curated ${c.cost} -> wiki ${w.cost}`);
+    }
+  }
+
+  console.log(`\nReconciliation: ${matched}/${curated.length} curated units matched a wiki page`);
+  if (costDiffs.length) {
+    console.log(`  ${costDiffs.length} cost corrections (applied by the overlay):`);
+    for (const line of costDiffs.slice(0, 25)) console.log(line);
+    if (costDiffs.length > 25) console.log(`    ... and ${costDiffs.length - 25} more`);
+  } else if (matched) {
+    console.log('  no cost disagreements');
+  }
+}
+
+async function discover(client: WikiClient, prefix: string): Promise<void> {
+  const cats = await listCategories(client, prefix);
   if (!cats.length) {
     console.log(`No categories found starting with "${prefix}".`);
     return;
   }
   console.log(`Categories starting with "${prefix}":\n`);
-  for (const c of cats) console.log(`  ${c.category}`);
-  console.log(`\nRe-run with: npm run ingest -- ${cats.slice(0, 3).map((c) => `--category "${c.category}"`).join(' ')}`);
+  for (const c of cats) console.log(`  ${c}`);
+  console.log(`\nRe-run with: npm run ingest -- ${cats.slice(0, 3).map((c) => `--category "${c}"`).join(' ')}`);
 }
 
 async function main(): Promise<number> {
@@ -121,11 +160,29 @@ async function main(): Promise<number> {
     for (const h of hits) titles.set(h.title, h.title);
   }
 
+  // Seed names drift. If they all came back empty and the caller did not pin
+  // categories explicitly, find the real ones and crawl those instead — this is
+  // what lets an unattended deploy build succeed without hand-tuning.
+  if (!titles.size && !args.category?.length) {
+    console.log('\n  seed categories returned nothing; discovering real category names...');
+    const found = new Set<string>();
+    for (const prefix of ['Generals', 'Zero Hour']) {
+      for (const c of await listCategories(client, prefix)) found.add(c);
+    }
+    const relevant = [...found].filter((c) => /unit|vehicle|infantry|aircraft|arsenal|map|general|faction|structure/i.test(c));
+    console.log(`  discovered ${found.size} categories, ${relevant.length} relevant`);
+    for (const cat of relevant.slice(0, 20)) {
+      const members = await client.categoryMembers(cat, limit);
+      if (members.length) console.log(`  category "${cat}": ${members.length} pages`);
+      for (const m of members) titles.set(m.title, m.title);
+    }
+  }
+
   const wanted = [...titles.values()].slice(0, limit);
   if (!wanted.length) {
-    console.error('\nNo pages found. The seed category names are probably wrong for this wiki.');
-    console.error('Run:  npm run ingest -- --discover "Zero Hour"   to see what exists.');
-    return 1;
+    console.error('\nNo pages found, and category discovery turned up nothing usable.');
+    console.error('Run:  npm run ingest -- --discover "Zero Hour"   to inspect the wiki by hand.');
+    return args['soft-fail'] ? 0 : 1;
   }
 
   // 2. Fetch and parse.
@@ -151,6 +208,7 @@ async function main(): Promise<number> {
   };
   console.log(`\nParsed: ${counts.units} units, ${counts.factions} factions, ${counts.maps} maps, ${counts.unknown} unclassified`);
   console.log(`API requests: ${client.requestCount}`);
+  reconcile(cache.units);
 
   if (args['dry-run']) {
     console.log('\n--dry-run: nothing written.');
@@ -170,7 +228,8 @@ main()
   .catch((err) => {
     if (err instanceof WikiBlockedError) {
       console.error(`\n${err.message}\n`);
-      process.exit(2);
+      // A deploy should still ship the curated dataset when the wiki is out of reach.
+      process.exit(process.argv.includes('--soft-fail') ? 0 : 2);
     }
     console.error(err);
     process.exit(1);
