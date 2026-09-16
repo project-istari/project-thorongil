@@ -145,6 +145,30 @@ test('overlay enriches a curated record matched by wiki page title', () => {
   assert.equal(result.records[0]!.source, 'merged');
 });
 
+test('overlay never lets the wiki rename a curated record', () => {
+  // The wiki's title casing differs from ours ("Sentry drone" vs "Sentry
+  // Drone"), and the curated name is the vocabulary the authored build orders
+  // and counter guidance speak. A crawl that renamed records desynchronised the
+  // advice from the units it named.
+  const curated: Rec[] = [{ id: 'sentry_drone', name: 'Sentry Drone', source: 'curated', wikiPage: 'Sentry_drone' }];
+  const result = overlay(
+    curated,
+    [{ name: 'Sentry drone', wikiPage: 'Sentry_drone', cost: 600 }],
+    ['id', 'name'],
+    ADMIT.unit,
+  );
+  assert.equal(result.records[0]!.name, 'Sentry Drone', 'curated name must survive the overlay');
+  assert.equal(result.records[0]!.cost, 600, 'facts should still merge');
+});
+
+test('the loaded dataset keeps its curated unit names', () => {
+  // Guards the same rule end to end, against whatever crawl is on disk.
+  const names = loadDataset().units.map((u) => u.name);
+  for (const expected of ['Sentry Drone', 'Tomahawk Launcher', 'Listening Outpost']) {
+    assert.ok(names.includes(expected), `${expected} was renamed by the wiki overlay`);
+  }
+});
+
 test('overlay refuses foreign wiki entities instead of injecting them', () => {
   const curated: Rec[] = [{ id: 'overlord', name: 'Overlord', source: 'curated', wikiPage: 'Overlord_Tank' }];
   const foreign = [

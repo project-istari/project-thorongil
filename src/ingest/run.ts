@@ -12,26 +12,32 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { parseArgs } from 'node:util';
-import { WikiClient, WikiBlockedError, DEFAULT_ENDPOINT } from './wiki.js';
-import { parsePage, type ParsedPage } from './parse.js';
+import { WikiClient, WikiBlockedError, DEFAULT_ENDPOINT, type WikiPage } from './wiki.js';
+import { parsePage, isDisambiguation, disambiguationLinks, type ParsedPage } from './parse.js';
 import { WIKI_CACHE, CURATED, INGEST_STATUS } from '../data/index.js';
 import type { WikiCache } from '../data/index.js';
 import type { IngestStatus, Unit } from '../types.js';
 
 /**
- * Seed categories. Wiki category names drift, so these are a starting point,
- * not a contract — run with --discover to list what the wiki actually has and
- * override with --category.
+ * Seed categories, verified against cnc.fandom.com's own category list.
+ *
+ * These were previously guesses ("USA arsenal", "Zero Hour units") and every
+ * one of them returned zero pages — the wiki files Zero Hour arsenals under the
+ * in-fiction nationality, not the faction label the game uses. Wiki category
+ * names still drift, so run with --discover to list what the wiki actually has
+ * and override with --category.
  */
 const DEFAULT_CATEGORIES = [
-  'Generals units',
-  'Zero Hour units',
-  'USA arsenal',
-  'China arsenal',
-  'GLA arsenal',
-  'Generals maps',
-  'Zero Hour maps',
-  'Generals factions',
+  'Zero Hour American arsenal',
+  'Zero Hour Chinese arsenal',
+  'Zero Hour GLA arsenal',
+  'Zero Hour Leang Arsenal',
+  'Zero Hour characters',
+  'Generals 1 American arsenal',
+  'Generals 1 Chinese arsenal',
+  'Generals 1 GLA arsenal',
+  'Generals 1 characters',
+  'Generals 1 skirmish maps',
 ];
 
 /** Searches that surface pages the categories miss. */
@@ -88,6 +94,30 @@ async function listCategories(client: WikiClient, prefix: string): Promise<strin
 }
 
 /**
+ * The wiki pages the curated dataset already names.
+ *
+ * Every curated unit, faction and map records the page it corresponds to. Those
+ * are exactly the pages worth fetching — crawling categories finds *more*
+ * entities, but only these can reconcile against what we ship. Seeding the
+ * crawl with them is what lifts the match rate off the floor.
+ */
+function curatedTitles(): string[] {
+  const out = new Set<string>();
+  for (const file of ['units.json', 'factions.json', 'maps.json']) {
+    try {
+      const records = JSON.parse(readFileSync(join(CURATED, file), 'utf8')) as Array<{ wikiPage?: string }>;
+      for (const r of records) {
+        if (r.wikiPage) out.add(r.wikiPage.replace(/_/g, ' '));
+      }
+    } catch {
+      // A missing or malformed curated file is the dataset tests' problem, not
+      // the crawler's; carry on with whatever the other files gave us.
+    }
+  }
+  return [...out];
+}
+
+/**
  * Compare what the wiki says against what we curated.
  *
  * This is the point of the crawl: the curated costs are approximations, and
@@ -102,17 +132,20 @@ function reconcile(units: WikiCache['units']): { matched: number; curatedTotal: 
   const byPage = new Map(curated.flatMap((u) => (u.wikiPage ? [[norm(u.wikiPage), u] as const] : [])));
 
   let matched = 0;
+  let withImages = 0;
   const costDiffs: string[] = [];
   for (const w of units) {
     const c = (w.wikiPage ? byPage.get(norm(w.wikiPage)) : undefined) ?? byName.get(norm(w.name));
     if (!c) continue;
     matched++;
+    if (w.image) withImages++;
     if (typeof w.cost === 'number' && w.cost !== c.cost) {
       costDiffs.push(`    ${c.name}: curated ${c.cost} -> wiki ${w.cost}`);
     }
   }
 
   console.log(`\nReconciliation: ${matched}/${curated.length} curated units matched a wiki page`);
+  console.log(`  ${withImages}/${matched} matched units carry a wiki image`);
   if (costDiffs.length) {
     console.log(`  ${costDiffs.length} cost corrections (applied by the overlay):`);
     for (const line of costDiffs.slice(0, 25)) console.log(line);
@@ -121,6 +154,62 @@ function reconcile(units: WikiCache['units']): { matched: number; curatedTotal: 
     console.log('  no cost disagreements');
   }
   return { matched, curatedTotal: curated.length, costCorrections: costDiffs.length };
+}
+
+/**
+ * Swap disambiguation pages for the article they point at for this game.
+ *
+ * The curated dataset records plain titles, and on a wiki covering every C&C
+ * release a plain title is usually a disambiguation stub: "Ranger" lists the
+ * Red Alert vehicle and the Generals infantryman without being either. Those
+ * stubs carry no cost, no image and no prose, so left unresolved they match a
+ * curated record and enrich it with nothing.
+ */
+async function resolveDisambiguations(
+  client: WikiClient,
+  pages: WikiPage[],
+  gameFilter: RegExp,
+): Promise<WikiPage[]> {
+  const stubs = pages.filter(isDisambiguation);
+  if (!stubs.length) return pages;
+
+  // Candidate title -> the title the curated record actually asked for, which
+  // has to survive onto the replacement or the join it exists for is lost.
+  const wanted = new Map<string, string>();
+  for (const stub of stubs) {
+    const origin = stub.requestedTitle ?? stub.title;
+    const candidate = disambiguationLinks(stub)
+      .filter((l) => gameFilter.test(l))
+      // "Generals 2" is a different game that still matches /generals/. Rank it
+      // last rather than excluding it, so it is a fallback and never a default.
+      .sort((a, b) => Number(/generals\s*(2|ii)\b/i.test(a)) - Number(/generals\s*(2|ii)\b/i.test(b)))[0];
+    if (candidate && !wanted.has(candidate)) wanted.set(candidate, origin);
+  }
+  if (!wanted.size) return pages;
+
+  console.log(`  resolving ${stubs.length} disambiguation pages -> ${wanted.size} articles`);
+  const resolved = await client.fetchPages([...wanted.keys()]);
+
+  const replacements: WikiPage[] = [];
+  for (const page of resolved) {
+    // fetchPages reports the candidate it was asked for; we want the curated
+    // title behind it instead.
+    const origin = wanted.get(page.requestedTitle ?? page.title);
+    if (!origin) continue;
+    replacements.push({ ...page, requestedTitle: origin });
+  }
+
+  const dropped = new Set(stubs.map((s) => s.title));
+  const kept = pages.filter((p) => !dropped.has(p.title));
+  // A replacement can collide with a page the crawl already had. Keep the copy
+  // that carries a curated title, since that is the only one that can join to a
+  // curated record; a plain crawl hit enriches nothing on its own.
+  const byTitle = new Map(kept.map((p) => [p.title, p] as const));
+  for (const r of replacements) {
+    const seen = byTitle.get(r.title);
+    if (!seen?.requestedTitle) byTitle.set(r.title, r);
+  }
+  return [...byTitle.values()];
 }
 
 /**
@@ -173,9 +262,17 @@ async function main(): Promise<number> {
   // 1. Collect candidate titles.
   const titles = new Map<string, string>();
 
+  // The pages our own dataset names come first: they are the only ones that can
+  // reconcile, so they must never be crowded out by the --limit cap.
+  const seeded = curatedTitles();
+  for (const t of seeded) titles.set(t, t);
+  console.log(`  curated dataset: ${seeded.length} pages`);
+
+  let categoryHits = 0;
   for (const cat of categories) {
     const members = await client.categoryMembers(cat, limit);
     console.log(`  category "${cat}": ${members.length} pages`);
+    categoryHits += members.length;
     for (const m of members) titles.set(m.title, m.title);
   }
   for (const term of searches) {
@@ -184,10 +281,15 @@ async function main(): Promise<number> {
     for (const h of hits) titles.set(h.title, h.title);
   }
 
-  // Seed names drift. If they all came back empty and the caller did not pin
-  // categories explicitly, find the real ones and crawl those instead — this is
+  // Seed names drift. If the *categories* came back empty and the caller did not
+  // pin them explicitly, find the real ones and crawl those instead — this is
   // what lets an unattended deploy build succeed without hand-tuning.
-  if (!titles.size && !args.category?.length) {
+  //
+  // Gated on the category yield, not on the total title count: the searches and
+  // the curated seed always return something, so a total-count test could never
+  // fire and the drifted names failed silently for as long as it was written
+  // that way.
+  if (categoryHits === 0 && !args.category?.length) {
     console.log('\n  seed categories returned nothing; discovering real category names...');
     const found = new Set<string>();
     for (const prefix of ['Generals', 'Zero Hour']) {
@@ -222,7 +324,7 @@ async function main(): Promise<number> {
 
   // 2. Fetch and parse.
   console.log(`\nFetching ${wanted.length} pages...`);
-  const fetched = await client.fetchPages(wanted);
+  const fetched = await resolveDisambiguations(client, await client.fetchPages(wanted), gameFilter);
 
   // Keep only pages that are actually about this game. A Generals page names
   // the game in its categories or its prose; a Tiberian Sun page does not.

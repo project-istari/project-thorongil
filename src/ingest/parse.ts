@@ -16,11 +16,30 @@ export function stripMarkup(input: string): string {
 }
 
 /**
+ * Template names that carry structured facts.
+ *
+ * cnc.fandom.com does not use `{{Infobox}}`: its unit pages open with
+ * `{{UnitBox}}`, and the surrounding furniture (`{{Games}}`, `{{For}}`,
+ * `{{Disambig}}`) is not an infobox at all. Matching only /Infobox/ meant the
+ * parser found no fields on any page on this wiki, which is why every crawl
+ * reported zero costs and "no cost disagreements" regardless of the data.
+ */
+const INFOBOX_NAME = /^(?:infobox\b|[a-z0-9 _-]*box$)/i;
+
+/** The offset of the first fact-carrying template, or -1. */
+function findInfobox(wikitext: string): number {
+  for (const m of wikitext.matchAll(/\{\{\s*([A-Za-z][A-Za-z0-9 _-]*)/g)) {
+    if (INFOBOX_NAME.test(m[1]!.trim())) return m.index!;
+  }
+  return -1;
+}
+
+/**
  * Pull `| key = value` pairs out of the first infobox template on a page.
  * Brace-depth aware, so nested templates in a value do not end the scan early.
  */
 export function parseInfobox(wikitext: string): Record<string, string> {
-  const start = wikitext.search(/\{\{\s*[Ii]nfobox/);
+  const start = findInfobox(wikitext);
   if (start === -1) return {};
 
   let depth = 0;
@@ -107,6 +126,42 @@ export function parseCost(fields: Record<string, string>): number | undefined {
   return undefined;
 }
 
+/**
+ * Does this page just point at other pages?
+ *
+ * The curated dataset records plain titles ("Ranger", "Humvee", "Overlord
+ * Tank"), but cnc.fandom.com covers every C&C game, so those bare names are
+ * usually disambiguation pages listing one article per game. Fetching them
+ * yields no cost, no image and no prose, which is what held the reconciliation
+ * rate down and left the page with no art.
+ */
+export function isDisambiguation(page: WikiPage): boolean {
+  if (/\bdisambiguation\b/i.test(page.categories.join(' | '))) return true;
+  return /\{\{\s*(disambig|disambiguation|dab|hndis)\b/i.test(page.wikitext);
+}
+
+/**
+ * The internal links a disambiguation page offers, with `{{PAGENAME}}` resolved.
+ *
+ * Fandom's disambiguation pages lean on `{{PAGENAME}}` rather than spelling the
+ * title out, so a naive link scrape returns "{{PAGENAME}} (Generals)".
+ */
+export function disambiguationLinks(page: WikiPage): string[] {
+  const text = page.wikitext.replace(/\{\{\s*PAGENAME\s*\}\}/gi, page.title);
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const m of text.matchAll(/\[\[([^\]|#]+)(?:\|[^\]]*)?\]\]/g)) {
+    const target = m[1]!.trim();
+    // Category/File/Template links are navigation furniture, not candidates.
+    if (!target || /^[A-Za-z ]+:/.test(target)) continue;
+    const key = target.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(target);
+  }
+  return out;
+}
+
 export type PageKind = 'unit' | 'faction' | 'map' | 'unknown';
 
 // Wiki categories are almost always plural ("China vehicles", "GLA generals"),
@@ -150,7 +205,10 @@ export function parsePage(page: WikiPage): ParsedPage {
   const kind = classify(page, fields);
   const name = page.title;
   const description = leadSentence(page.wikitext);
-  const wikiPage = page.title.replace(/ /g, '_');
+  // Join on the title the curated record asked for, not the one the wiki
+  // redirected us to, or a redirect breaks the very match it was meant to make.
+  const wikiPage = (page.requestedTitle ?? page.title).replace(/ /g, '_');
+  const image = page.image;
   const raw = { title: page.title, fields };
 
   if (kind === 'unit') {
@@ -161,6 +219,7 @@ export function parsePage(page: WikiPage): ParsedPage {
         id: slugify(name), name, wikiPage,
         ...(cost !== undefined ? { cost } : {}),
         ...(description ? { description } : {}),
+        ...(image ? { image } : {}),
       },
     };
   }
@@ -173,6 +232,7 @@ export function parsePage(page: WikiPage): ParsedPage {
         id: slugify(name), name, wikiPage,
         ...(players ? { players } : {}),
         ...(description ? { description } : {}),
+        ...(image ? { image } : {}),
       },
     };
   }
@@ -180,7 +240,11 @@ export function parsePage(page: WikiPage): ParsedPage {
   if (kind === 'faction') {
     return {
       kind, raw,
-      faction: { id: slugify(name), name, wikiPage, ...(description ? { description } : {}) },
+      faction: {
+        id: slugify(name), name, wikiPage,
+        ...(description ? { description } : {}),
+        ...(image ? { image } : {}),
+      },
     };
   }
 

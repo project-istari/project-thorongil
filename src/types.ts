@@ -90,6 +90,8 @@ export interface Unit {
   note: string;
   /** Encyclopaedic description, filled in by the wiki ingest step. */
   description?: string;
+  /** Lead image URL from the wiki, when the crawl found one. Presentation only. */
+  image?: string;
   /** Where this record came from. `wiki` entries are overlaid by the ingest step. */
   source: 'curated' | 'wiki' | 'merged';
   /** Wiki page title, when known, so the ingest step can reconcile it. */
@@ -118,6 +120,8 @@ export interface Faction {
   quirks: string[];
   /** Encyclopaedic description, filled in by the wiki ingest step. */
   description?: string;
+  /** Lead image URL from the wiki, when the crawl found one. Presentation only. */
+  image?: string;
   wikiPage?: string;
   source: 'curated' | 'wiki' | 'merged';
 }
@@ -141,6 +145,8 @@ export interface GameMap {
   notes: string[];
   /** Encyclopaedic description, filled in by the wiki ingest step. */
   description?: string;
+  /** Lead image URL from the wiki, when the crawl found one. Presentation only. */
+  image?: string;
   wikiPage?: string;
   source: 'curated' | 'wiki' | 'merged';
 }

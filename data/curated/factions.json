@@ -75,7 +75,7 @@
       "Aircraft are the army — losing air superiority loses the game",
       "Countermeasures upgrade makes aircraft shrug off missile defences"
     ],
-    "wikiPage": "Air_Force_General",
+    "wikiPage": "Malcolm_Granger",
     "source": "curated"
   },
   {
@@ -114,7 +114,7 @@
       "Power is the single point of failure — protect and over-build reactors",
       "Point Defence Laser intercepts rockets and missiles but not shells or bullets"
     ],
-    "wikiPage": "Laser_General",
+    "wikiPage": "Townes",
     "source": "curated"
   },
   {
@@ -152,7 +152,7 @@
       "Her clock is the real opponent — every minute favours her",
       "Superweapon timers are public information: count them"
     ],
-    "wikiPage": "Superweapon_General",
+    "wikiPage": "Alexis_Alexander",
     "source": "curated"
   },
   {
@@ -230,7 +230,7 @@
       "Veterancy on delivery means his first tanks beat your first tanks",
       "Overlords can mount Gattling, Propaganda or Bunker upgrades"
     ],
-    "wikiPage": "Tank_General",
+    "wikiPage": "Ta_Hun_Kwai",
     "source": "curated"
   },
   {
@@ -268,7 +268,7 @@
       "All infantry start veteran, which changes every early trade",
       "Horde bonus applies to infantry, so bigger really is better"
     ],
-    "wikiPage": "Infantry_General",
+    "wikiPage": "Shin_Fai",
     "source": "curated"
   },
   {
@@ -306,7 +306,7 @@
       "Death explosions mean you lose units even when you win the fight",
       "His reactors are a liability you can exploit with a single raid"
     ],
-    "wikiPage": "Nuke_General",
+    "wikiPage": "Tsing_Shi_Tao",
     "source": "curated"
   },
   {
@@ -384,7 +384,7 @@
       "Toxin damage lingers on the ground after the attack stops",
       "Against vehicles his damage profile collapses — he must catch infantry"
     ],
-    "wikiPage": "Toxin_General",
+    "wikiPage": "Dr._Thrax",
     "source": "curated"
   },
   {
@@ -422,7 +422,7 @@
       "Assume every empty-looking piece of ground is occupied",
       "Stealth breaks when he fires — the window to punish is short"
     ],
-    "wikiPage": "Stealth_General",
+    "wikiPage": "Prince_Kassad",
     "source": "curated"
   },
   {
@@ -460,7 +460,7 @@
       "Death explosions mean melee range is never safe near him",
       "Cheap suicide units mean his army value is always lower than it looks"
     ],
-    "wikiPage": "Demolition_General",
+    "wikiPage": "Rodall_Juhziz",
     "source": "curated"
   }
 ]

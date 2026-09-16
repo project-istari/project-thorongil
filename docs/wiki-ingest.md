@@ -117,5 +117,7 @@ connection, with the three things worth trying:
 - skip it — the curated dataset in `data/curated/` is complete enough to plan with on
   its own, which is the whole reason it is authored rather than generated.
 
-This repository ships with an empty cache for exactly that reason: the network it was
-built on blocks `cnc.fandom.com` at the egress proxy.
+`data/wiki-cache/` is gitignored rather than committed, so a fresh clone always starts
+from the curated dataset and a crawl is an explicit step — locally via `npm run ingest`,
+or automatically on Vercel, where `vercel-build` runs it with `--soft-fail` so an
+unreachable wiki still ships the curated dataset instead of breaking the deploy.
