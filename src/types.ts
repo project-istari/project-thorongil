@@ -167,6 +167,8 @@ export interface Dataset {
      * "no overlay" to mean both "never ran" and "ran and was refused".
      */
     lastIngest?: IngestStatus;
+    /** How the wiki overlay landed: records enriched, and records refused. */
+    overlay?: { enriched: number; rejected: number };
   };
 }
 

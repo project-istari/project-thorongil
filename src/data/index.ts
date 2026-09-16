@@ -42,38 +42,91 @@ function slug(name: string): string {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
 }
 
+/** Normalised wiki page key, so "Overlord_Tank" and "Overlord Tank" agree. */
+function pageKey(page: string | undefined): string | undefined {
+  return page ? slug(page) : undefined;
+}
+
 /**
  * Overlay wiki records onto curated ones.
  *
- * Curated strategy judgement (threat, answers, notes) always wins — that is
- * authored, not scraped. Wiki data fills descriptive gaps and contributes
- * entities we never curated, which arrive tagged `source: 'wiki'`.
+ * Two rules, both learned the hard way from a real crawl.
+ *
+ * 1. Curated strategy judgement (threat, answers, notes) always wins — it is
+ *    authored, not scraped. The wiki fills descriptive gaps only.
+ * 2. A wiki record that does not match a curated one is **rejected** unless it
+ *    satisfies everything the engine needs. cnc.fandom.com covers every C&C
+ *    game, so a crawl returns Tiberium and Red Alert pages; admitting those as
+ *    armies gave the planner factions with no threat profile, which crashed it.
+ *    Nothing the wiki can currently produce clears that bar, which is the point:
+ *    enrichment is safe, injection is not.
  */
-function overlay<T extends { id: string; name: string; source: string }>(
+export function overlay<T extends { id: string; name: string; source: string; wikiPage?: string }>(
   curated: T[],
   fromWiki: Array<Omit<Partial<T>, 'id'> & { name: string; id?: string }> | undefined,
   protectedKeys: ReadonlyArray<keyof T>,
-): T[] {
-  if (!fromWiki?.length) return curated;
+  admit: (candidate: Record<string, unknown>) => boolean,
+): { records: T[]; enriched: number; rejected: number } {
+  if (!fromWiki?.length) return { records: curated, enriched: 0, rejected: 0 };
+
+  const byPage = new Map<string, T>();
   const byId = new Map(curated.map((c) => [c.id, c]));
   const byName = new Map(curated.map((c) => [slug(c.name), c]));
+  for (const c of curated) {
+    const key = pageKey(c.wikiPage);
+    if (key) byPage.set(key, c);
+  }
+
+  const added: T[] = [];
+  let enriched = 0;
+  let rejected = 0;
 
   for (const w of fromWiki) {
-    const key = w.id ?? slug(w.name);
-    const existing = byId.get(key) ?? byName.get(slug(w.name));
+    // Page title is the most reliable join: curated records carry the exact
+    // page they correspond to, and the crawler reports the page it read.
+    const existing =
+      byPage.get(pageKey(w.wikiPage as string | undefined) ?? '\u0000') ??
+      byId.get(w.id ?? slug(w.name)) ??
+      byName.get(slug(w.name));
+
     if (!existing) {
-      byId.set(key, { ...(w as T), id: key, source: 'wiki' });
+      if (admit(w as Record<string, unknown>)) {
+        added.push({ ...(w as unknown as T), id: w.id ?? slug(w.name), source: 'wiki' });
+      } else {
+        rejected++;
+      }
       continue;
     }
+
     for (const [k, v] of Object.entries(w) as Array<[keyof T, T[keyof T]]>) {
       if (protectedKeys.includes(k)) continue;
       if (v === undefined || v === null || v === '') continue;
       existing[k] = v;
     }
     existing.source = 'merged' as T['source'];
+    enriched++;
   }
-  return [...byId.values()];
+
+  return { records: [...curated, ...added], enriched, rejected };
 }
+
+/**
+ * Admission rules: what a wiki-only record must carry to be safe for the engine.
+ * The faction list is a closed set of twelve, so nothing is ever admitted there.
+ */
+export const ADMIT = {
+  faction: () => false,
+  unit: (c: Record<string, unknown>) =>
+    Array.isArray(c['factions']) && c['factions'].length > 0 &&
+    Array.isArray(c['roles']) &&
+    typeof c['answers'] === 'object' && c['answers'] !== null &&
+    typeof c['tier'] === 'string' && typeof c['cost'] === 'number',
+  map: (c: Record<string, unknown>) =>
+    typeof c['players'] === 'number' &&
+    typeof c['chokepoints'] === 'number' &&
+    typeof c['supplyDensity'] === 'number' &&
+    typeof c['openness'] === 'number',
+} as const;
 
 function latestWikiCache(): WikiCache | undefined {
   if (!existsSync(WIKI_CACHE)) return undefined;
@@ -109,15 +162,27 @@ export function loadDataset(): Dataset {
   const wiki = latestWikiCache();
   const status = lastIngestStatus();
 
+  const f = overlay(factions, wiki?.factions, ['threat', 'vulnerability', 'opening', 'signatureTactics', 'id', 'side'], ADMIT.faction);
+  const u = overlay(units, wiki?.units, ['answers', 'roles', 'factions', 'id', 'tier'], ADMIT.unit);
+  const m = overlay(maps, wiki?.maps, ['chokepoints', 'supplyDensity', 'openness', 'id'], ADMIT.map);
+
   const dataset: Dataset = {
-    factions: overlay(factions, wiki?.factions, ['threat', 'vulnerability', 'opening', 'signatureTactics', 'id', 'side']),
-    units: overlay(units, wiki?.units, ['answers', 'roles', 'factions', 'id', 'tier']),
-    maps: overlay(maps, wiki?.maps, ['chokepoints', 'supplyDensity', 'openness', 'id']),
+    factions: f.records,
+    units: u.records,
+    maps: m.records,
     matchups,
     provenance: {
       curatedAt: '2026-09-16',
       ...(wiki ? { wikiCache: { fetchedAt: wiki.fetchedAt, pages: wiki.pageCount, source: wiki.source } } : {}),
       ...(status ? { lastIngest: status } : {}),
+      ...(wiki
+        ? {
+            overlay: {
+              enriched: f.enriched + u.enriched + m.enriched,
+              rejected: f.rejected + u.rejected + m.rejected,
+            },
+          }
+        : {}),
     },
   };
 

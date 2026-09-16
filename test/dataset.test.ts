@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { loadDataset, unitsFor, factionById, mapById } from '../src/data/index.js';
+import { loadDataset, unitsFor, factionById, mapById, overlay, ADMIT } from '../src/data/index.js';
 import { AXES } from '../src/engine/threat.js';
 import type { FactionId } from '../src/types.js';
 
@@ -121,4 +121,63 @@ test('provenance always states where the data came from', () => {
     else assert.ok((p.lastIngest.error ?? '').length > 0, 'a failed crawl must say why');
   }
   if (p.wikiCache) assert.ok(p.wikiCache.pages >= 0);
+});
+
+// --- overlay admission ---------------------------------------------------
+// cnc.fandom.com covers every C&C game, so a crawl returns Tiberium and Red
+// Alert pages. Admitting those as armies gave the planner factions with no
+// threat profile, which crashed it and left the page blank.
+
+type Rec = { id: string; name: string; source: string; wikiPage?: string; cost?: number };
+
+test('overlay enriches a curated record matched by wiki page title', () => {
+  const curated: Rec[] = [{ id: 'overlord', name: 'Overlord', source: 'curated', wikiPage: 'Overlord_Tank', cost: 2000 }];
+  const result = overlay(
+    curated,
+    [{ name: 'Overlord Tank', wikiPage: 'Overlord_Tank', cost: 2200 }],
+    ['id'],
+    ADMIT.unit,
+  );
+  assert.equal(result.records.length, 1, 'must not duplicate the record');
+  assert.equal(result.enriched, 1);
+  assert.equal(result.rejected, 0);
+  assert.equal(result.records[0]!.cost, 2200, 'wiki cost should win');
+  assert.equal(result.records[0]!.source, 'merged');
+});
+
+test('overlay refuses foreign wiki entities instead of injecting them', () => {
+  const curated: Rec[] = [{ id: 'overlord', name: 'Overlord', source: 'curated', wikiPage: 'Overlord_Tank' }];
+  const foreign = [
+    { name: 'Mammoth Tank', wikiPage: 'Mammoth_Tank', cost: 1500 },
+    { name: 'Kirov Airship', wikiPage: 'Kirov_Airship' },
+  ];
+
+  const asFactions = overlay(curated, foreign, ['id'], ADMIT.faction);
+  assert.equal(asFactions.records.length, 1, 'no wiki page may become a thirteenth army');
+  assert.equal(asFactions.rejected, 2);
+
+  // Units need the full engine contract, which scraped prose cannot supply.
+  const asUnits = overlay(curated, foreign, ['id'], ADMIT.unit);
+  assert.equal(asUnits.records.length, 1);
+  assert.equal(asUnits.rejected, 2);
+});
+
+test('overlay admits a wiki record that does carry the engine contract', () => {
+  const curated: Rec[] = [];
+  const complete = [{
+    name: 'Complete Unit', wikiPage: 'Complete_Unit', cost: 800, tier: 'early',
+    factions: ['usa'], roles: ['anti_air'], answers: { air: 3 },
+  }];
+  const result = overlay(curated as never[], complete as never[], ['id'], ADMIT.unit);
+  assert.equal(result.records.length, 1, 'a fully specified record is still welcome');
+  assert.equal(result.rejected, 0);
+  assert.equal((result.records[0] as unknown as { source: string }).source, 'wiki');
+});
+
+test('the loaded dataset can never grow a thirteenth army', () => {
+  assert.equal(ds.factions.length, 12, `expected 12 armies, got ${ds.factions.length}`);
+  for (const f of ds.factions) {
+    assert.ok(f.threat, `${f.id} has no threat profile`);
+    assert.ok(['usa', 'china', 'gla'].includes(f.side), `${f.id} has no valid side`);
+  }
 });

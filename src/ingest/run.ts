@@ -52,6 +52,7 @@ function parseCli() {
       delay: { type: 'string', default: '250' },
       'dry-run': { type: 'boolean', default: false },
       'soft-fail': { type: 'boolean', default: false },
+      game: { type: 'string', default: 'generals|zero hour' },
       help: { type: 'boolean', default: false },
     },
     allowPositionals: false,
@@ -70,6 +71,9 @@ battle-lineup wiki ingest
   --delay <ms>         Delay between API requests (default 250)
   --dry-run            Fetch and parse, but do not write the cache
   --soft-fail          Exit 0 when the wiki is unreachable (for CI and deploys)
+  --game <regex>       Keep only pages about this game (default: "generals|zero hour").
+                       cnc.fandom.com covers every C&C title, so without this a
+                       crawl returns mostly Tiberium and Red Alert pages.
   --help               This message
 `;
 
@@ -93,12 +97,14 @@ function reconcile(units: WikiCache['units']): { matched: number; curatedTotal: 
   const curatedAll = JSON.parse(readFileSync(join(CURATED, 'units.json'), 'utf8')) as Unit[];
   if (!units?.length) return { matched: 0, curatedTotal: curatedAll.length, costCorrections: 0 };
   const curated = curatedAll;
-  const byName = new Map(curated.map((u) => [u.name.toLowerCase(), u]));
+  const norm = (v: string) => v.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+  const byName = new Map(curated.map((u) => [norm(u.name), u]));
+  const byPage = new Map(curated.flatMap((u) => (u.wikiPage ? [[norm(u.wikiPage), u] as const] : [])));
 
   let matched = 0;
   const costDiffs: string[] = [];
   for (const w of units) {
-    const c = byName.get(w.name.toLowerCase());
+    const c = (w.wikiPage ? byPage.get(norm(w.wikiPage)) : undefined) ?? byName.get(norm(w.name));
     if (!c) continue;
     matched++;
     if (typeof w.cost === 'number' && w.cost !== c.cost) {
@@ -159,6 +165,7 @@ async function main(): Promise<number> {
     return 0;
   }
 
+  const gameFilter = new RegExp(args.game ?? 'generals|zero hour', 'i');
   const categories = args.category?.length ? args.category : DEFAULT_CATEGORIES;
   const searches = [...DEFAULT_SEARCHES, ...(args.search ?? [])];
   const limit = Number(args.limit);
@@ -186,7 +193,12 @@ async function main(): Promise<number> {
     for (const prefix of ['Generals', 'Zero Hour']) {
       for (const c of await listCategories(client, prefix)) found.add(c);
     }
-    const relevant = [...found].filter((c) => /unit|vehicle|infantry|aircraft|arsenal|map|general|faction|structure/i.test(c));
+    // Both filters matter: the category has to be about this game AND about a
+    // kind of page we model. Dropping the first one is what pulled in 200-odd
+    // Tiberium and Red Alert units on the first real crawl.
+    const relevant = [...found]
+      .filter((c) => gameFilter.test(c))
+      .filter((c) => /unit|vehicle|infantry|aircraft|arsenal|map|general|faction|structure/i.test(c));
     console.log(`  discovered ${found.size} categories, ${relevant.length} relevant`);
     for (const cat of relevant.slice(0, 20)) {
       const members = await client.categoryMembers(cat, limit);
@@ -210,7 +222,18 @@ async function main(): Promise<number> {
 
   // 2. Fetch and parse.
   console.log(`\nFetching ${wanted.length} pages...`);
-  const pages = await client.fetchPages(wanted);
+  const fetched = await client.fetchPages(wanted);
+
+  // Keep only pages that are actually about this game. A Generals page names
+  // the game in its categories or its prose; a Tiberian Sun page does not.
+  const pages = fetched.filter((pg) =>
+    gameFilter.test(pg.title) ||
+    gameFilter.test(pg.categories.join(' ')) ||
+    gameFilter.test(pg.wikitext.slice(0, 4000)),
+  );
+  const dropped = fetched.length - pages.length;
+  if (dropped) console.log(`  filtered out ${dropped} pages from other C&C games (--game "${gameFilter.source}")`);
+
   const parsed: ParsedPage[] = pages.map(parsePage);
 
   const cache: WikiCache & { raw: ParsedPage['raw'][] } = {

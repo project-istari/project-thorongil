@@ -946,21 +946,7 @@ function renderTimeline(plan) {
 
 /* -------------------------------------------------------------- render --- */
 
-function render() {
-  let plan;
-  try {
-    plan = planFrom(DATA, {
-      you: state.you ?? undefined,
-      enemy: state.enemy ?? undefined,
-      difficulty: state.difficulty,
-      mapId: state.mapId ?? undefined,
-      seed: state.seed,
-    });
-  } catch (err) {
-    $('briefing').replaceChildren(el('p', 'assessment', `Unable to establish a battle plan: ${err.message}`));
-    return;
-  }
-
+function renderControls() {
   sideTabs($('you-sides'), state.youSide, (s) => {
     state.youSide = s;
     if (s === null) state.you = null;
@@ -979,6 +965,31 @@ function render() {
 
   rankButtons();
   $('map-select').value = state.mapId ?? '';
+}
+
+function render() {
+  // Controls are drawn first and unconditionally. When a plan fails, the user
+  // needs the selectors more than ever — an earlier version returned early and
+  // left the whole console blank, with no way to change the selection.
+  renderControls();
+
+  let plan;
+  try {
+    plan = planFrom(DATA, {
+      you: state.you ?? undefined,
+      enemy: state.enemy ?? undefined,
+      difficulty: state.difficulty,
+      mapId: state.mapId ?? undefined,
+      seed: state.seed,
+    });
+  } catch (err) {
+    const box = panel('Command error');
+    box.append(el('p', 'rationale', 'No battle plan could be established for this selection.'));
+    box.append(el('p', 'rationale', String(err && err.message ? err.message : err)));
+    box.append(el('p', 'rationale', 'Pick a different army or theatre on the left to continue.'));
+    $('briefing').replaceChildren(box);
+    return;
+  }
 
   const parts = [renderDossier(plan), renderRoster(plan), renderIntel(plan), renderQueue(plan), renderCounters(plan), renderTimeline(plan)]
     .filter(Boolean);
@@ -1019,11 +1030,16 @@ function dataSource() {
   const p = DATA.provenance;
   const ing = p.lastIngest;
   if (p.wikiCache) {
-    const recon = ing && ing.matched != null ? ` · ${ing.matched}/${ing.curatedTotal} units reconciled` : '';
+    const recon = ing && ing.matched != null ? ` \u00b7 ${ing.matched}/${ing.curatedTotal} units reconciled` : '';
+    // A crawl that ignored far more than it merged is scoped wrong, and that
+    // should be visible on the page rather than buried in a build log.
+    const ov = p.overlay;
+    const ignored = ov && ov.rejected ? ` \u00b7 ${ov.enriched} enriched, ${ov.rejected} ignored (not Generals)` : '';
+    const poor = ov && ov.rejected > ov.enriched * 4;
     return {
-      chip: 'Wiki \u2713',
-      tone: 'var(--ok)',
-      line: `Wiki overlay \u00b7 ${p.wikiCache.pages} pages from ${p.wikiCache.source} \u00b7 ${p.wikiCache.fetchedAt.slice(0, 10)}${recon}`,
+      chip: poor ? 'Wiki \u26a0' : 'Wiki \u2713',
+      tone: poor ? 'var(--warn)' : 'var(--ok)',
+      line: `Wiki overlay \u00b7 ${p.wikiCache.pages} pages from ${p.wikiCache.source} \u00b7 ${p.wikiCache.fetchedAt.slice(0, 10)}${recon}${ignored}`,
     };
   }
   if (ing && !ing.ok) {

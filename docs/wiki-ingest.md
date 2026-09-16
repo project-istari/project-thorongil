@@ -20,6 +20,8 @@ Options:
 | `--limit <n>` | Cap on pages fetched. Default 600. |
 | `--delay <ms>` | Delay between API calls. Default 250. |
 | `--dry-run` | Fetch and parse, report counts, write nothing. |
+| `--soft-fail` | Exit 0 when the wiki is unreachable (for CI and deploys). |
+| `--game <regex>` | Keep only pages about this game. Default `generals\|zero hour`. |
 
 ## How the crawl works
 
@@ -60,6 +62,24 @@ That prints the matching categories and suggests a `--category` command line to 
   from its categories and the shape of its infobox. The hint patterns match plurals,
   because wiki categories are almost always plural (`China vehicles`, `GLA generals`).
 
+## Why `--game` exists
+
+`cnc.fandom.com` documents every Command & Conquer title, not just Generals. The
+first real crawl proved it: the Generals seed categories returned nothing, category
+discovery fell back to crawling every category matching `unit|vehicle|...` across
+the whole wiki, and the result was 214 "units" of which **9** matched anything in
+the curated dataset. The rest were Tiberium and Red Alert pages.
+
+Two filters now apply, and both matter:
+
+- discovery only considers categories that match `--game`, and
+- fetched pages are kept only if the game appears in the title, the categories, or
+  the opening prose.
+
+If the reconciliation report still shows a low match count, widen or correct the
+category names rather than the game filter — a low count means the crawl is looking
+in the wrong place, not that the filter is too tight.
+
 ## What the overlay may and may not change
 
 The merge in `src/data/index.ts` is one-directional by design.
@@ -77,6 +97,13 @@ entities that were never curated (those arrive tagged `source: 'wiki'`).
 
 Those fields are the strategy judgement the engine reasons over. Scraped prose cannot
 produce them, and letting a wiki edit change them would silently change the advice.
+
+**A wiki record that matches nothing curated is rejected**, unless it happens to
+carry every field the engine needs — which scraped pages do not. The faction list is
+a closed set of twelve, so nothing is ever admitted there at all. This is not
+fussiness: admitting unmatched pages as armies is exactly what put factions with no
+threat profile in front of the planner and blanked the deployed page. The count of
+rejected records is reported in the footer, so a mis-scoped crawl is visible.
 A record touched by the overlay is re-tagged `source: 'merged'` so the provenance line
 in the CLI and the web page stays accurate.
 
