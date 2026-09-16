@@ -28,7 +28,8 @@ npm run plan -- --list-maps
 ```
 
 There is also a browser version — a command terminal that runs the same engine
-entirely client-side:
+entirely client-side, with commander portraits and unit photography from the wiki
+and a drawn tactical diagram for every theatre:
 
 ```bash
 npm run build:web   # bakes public/index.html

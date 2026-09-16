@@ -1,7 +1,8 @@
 <title>Battle Lineup</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Chakra+Petch:wght@500;600;700&family=Share+Tech+Mono&display=swap">
+<link rel="preconnect" href="https://static.wikia.nocookie.net" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Chakra+Petch:wght@500;600;700&family=Share+Tech+Mono&display=swap">
 
 <style>
   /*
@@ -12,49 +13,50 @@
   :root {
     color-scheme: dark;
 
-    --ground:     #0A0D0A;
+    --ground:     #080B08;
     --ground-2:   #0E120D;
     --panel:      #151B14;
     --panel-2:    #1D251B;
     --panel-hi:   #27311F;
 
-    --ink:        #DCE4D4;
-    --ink-soft:   #93A28B;
-    --ink-faint:  #6B7A65;
+    --ink:        #E8EFE1;
+    --ink-soft:   #A3B29A;
+    --ink-faint:  #77876F;
 
     --line:       #2E3A29;
     --line-hot:   #46552F;
 
-    --amber:      #E8A33D;
-    --amber-dim:  #A8762A;
-    --amber-glow: rgba(232, 163, 61, 0.14);
+    --amber:      #F5B145;
+    --amber-dim:  #B98330;
+    --amber-glow: rgba(245, 177, 69, 0.16);
 
-    --usa:        #59A0E0;
-    --china:      #DE5548;
-    --gla:        #A9BC50;
+    /* Army colours, taken from the game's own faction palette. */
+    --usa:        #5FAEF2;
+    --china:      #F2584A;
+    --gla:        #B9CE55;
 
-    --crit:       #E0604C;
-    --warn:       #E8A33D;
-    --ok:         #74C077;
+    --crit:       #F26A54;
+    --warn:       #F5B145;
+    --ok:         #7FD183;
 
     --display: "Chakra Petch", "Barlow Condensed", "Arial Narrow", sans-serif;
     --body: "Barlow", ui-sans-serif, system-ui, sans-serif;
     --hud: "Share Tech Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
-    --chamfer: 9px;
+    --chamfer: 10px;
   }
 
   * { box-sizing: border-box; }
 
   body {
     background:
-      radial-gradient(120% 70% at 50% 0%, #131A12 0%, var(--ground) 62%),
+      radial-gradient(120% 70% at 50% 0%, #141C12 0%, var(--ground) 62%),
       repeating-linear-gradient(0deg, rgba(120,150,110,0.030) 0 1px, transparent 1px 3px),
       var(--ground);
     background-attachment: fixed;
     color: var(--ink);
     font-family: var(--body);
-    font-size: 15px;
+    font-size: 17px;
     line-height: 1.55;
     margin: 0;
     padding-block: 0 4rem;
@@ -63,7 +65,7 @@
     overflow-x: hidden;
   }
 
-  .shell { max-width: 1240px; margin-inline: auto; }
+  .shell { max-width: 1320px; margin-inline: auto; }
 
   /* Chamfered corners: the signature RTS panel edge. */
   .cut {
@@ -79,49 +81,48 @@
     align-items: center;
     justify-content: space-between;
     gap: 0.6rem 1.5rem;
-    padding-block: 1.4rem 0.9rem;
+    padding-block: 1.5rem 1rem;
     border-bottom: 1px solid var(--line-hot);
-    margin-bottom: 1.4rem;
+    margin-bottom: 1.5rem;
     position: relative;
   }
   .masthead::after {
     content: "";
     position: absolute;
     left: 0; bottom: -1px;
-    width: clamp(90px, 22%, 220px); height: 3px;
+    width: clamp(90px, 22%, 240px); height: 3px;
     background: var(--amber);
   }
   .wordmark {
     font-family: var(--display);
     font-weight: 700;
-    font-size: clamp(1.7rem, 7vw, 2.6rem);
+    font-size: clamp(2.1rem, 7.5vw, 3.2rem);
     letter-spacing: 0.14em;
     text-transform: uppercase;
     line-height: 1;
     margin: 0;
     color: var(--ink);
+    text-shadow: 0 0 28px rgba(245, 177, 69, 0.18);
   }
   .wordmark span { color: var(--amber); }
   .masthead .sub {
-    margin: 0.3rem 0 0;
+    margin: 0.45rem 0 0;
     color: var(--ink-soft);
     font-family: var(--hud);
-    font-size: 0.72rem;
+    font-size: 0.82rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
   }
-  .readiness {
-    display: flex; flex-wrap: wrap; gap: 0.35rem;
-  }
+  .readiness { display: flex; flex-wrap: wrap; gap: 0.4rem; }
   .readout {
     font-family: var(--hud);
-    font-size: 0.66rem;
+    font-size: 0.76rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--ink-soft);
     background: var(--panel);
     border: 1px solid var(--line);
-    padding: 0.25rem 0.5rem;
+    padding: 0.32rem 0.6rem;
     white-space: nowrap;
   }
   .readout b { color: var(--amber); font-weight: 400; }
@@ -129,11 +130,11 @@
   /* ------------------------------------------------------------ layout --- */
   .board {
     display: grid;
-    grid-template-columns: 320px minmax(0, 1fr);
+    grid-template-columns: 360px minmax(0, 1fr);
     gap: 1.6rem;
     align-items: start;
   }
-  @media (max-width: 900px) {
+  @media (max-width: 980px) {
     .board { grid-template-columns: minmax(0, 1fr); gap: 1.2rem; }
     .rail { position: static; }
   }
@@ -150,44 +151,34 @@
   .console {
     background: linear-gradient(180deg, var(--panel-2), var(--panel));
     border: 1px solid var(--line);
-    padding: 0.75rem 0.8rem 0.85rem;
+    padding: 0.8rem 0.85rem 0.9rem;
     min-width: 0;
   }
-  .console > legend,
-  .console-title {
+  .console > legend {
     font-family: var(--hud);
-    font-size: 0.68rem;
+    font-size: 0.78rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--amber);
     padding: 0;
-    margin: 0 0 0.55rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .console-title::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: var(--line-hot);
+    margin: 0 0 0.6rem;
   }
   fieldset.console { border: 1px solid var(--line); margin: 0; }
 
   /* side tabs */
-  .sides { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-bottom: 0.5rem; }
+  .sides { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-bottom: 0.55rem; }
   .side-tab {
     font-family: var(--display);
     font-weight: 600;
-    font-size: 0.74rem;
+    font-size: 0.86rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--ink-faint);
     background: var(--panel);
     border: 1px solid var(--line);
     border-bottom: 2px solid var(--tab, var(--line));
-    padding: 0.42rem 0.15rem;
-    min-height: 34px;
+    padding: 0.48rem 0.15rem;
+    min-height: 38px;
     cursor: pointer;
     transition: color 120ms ease, background 120ms ease;
   }
@@ -199,25 +190,28 @@
   }
   .side-tab:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
 
-  /* army cards */
-  .armies { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px; }
+  /* ---- army cards, now with the commander's face on them ---------------- */
+  .armies { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; }
   .armies.is-wide { grid-template-columns: minmax(0, 1fr); }
 
   .army {
     position: relative;
     display: grid;
-    gap: 0.05rem;
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: 0.55rem;
+    align-items: center;
     text-align: left;
     font: inherit;
-    min-height: 52px;
-    padding: 0.4rem 0.5rem 0.42rem 0.62rem;
+    min-height: 62px;
+    padding: 0.4rem 0.5rem 0.42rem 0.55rem;
     color: var(--ink-soft);
     background: var(--panel);
     border: 1px solid var(--line);
     cursor: pointer;
     overflow: hidden;
-    transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+    transition: background 130ms ease, color 130ms ease, border-color 130ms ease, transform 130ms ease;
   }
+  .army.is-any { grid-template-columns: minmax(0, 1fr); }
   .army::before {
     content: "";
     position: absolute;
@@ -225,42 +219,82 @@
     width: 3px;
     background: var(--mark, var(--line-hot));
   }
-  .army:hover { background: var(--panel-hi); color: var(--ink); border-color: var(--line-hot); }
+  .army:hover {
+    background: var(--panel-hi); color: var(--ink);
+    border-color: var(--mark, var(--line-hot));
+    transform: translateY(-1px);
+  }
   .army[aria-pressed="true"] {
-    background: var(--panel-hi);
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--mark) 18%, transparent), transparent 60%),
+      var(--panel-hi);
     border-color: var(--mark, var(--amber));
     color: var(--ink);
+    box-shadow: inset 0 0 22px -8px var(--mark);
   }
   .army[aria-pressed="true"]::after {
     content: "";
     position: absolute;
     right: -1px; top: -1px;
-    border-width: 0 12px 12px 0;
+    border-width: 0 13px 13px 0;
     border-style: solid;
     border-color: transparent var(--mark, var(--amber)) transparent transparent;
   }
   .army:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+
+  /* Commander portrait. Falls back to the faction mark when the crawl has no
+     art for this army, so the grid never shows a broken frame. */
+  .portrait {
+    position: relative;
+    width: 52px; height: 52px;
+    flex: none;
+    background: var(--ground-2);
+    border: 1px solid var(--line);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+  .portrait img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center 22%;
+    filter: saturate(0.85) contrast(1.06);
+    transition: filter 130ms ease, transform 130ms ease;
+  }
+  .army:hover .portrait img,
+  .army[aria-pressed="true"] .portrait img { filter: saturate(1.1) contrast(1.1); transform: scale(1.05); }
+  .portrait svg { width: 24px; height: 24px; opacity: 0.6; }
+  .portrait::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 45%, rgba(8,11,8,0.6));
+    pointer-events: none;
+  }
+
+  /* Name over commander. Without this the two spans flow inline and read as
+     "CHINAStandard doctrine". */
+  .army-text { display: grid; gap: 0.02rem; min-width: 0; }
   .army-name {
     font-family: var(--display);
     font-weight: 600;
-    font-size: 0.86rem;
+    font-size: 1rem;
     letter-spacing: 0.05em;
     text-transform: uppercase;
     line-height: 1.15;
     color: inherit;
   }
   .army[aria-pressed="true"] .army-name { color: var(--mark, var(--amber)); }
-  .army-who { font-family: var(--hud); font-size: 0.63rem; letter-spacing: 0.04em; color: var(--ink-faint); }
+  .army-who { font-family: var(--hud); font-size: 0.72rem; letter-spacing: 0.02em; color: var(--ink-faint); }
 
   /* rank / difficulty */
   .ranks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px; }
   .rank {
     display: grid;
     justify-items: center;
-    gap: 0.05rem;
+    gap: 0.1rem;
     font: inherit;
-    min-height: 48px;
-    padding: 0.35rem 0.1rem;
+    min-height: 54px;
+    padding: 0.4rem 0.1rem;
     background: var(--panel);
     border: 1px solid var(--line);
     color: var(--ink-faint);
@@ -268,49 +302,63 @@
     transition: background 120ms ease, color 120ms ease;
   }
   .rank:hover { background: var(--panel-hi); color: var(--ink); }
-  .rank .stars { font-size: 0.7rem; letter-spacing: 0.04em; line-height: 1.2; }
+  .rank .stars { font-size: 0.82rem; letter-spacing: 0.04em; line-height: 1.2; }
   .rank .rank-label {
     font-family: var(--display);
     font-weight: 600;
-    font-size: 0.68rem;
+    font-size: 0.78rem;
     letter-spacing: 0.09em;
     text-transform: uppercase;
   }
-  .rank[aria-pressed="true"] { background: var(--panel-hi); color: var(--ink); border-color: var(--tone, var(--amber)); }
+  .rank[aria-pressed="true"] {
+    background: var(--panel-hi); color: var(--ink);
+    border-color: var(--tone, var(--amber));
+    box-shadow: inset 0 0 18px -8px var(--tone);
+  }
   .rank[aria-pressed="true"] .stars { color: var(--tone, var(--amber)); }
   .rank:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
 
   select, .command-btn {
     width: 100%;
     font-family: var(--body);
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     color: var(--ink);
     background: var(--panel);
     border: 1px solid var(--line);
-    padding: 0.5rem 0.55rem;
-    min-height: 42px;
+    padding: 0.55rem 0.6rem;
+    min-height: 46px;
   }
   select:hover, .command-btn:hover { background: var(--panel-hi); border-color: var(--line-hot); }
   .command-btn {
     font-family: var(--display);
-    font-weight: 600;
-    font-size: 0.8rem;
+    font-weight: 700;
+    font-size: 0.92rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--amber);
     cursor: pointer;
   }
+  .command-btn:hover { box-shadow: inset 0 0 22px -8px var(--amber); }
   select:focus-visible, .command-btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
 
+  /* The theatre picker gets its own preview diagram underneath. */
+  .theatre-preview { margin-top: 0.6rem; }
+  .theatre-preview svg { width: 100%; height: auto; display: block; border: 1px solid var(--line); background: var(--ground-2); }
+  .theatre-caption {
+    font-family: var(--hud); font-size: 0.68rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-faint); margin-top: 0.3rem;
+  }
+
   /* ---------------------------------------------------------- briefing --- */
-  .briefing { display: grid; gap: 1.1rem; min-width: 0; }
+  .briefing { display: grid; gap: 1.2rem; min-width: 0; }
 
   .dossier {
     position: relative;
     background: linear-gradient(180deg, var(--panel-2), var(--panel));
     border: 1px solid var(--line-hot);
-    padding: 1rem 1.1rem 1.1rem;
+    padding: 1.1rem 1.2rem 1.2rem;
     min-width: 0;
+    overflow: hidden;
   }
   .dossier::before {
     content: "";
@@ -319,62 +367,106 @@
   }
   .eva {
     font-family: var(--hud);
-    font-size: 0.66rem;
+    font-size: 0.78rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--amber-dim);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.7rem;
   }
   .eva b { color: var(--amber); font-weight: 400; }
 
-  .combatants { display: grid; gap: 0.5rem; }
-  @media (min-width: 620px) {
+  /* ---- the VS plate: two commanders facing each other ------------------- */
+  .combatants { display: grid; gap: 0.7rem; align-items: stretch; }
+  @media (min-width: 680px) {
     .combatants { grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); align-items: center; }
   }
-  .combatant { display: flex; align-items: center; gap: 0.55rem; min-width: 0; }
-  .combatant.them { justify-self: end; }
-  @media (min-width: 620px) { .combatant.them { flex-direction: row-reverse; text-align: right; } }
-  .combatant svg { width: 30px; height: 30px; flex: none; }
+  .combatant {
+    display: flex; align-items: center; gap: 0.85rem; min-width: 0;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--mark) 16%, transparent), transparent 75%);
+    border: 1px solid color-mix(in srgb, var(--mark) 40%, var(--line));
+    border-left: 3px solid var(--mark);
+    padding: 0.6rem 0.75rem;
+  }
+  @media (min-width: 680px) {
+    .combatant.them {
+      flex-direction: row-reverse; text-align: right;
+      border-left: 1px solid color-mix(in srgb, var(--mark) 40%, var(--line));
+      border-right: 3px solid var(--mark);
+      background: linear-gradient(270deg, color-mix(in srgb, var(--mark) 16%, transparent), transparent 75%);
+    }
+  }
+  /* Big commander portrait on the briefing header. */
+  .mugshot {
+    position: relative;
+    width: clamp(84px, 13vw, 116px);
+    aspect-ratio: 1;
+    flex: none;
+    border: 1px solid color-mix(in srgb, var(--mark) 55%, var(--line));
+    background: var(--ground-2);
+    overflow: hidden;
+    display: grid; place-items: center;
+    box-shadow: 0 0 26px -10px var(--mark);
+  }
+  .mugshot img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center 20%;
+    filter: saturate(1.05) contrast(1.08);
+  }
+  .mugshot svg { width: 38px; height: 38px; opacity: 0.7; }
+  .mugshot::after {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, transparent 55%, rgba(8,11,8,0.65)),
+      repeating-linear-gradient(0deg, rgba(0,0,0,0.16) 0 1px, transparent 1px 3px);
+    pointer-events: none;
+  }
   .combatant .who { min-width: 0; }
   .combatant .army-title {
     font-family: var(--display);
     font-weight: 700;
-    font-size: clamp(1.02rem, 3.6vw, 1.42rem);
+    font-size: clamp(1.2rem, 3.8vw, 1.72rem);
     letter-spacing: 0.04em;
     text-transform: uppercase;
     line-height: 1.12;
     overflow-wrap: anywhere;
+    color: var(--mark);
   }
-  .combatant .cmdr { font-family: var(--hud); font-size: 0.66rem; color: var(--ink-faint); letter-spacing: 0.05em; }
+  .combatant .cmdr { font-family: var(--hud); font-size: 0.78rem; color: var(--ink-soft); letter-spacing: 0.04em; }
+  .combatant .role {
+    font-family: var(--hud); font-size: 0.66rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--ink-faint);
+  }
   .clash {
     font-family: var(--display);
     font-weight: 700;
-    font-size: 0.7rem;
-    letter-spacing: 0.24em;
-    color: var(--ink-faint);
+    font-size: 1.15rem;
+    letter-spacing: 0.18em;
+    color: var(--amber);
     text-align: center;
-    padding: 0 0.3rem;
+    padding: 0.2rem 0.5rem;
+    text-shadow: 0 0 18px var(--amber-glow);
   }
 
   .assessment {
-    margin: 0.9rem 0 0;
-    font-size: 1rem;
+    margin: 1rem 0 0;
+    font-size: 1.12rem;
     line-height: 1.5;
     color: var(--ink);
-    border-left: 2px solid var(--amber);
-    padding-left: 0.7rem;
+    border-left: 3px solid var(--amber);
+    padding-left: 0.85rem;
     text-wrap: pretty;
   }
 
-  .conditions { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.85rem; }
+  .conditions { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.95rem; }
   .cond {
     font-family: var(--hud);
-    font-size: 0.64rem;
+    font-size: 0.74rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     border: 1px solid var(--line-hot);
     background: var(--panel);
-    padding: 0.2rem 0.45rem;
+    padding: 0.25rem 0.55rem;
     color: var(--ink-soft);
   }
   .cond.is-easy   { border-color: var(--ok);   color: var(--ok); }
@@ -386,32 +478,32 @@
   section.panel {
     background: var(--panel);
     border: 1px solid var(--line);
-    padding: 0.85rem 0.9rem 0.95rem;
+    padding: 0.95rem 1rem 1.05rem;
     min-width: 0;
   }
   .panel > h2 {
     font-family: var(--display);
     font-weight: 700;
-    font-size: 0.92rem;
+    font-size: 1.08rem;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--amber);
-    margin: 0 0 0.75rem;
+    margin: 0 0 0.85rem;
     display: flex;
     align-items: center;
-    gap: 0.55rem;
+    gap: 0.6rem;
     flex-wrap: wrap;
   }
   .panel > h2::before {
     content: "";
-    width: 7px; height: 7px;
+    width: 8px; height: 8px;
     background: var(--amber);
     transform: rotate(45deg);
     flex: none;
   }
   .panel > h2 .count {
     font-family: var(--hud);
-    font-size: 0.62rem;
+    font-size: 0.72rem;
     letter-spacing: 0.1em;
     color: var(--ink-faint);
     margin-left: auto;
@@ -419,66 +511,66 @@
   }
 
   /* segmented threat meters, RTS power-bar style */
-  .meters { display: grid; gap: 0.5rem; }
+  .meters { display: grid; gap: 0.55rem; }
   .meter { display: grid; gap: 0.2rem 0.7rem; grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
-  @media (min-width: 560px) { .meter { grid-template-columns: 8.5rem minmax(0, 1fr) 2.2rem; } }
+  @media (min-width: 560px) { .meter { grid-template-columns: 10rem minmax(0, 1fr) 2.6rem; } }
   .meter-name {
     font-family: var(--display);
     font-weight: 600;
-    font-size: 0.78rem;
+    font-size: 0.92rem;
     letter-spacing: 0.07em;
     text-transform: uppercase;
     color: var(--ink-soft);
   }
   .segs { display: flex; gap: 2px; grid-column: 1 / -1; }
   @media (min-width: 560px) { .segs { grid-column: auto; } }
-  .segs i { flex: 1; height: 9px; background: var(--panel-hi); border: 1px solid var(--line); }
-  .segs i.on { background: var(--ok); border-color: var(--ok); }
-  .segs.warn i.on { background: var(--warn); border-color: var(--warn); }
-  .segs.crit i.on { background: var(--crit); border-color: var(--crit); }
+  .segs i { flex: 1; height: 13px; background: var(--panel-hi); border: 1px solid var(--line); }
+  .segs i.on { background: var(--ok); border-color: var(--ok); box-shadow: 0 0 10px -3px var(--ok); }
+  .segs.warn i.on { background: var(--warn); border-color: var(--warn); box-shadow: 0 0 10px -3px var(--warn); }
+  .segs.crit i.on { background: var(--crit); border-color: var(--crit); box-shadow: 0 0 10px -3px var(--crit); }
   .meter-val {
-    font-family: var(--hud); font-size: 0.7rem; color: var(--ink-faint);
+    font-family: var(--hud); font-size: 0.82rem; color: var(--ink-soft);
     text-align: right; font-variant-numeric: tabular-nums;
     justify-self: end;
   }
 
   /* build queue */
-  ol.queue { list-style: none; counter-reset: q; margin: 0; padding: 0; display: grid; gap: 2px; }
+  ol.queue { list-style: none; counter-reset: q; margin: 0; padding: 0; display: grid; gap: 3px; }
   ol.queue li {
     counter-increment: q;
     display: grid;
-    grid-template-columns: 2rem minmax(0, 1fr);
-    gap: 0.6rem;
+    grid-template-columns: 2.3rem minmax(0, 1fr);
+    gap: 0.7rem;
     align-items: start;
     background: var(--panel-2);
     border: 1px solid var(--line);
-    padding: 0.42rem 0.55rem;
-    font-size: 0.88rem;
+    padding: 0.5rem 0.65rem;
+    font-size: 1rem;
     color: var(--ink-soft);
   }
   ol.queue li::before {
     content: counter(q, decimal-leading-zero);
     font-family: var(--hud);
-    font-size: 0.72rem;
+    font-size: 0.84rem;
     color: var(--amber-dim);
     background: var(--ground-2);
     border: 1px solid var(--line);
     text-align: center;
-    line-height: 1.5;
+    line-height: 1.6;
     font-variant-numeric: tabular-nums;
   }
-  ol.queue li.is-priority { border-color: var(--crit); background: rgba(224, 96, 76, 0.07); color: var(--ink); }
+  ol.queue li.is-priority { border-color: var(--crit); background: rgba(242, 106, 84, 0.08); color: var(--ink); }
   ol.queue li.is-priority::before { color: var(--crit); border-color: var(--crit); }
 
-  /* countermeasures */
-  .counters { display: grid; gap: 0.6rem; align-items: start; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); }
+  /* ---- countermeasures: requisition cards with unit art ----------------- */
+  .counters { display: grid; gap: 0.75rem; align-items: start; grid-template-columns: repeat(auto-fit, minmax(min(330px, 100%), 1fr)); }
   .counter {
     background: var(--panel-2);
     border: 1px solid var(--line);
-    border-top: 2px solid var(--line-hot);
-    padding: 0.6rem 0.7rem 0.7rem;
+    border-top: 3px solid var(--line-hot);
+    padding: 0.7rem 0.8rem 0.8rem;
     display: grid;
-    gap: 0.5rem;
+    gap: 0.6rem;
     align-content: start;
     min-width: 0;
   }
@@ -487,99 +579,161 @@
   .counter-head { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
   .counter-head h3 {
     font-family: var(--display);
-    font-weight: 600;
-    font-size: 0.86rem;
+    font-weight: 700;
+    font-size: 1.02rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     margin: 0;
     color: var(--ink);
   }
   .counter-head .pres {
-    margin-left: auto; font-family: var(--hud); font-size: 0.64rem;
-    color: var(--ink-faint); font-variant-numeric: tabular-nums;
+    margin-left: auto; font-family: var(--hud); font-size: 0.76rem;
+    color: var(--ink-soft); font-variant-numeric: tabular-nums;
   }
-  .units { display: grid; gap: 0.45rem; margin: 0; padding: 0; list-style: none; }
-  .unit { display: grid; gap: 0.1rem; min-width: 0; }
-  .unit-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.3rem 0.45rem; }
+
+  .units { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+  .unit {
+    display: grid;
+    grid-template-columns: 80px minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: start;
+    min-width: 0;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 0.45rem 0.55rem;
+    transition: border-color 130ms ease, background 130ms ease;
+  }
+  .unit:hover { border-color: var(--line-hot); background: var(--panel-hi); }
+
+  /* Unit photograph. 54 of 61 units resolve to one; the rest fall back to the
+     faction mark rather than leaving a hole in the grid. */
+  .shot {
+    position: relative;
+    width: 80px; height: 62px;
+    background: var(--ground-2);
+    border: 1px solid var(--line);
+    overflow: hidden;
+    display: grid; place-items: center;
+  }
+  .shot img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: saturate(0.9) contrast(1.05);
+    transition: transform 160ms ease, filter 160ms ease;
+  }
+  .unit:hover .shot img { transform: scale(1.07); filter: saturate(1.15) contrast(1.1); }
+  .shot svg { width: 22px; height: 22px; opacity: 0.45; }
+  .shot::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 55%, rgba(8,11,8,0.5));
+    pointer-events: none;
+  }
+
+  .unit-body { display: grid; gap: 0.12rem; min-width: 0; }
+  .unit-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.3rem 0.5rem; }
   .unit-name {
-    font-family: var(--display); font-weight: 600; font-size: 0.85rem;
+    font-family: var(--display); font-weight: 600; font-size: 1rem;
     letter-spacing: 0.04em; color: var(--ink);
   }
-  .unit-cost { font-family: var(--hud); font-size: 0.68rem; color: var(--amber); font-variant-numeric: tabular-nums; }
+  .unit-cost { font-family: var(--hud); font-size: 0.82rem; color: var(--amber); font-variant-numeric: tabular-nums; }
   .unit-tier {
-    font-family: var(--hud); font-size: 0.58rem; letter-spacing: 0.08em;
-    color: var(--ink-faint); border: 1px solid var(--line); padding: 0 0.25rem;
+    font-family: var(--hud); font-size: 0.66rem; letter-spacing: 0.08em;
+    color: var(--ink-faint); border: 1px solid var(--line); padding: 0 0.3rem;
   }
-  .unit-why { font-size: 0.83rem; color: var(--ink-soft); line-height: 1.42; }
+  .unit-why { font-size: 0.95rem; color: var(--ink-soft); line-height: 1.42; }
   .counter-doctrine {
-    font-size: 0.82rem; color: var(--ink-soft);
-    border-top: 1px solid var(--line); padding-top: 0.45rem;
+    font-size: 0.95rem; color: var(--ink-soft);
+    border-top: 1px solid var(--line); padding-top: 0.55rem;
   }
   .counter-doctrine::before { content: "▸ "; color: var(--amber); }
 
   /* timeline */
-  .phases { display: grid; gap: 0.6rem; align-items: start; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); }
-  .phase { background: var(--panel-2); border: 1px solid var(--line); border-left: 2px solid var(--amber); padding: 0.55rem 0.65rem; min-width: 0; }
+  .phases { display: grid; gap: 0.7rem; align-items: start; grid-template-columns: repeat(auto-fit, minmax(min(245px, 100%), 1fr)); }
+  .phase { background: var(--panel-2); border: 1px solid var(--line); border-left: 3px solid var(--amber); padding: 0.65rem 0.75rem; min-width: 0; }
   .phase h3 {
-    font-family: var(--display); font-weight: 600; font-size: 0.85rem;
+    font-family: var(--display); font-weight: 600; font-size: 1rem;
     letter-spacing: 0.1em; text-transform: uppercase; margin: 0; color: var(--ink);
   }
   .phase .window {
-    font-family: var(--hud); font-size: 0.64rem; color: var(--amber-dim);
-    display: block; margin-bottom: 0.35rem; letter-spacing: 0.06em;
+    font-family: var(--hud); font-size: 0.76rem; color: var(--amber-dim);
+    display: block; margin-bottom: 0.45rem; letter-spacing: 0.06em;
   }
-  .phase ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.35rem; }
-  .phase li { font-size: 0.83rem; color: var(--ink-soft); padding-left: 0.75rem; position: relative; }
+  .phase ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.4rem; }
+  .phase li { font-size: 0.95rem; color: var(--ink-soft); padding-left: 0.85rem; position: relative; }
   .phase li::before { content: "–"; position: absolute; left: 0; color: var(--ink-faint); }
 
   /* advice */
-  .duo { display: grid; gap: 1.1rem; grid-template-columns: repeat(auto-fit, minmax(275px, 1fr)); }
-  ul.advice { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.45rem; }
+  .duo { display: grid; gap: 1.2rem; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); }
+  ul.advice { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.55rem; }
   ul.advice li {
-    display: grid; grid-template-columns: 1.15rem minmax(0, 1fr); gap: 0.45rem;
-    font-size: 0.85rem; color: var(--ink-soft);
+    display: grid; grid-template-columns: 1.3rem minmax(0, 1fr); gap: 0.5rem;
+    font-size: 0.98rem; color: var(--ink-soft);
   }
-  ul.advice li::before { content: "▸"; color: var(--amber); font-size: 0.7rem; line-height: 1.85; }
-  ul.advice.is-danger li::before { content: "✕"; color: var(--crit); font-size: 0.72rem; }
+  ul.advice li::before { content: "▸"; color: var(--amber); font-size: 0.8rem; line-height: 1.8; }
+  ul.advice.is-danger li::before { content: "✕"; color: var(--crit); font-size: 0.82rem; }
   ul.advice.is-intel li::before { content: "!"; color: var(--warn); font-family: var(--hud); line-height: 1.7; }
 
-  /* lineup ranking */
-  .roster { display: grid; gap: 2px; margin-top: 0.6rem; }
+  /* ---- lineup ranking, with a face per contender ------------------------ */
+  .roster { display: grid; gap: 3px; margin-top: 0.7rem; }
   .roster-row {
     display: grid;
-    grid-template-columns: 2.1rem minmax(50px, 7rem) minmax(0, 1fr);
-    gap: 0.55rem; align-items: center;
-    font-size: 0.83rem;
-    padding: 0.12rem 0;
+    grid-template-columns: 2.4rem 34px minmax(60px, 8rem) minmax(0, 1fr);
+    gap: 0.6rem; align-items: center;
+    font-size: 0.95rem;
+    padding: 0.2rem 0.25rem;
+    border: 1px solid transparent;
   }
-  .roster-score { font-family: var(--hud); font-size: 0.7rem; color: var(--ink-faint); text-align: right; font-variant-numeric: tabular-nums; }
-  .roster-bar { height: 7px; background: var(--panel-hi); border: 1px solid var(--line); }
+  .roster-row.is-pick { border-color: color-mix(in srgb, var(--amber) 45%, var(--line)); background: rgba(245,177,69,0.06); }
+  .roster-score { font-family: var(--hud); font-size: 0.84rem; color: var(--ink-soft); text-align: right; font-variant-numeric: tabular-nums; }
+  .roster-face {
+    width: 34px; height: 34px; border: 1px solid var(--line);
+    background: var(--ground-2); overflow: hidden; display: grid; place-items: center;
+  }
+  .roster-face img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
+  .roster-face svg { width: 17px; height: 17px; opacity: 0.55; }
+  .roster-bar { height: 10px; background: var(--panel-hi); border: 1px solid var(--line); }
   .roster-bar > i { display: block; height: 100%; background: var(--line-hot); }
   .roster-name { color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .roster-row.is-pick .roster-name { color: var(--ink); font-weight: 600; }
   .roster-row.is-pick .roster-score { color: var(--amber); }
-  .roster-row.is-pick .roster-bar > i { background: var(--amber); }
+  .roster-row.is-pick .roster-bar > i { background: var(--amber); box-shadow: 0 0 12px -3px var(--amber); }
 
-  .rationale { font-size: 0.86rem; color: var(--ink-soft); margin: 0 0 0.35rem; }
+  .rationale { font-size: 0.98rem; color: var(--ink-soft); margin: 0 0 0.4rem; }
+
+  /* ---- terrain panel: a drawn tactical diagram, not a photo ------------- */
+  .terrain-split { display: grid; gap: 0.9rem; }
+  @media (min-width: 640px) { .terrain-split { grid-template-columns: 300px minmax(0, 1fr); align-items: start; } }
+  .terrain-art { border: 1px solid var(--line-hot); background: var(--ground-2); }
+  .terrain-art svg { width: 100%; height: auto; display: block; }
+  .terrain-legend {
+    font-family: var(--hud); font-size: 0.7rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-faint);
+    padding: 0.35rem 0.5rem; border-top: 1px solid var(--line);
+    display: flex; flex-wrap: wrap; gap: 0.15rem 0.8rem;
+  }
+  .terrain-legend b { color: var(--ink-soft); font-weight: 400; }
 
   /* colophon */
   .colophon {
-    margin-top: 1.6rem;
-    padding-top: 0.75rem;
+    margin-top: 1.8rem;
+    padding-top: 0.85rem;
     border-top: 1px solid var(--line);
     font-family: var(--hud);
-    font-size: 0.63rem;
+    font-size: 0.72rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--ink-faint);
     display: grid;
-    gap: 0.25rem;
+    gap: 0.3rem;
   }
   .colophon a { color: var(--amber-dim); }
 
-  @media (max-width: 420px) {
+  @media (max-width: 460px) {
     .armies { grid-template-columns: minmax(0, 1fr); }
     .ranks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .roster-row { grid-template-columns: 2.2rem 28px minmax(0, 1fr); }
+    .roster-bar { display: none; }
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -588,6 +742,9 @@
       0%, 100% { opacity: 0.55; }
       50% { opacity: 1; }
     }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
   }
 </style>
 
@@ -622,6 +779,7 @@
       <fieldset class="console">
         <legend>Theatre</legend>
         <select id="map-select" aria-label="Map"></select>
+        <div class="theatre-preview" id="theatre-preview"></div>
       </fieldset>
 
       <button type="button" class="command-btn" id="reroll">Randomize deployment</button>
@@ -1075,13 +1233,14 @@ function planFrom(ds, input) {
     };
 }
 
-const DATA = {"factions":[{"id":"usa","name":"United States of America","side":"usa","tagline":"Expensive, precise, and lethal once the airfields are humming.","threat":{"air":3,"armor":2,"infantry_swarm":1,"artillery":2,"stealth":1,"superweapon":2,"economy":2,"base_defense":2,"early_rush":1,"chemical":0},"vulnerability":{"early_rush":3,"infantry_swarm":2,"stealth":2,"artillery":2},"strengths":["Best air force in the game once Airfields are up","Tomahawk Launchers out-range almost every base defence","Drones bolt onto vehicles for free repair, scouting and extra guns","Strategy Center stances swing a fight without spending credits"],"weaknesses":["Units cost more than anything they will trade with early on","Very soft for the first five minutes — a committed rush ends the game","Airfields are large, fragile, and worth raiding","Infantry hordes overwhelm small numbers of expensive units"],"opening":["Dozer -> Supply Center, pull both Chinooks onto the nearest supply pile","Barracks -> two Rangers for scouting and garrison clearing","Supply Drop Zone as soon as credits allow — it pays passively all game","War Factory -> Humvees, then Crusaders","Strategy Center (unlocks stances and the Paladin), then Airfield"],"signatureTactics":["Garrison a central building with Rangers and Missile Defenders early","Comanche pairs hunting supply lines and dozers, never trading with AA","Tomahawk line behind a Crusader screen to peel base defences apart","Colonel Burton to silently demolish a superweapon or power grid"],"quirks":["Drones attach to vehicles: Battle Drone repairs, Scout Drone spots, Hellfire adds damage","Strategy Center stance: Bombardment (range), Hold the Line (armour), Search and Destroy (damage/vision)","Supply Drop Zone gives income with no chinook risk"],"wikiPage":"United_States_of_America_(Generals)","source":"curated"},{"id":"usa_air","name":"USA Air Force General","general":"Gen. Malcolm \"Ace\" Granger","side":"usa","tagline":"Owns the sky, rents the ground.","threat":{"air":3,"armor":1,"infantry_swarm":1,"artillery":1,"stealth":2,"superweapon":2,"economy":2,"base_defense":1,"early_rush":1,"chemical":0},"vulnerability":{"early_rush":3,"armor":3,"base_defense":3,"infantry_swarm":2},"strengths":["King Raptor and Aurora Alpha hit harder and survive more than stock aircraft","Stealth Comanches arrive unseen over supply lines","Carpet bombing erases infantry hordes and clustered production","Aircraft rearm and recover faster than anyone can replace ground losses"],"weaknesses":["No Crusader or Paladin line — his ground army is thin and improvised","A fast ground rush kills him before the second Airfield finishes","Massed anti-air (Quad Cannons, Gattlings, Avengers) shuts the whole army off","Base defence is an afterthought"],"opening":["Dozer -> Supply Center, both Chinooks mining immediately","Barracks -> Rangers, then a Patriot Battery on the main approach","Airfield as the first real investment","Second Airfield before any ground tech"],"signatureTactics":["Raptor pairs sniping dozers and supply trucks from minute four","Aurora Alpha runs on superweapons, Command Centers and War Factories","Chinook-lift a Humvee ball behind the enemy economy","Keep a Patriot screen at home so he never has to land to defend"],"quirks":["Aircraft are the army — losing air superiority loses the game","Countermeasures upgrade makes aircraft shrug off missile defences"],"wikiPage":"Air_Force_General","source":"curated"},{"id":"usa_laser","name":"USA Laser General","general":"Gen. \"Pinpoint\" Townes","side":"usa","tagline":"Immaculate defence, wired to a fuse box.","threat":{"air":2,"armor":2,"infantry_swarm":1,"artillery":1,"stealth":1,"superweapon":2,"economy":2,"base_defense":3,"early_rush":1,"chemical":0},"vulnerability":{"early_rush":2,"artillery":3,"infantry_swarm":2,"economy":3},"strengths":["Laser Turrets out-damage any other static defence for the price","Laser Crusaders cut through armour with no travel time to dodge","Point Defence Lasers shoot incoming rockets and missiles out of the air","Cold Fusion Reactors are cheaper and produce more power than standard"],"weaknesses":["Everything is power-gated — dark reactors mean dark turrets","Artillery out-ranges his defensive line and he cannot answer in kind","Missile-only armies do badly, but shell and gun armies walk through","Thin early game like all USA sides"],"opening":["Dozer -> Supply Center, Chinooks onto supply","Cold Fusion Reactor early — the whole army keys off power","Barracks -> Rangers, Laser Turret on the main approach","War Factory -> Laser Crusaders","Strategy Center, then Airfield"],"signatureTactics":["Turtle a chokepoint with Laser Turrets and push out with Laser Crusaders","Use Point Defence Laser coverage to walk into missile-heavy armies","Avenger units to blank enemy missiles over the army ball"],"quirks":["Power is the single point of failure — protect and over-build reactors","Point Defence Laser intercepts rockets and missiles but not shells or bullets"],"wikiPage":"Laser_General","source":"curated"},{"id":"usa_super","name":"USA Superweapon General","general":"Gen. Alexis Alexander","side":"usa","tagline":"Survive her opening and you still have to survive the sky falling.","threat":{"air":2,"armor":2,"infantry_swarm":1,"artillery":2,"stealth":1,"superweapon":3,"economy":2,"base_defense":3,"early_rush":1,"chemical":0},"vulnerability":{"early_rush":3,"stealth":2,"armor":2},"strengths":["Particle Cannons are cheaper and recharge faster, and she fields more of them","EMP Patriots freeze vehicles in place inside her defensive envelope","Advanced Control Rods push more power out of every reactor","Late game is effectively unwinnable if she is allowed to reach it"],"weaknesses":["Slow, greedy opening — she is at her weakest for the first eight minutes","A spread-out enemy base blunts every Particle Cannon shot","Killing the Particle Cannon uplinks resets her entire plan","Raids on dozers delay superweapons disproportionately"],"opening":["Dozer -> Supply Center, Chinooks mining","Barracks and a Patriot Battery, because she must survive to tech","Cold Fusion Reactor -> Strategy Center","Particle Cannon uplink the moment it is affordable"],"signatureTactics":["Hold a tight defensive perimeter and win on superweapon uptime","EMP Patriot line to strand armour inside Particle Cannon range","Chain Particle Cannon shots onto production rather than armies"],"quirks":["Her clock is the real opponent — every minute favours her","Superweapon timers are public information: count them"],"wikiPage":"Superweapon_General","source":"curated"},{"id":"china","name":"People's Republic of China","side":"china","tagline":"Bring more of everything and let the horde bonus do the maths.","threat":{"air":2,"armor":3,"infantry_swarm":2,"artillery":2,"stealth":0,"superweapon":2,"economy":2,"base_defense":2,"early_rush":2,"chemical":1},"vulnerability":{"air":2,"stealth":2,"artillery":2,"chemical":1},"strengths":["Overlords are the toughest thing on the field and carry upgrades on their back","Horde bonus makes massed identical units hit far above their cost","Gattling Cannons answer air and infantry from the same building","Hackers print credits without ever leaving the base"],"weaknesses":["Slow ground units get kited by anything faster","No stealth and poor stealth detection outside the Listening Outpost","Long-range artillery picks the horde apart before it arrives","Nuclear reactors detonate when destroyed, inside your own base"],"opening":["Dozer -> Supply Center, both Supply Trucks mining","Barracks -> Red Guard pairs to hold ground and scout","War Factory -> Battlemasters, keep five together for the horde bonus","Nuclear Reactor -> Internet Center for hackers, or Propaganda Center for upgrades","Gattling Cannon on the approach before the first air scout arrives"],"signatureTactics":["Five-Battlemaster horde with a Dragon Tank behind to clear garrisons","Overlord with a Gattling Cannon on top as a mobile no-fly zone","Nuke Cannon or Inferno Cannon line to crack a turtled base","Black Lotus to capture a building or drain an enemy supply centre"],"quirks":["Horde bonus: five or more of the same unit near each other gain attack","Propaganda Towers and Overlord speakers passively heal nearby units","Nationalism and Patriotism stack the horde bonus higher"],"wikiPage":"China_(Generals)","source":"curated"},{"id":"china_tank","name":"China Tank General","general":"Gen. Ta Hun Kwai","side":"china","tagline":"A wall of armour that arrives early and never stops.","threat":{"air":1,"armor":3,"infantry_swarm":1,"artillery":1,"stealth":0,"superweapon":2,"economy":2,"base_defense":2,"early_rush":3,"chemical":0},"vulnerability":{"air":3,"artillery":2,"stealth":2},"strengths":["Tanks are cheaper, faster and roll off the line already veteran","Emperor Overlord carries its own propaganda aura and shrugs off massed fire","Can contest the map earlier than any other Chinese side","Armour count snowballs if the first push is not punished"],"weaknesses":["Almost nothing in his arsenal answers massed air","Rocket infantry in garrisons trade brutally well against him","Artillery kills the ball before it closes","Committed to the ground: no flexibility if you deny the ground"],"opening":["Dozer -> Supply Center, trucks mining","War Factory immediately — his tanks are the opening","Battlemaster pressure on the enemy supply line before minute five","Gattling Cannon at home only after the first push"],"signatureTactics":["Early Battlemaster raid on dozers and supply trucks","Emperor Overlord spearhead with Battlemasters filling the horde bonus","Overrun infantry with tank treads rather than shooting them"],"quirks":["Veterancy on delivery means his first tanks beat your first tanks","Overlords can mount Gattling, Propaganda or Bunker upgrades"],"wikiPage":"Tank_General","source":"curated"},{"id":"china_infantry","name":"China Infantry General","general":"Gen. \"Anvil\" Shin Fai","side":"china","tagline":"Bodies, endlessly, all of them already veterans.","threat":{"air":1,"armor":1,"infantry_swarm":3,"artillery":2,"stealth":0,"superweapon":2,"economy":2,"base_defense":2,"early_rush":3,"chemical":0},"vulnerability":{"chemical":3,"artillery":3,"air":2,"armor":2},"strengths":["Infantry arrive as veterans and scale into enormous hordes","Minigunners and Tank Hunters cover infantry and armour from one Barracks","Attack Outposts push the horde forward with healing and detection","Cheapest map control in the game"],"weaknesses":["Flame and toxin delete whole hordes in seconds","Artillery and carpet bombing are equally catastrophic","Very little answer to heavy armour in open ground","Garrisons become death traps once the building burns"],"opening":["Dozer -> Supply Center, trucks mining","Barracks first, then a second Barracks — production width is the strategy","Red Guard and Tank Hunter mix, pushed out to claim ground early","Troop Crawler to move the horde and detect stealth"],"signatureTactics":["Early veteran Red Guard flood onto the enemy's supply line","Garrison every building on the approach with Tank Hunters","Troop Crawler drops behind the enemy line and unloads a full horde"],"quirks":["All infantry start veteran, which changes every early trade","Horde bonus applies to infantry, so bigger really is better"],"wikiPage":"Infantry_General","source":"curated"},{"id":"china_nuke","name":"China Nuclear General","general":"Gen. Tsing Shi Tao","side":"china","tagline":"Everything he owns is also a bomb, including his power plants.","threat":{"air":2,"armor":3,"infantry_swarm":2,"artillery":3,"stealth":0,"superweapon":3,"economy":3,"base_defense":2,"early_rush":2,"chemical":2},"vulnerability":{"early_rush":2,"air":2,"artillery":2},"strengths":["Tanks leave a radioactive detonation behind when they die","Tactical Nuke Cannon flattens clustered armies and static defences","Nuclear reactors produce more power, so he techs faster","Nuke MiGs turn a bombing run into an area denial weapon"],"weaknesses":["His own reactors detonate inside his base when destroyed","Clumped defenders are exactly what his whole arsenal wants","Long-range engagements deny his death-explosion value","Early aggression arrives before the nuclear tech does"],"opening":["Dozer -> Supply Center, trucks mining","Nuclear Reactor early — power is his economy advantage","War Factory -> Battlemasters with the nuclear upgrades","Nuke Cannon once the front stabilises"],"signatureTactics":["Trade tanks aggressively — his die better than yours","Tactical Nuke Cannon onto any static defensive line","Nuke MiG runs to make ground permanently uncomfortable"],"quirks":["Death explosions mean you lose units even when you win the fight","His reactors are a liability you can exploit with a single raid"],"wikiPage":"Nuke_General","source":"curated"},{"id":"gla","name":"Global Liberation Army","side":"gla","tagline":"Cheap, fast, everywhere, and impossible to finish off.","threat":{"air":0,"armor":2,"infantry_swarm":2,"artillery":2,"stealth":2,"superweapon":2,"economy":3,"base_defense":1,"early_rush":3,"chemical":2},"vulnerability":{"air":3,"armor":2,"base_defense":2},"strengths":["Fastest, cheapest army on the field — trades on volume and tempo","Tunnel Networks teleport the army across the map and heal it","Destroyed buildings leave holes that rebuild for a fraction of the cost","Black Market and salvage give income and free veterancy"],"weaknesses":["No aircraft at all — the sky belongs to the enemy by default","Light armour everywhere; anything heavy wins a straight fight","Static defence is weak outside Stinger Sites and tunnels","Falls off badly if the early tempo is neutralised"],"opening":["Worker -> Supply Stash, extra Workers onto supply immediately","Barracks -> Rebels for scouting, RPG Troopers for the first raid","Arms Dealer -> Technicals, then Scorpions","Tunnel Network toward the middle of the map to project the army","Black Market for income and upgrades"],"signatureTactics":["Rebel and RPG raid on the enemy dozer line before minute four","Tunnel Network forward so reinforcements arrive already at the front","Jarmen Kell snipes vehicle crews, then infantry walk into free tanks","Bomb Truck disguised in an enemy column, driven into a superweapon"],"quirks":["Buildings leave rebuildable holes — killing GLA structures is never permanent","Salvage crates from destroyed vehicles upgrade units on the spot","GPS Scrambler and Sneak Attack put an army where it should not be"],"wikiPage":"Global_Liberation_Army","source":"curated"},{"id":"gla_toxin","name":"GLA Toxin General","general":"Dr. Thrax","side":"gla","tagline":"Poisons the ground you were going to stand on.","threat":{"air":0,"armor":1,"infantry_swarm":2,"artillery":2,"stealth":1,"superweapon":2,"economy":2,"base_defense":2,"early_rush":3,"chemical":3},"vulnerability":{"air":3,"armor":3},"strengths":["Starts with Anthrax Beta and can upgrade to Gamma — toxins never wear off","Toxin Tractors and Toxin Rebels clear infantry and garrisons instantly","Toxin Scuds leave lingering clouds that deny ground for free","Anthrax Bomb is a cheap answer to any infantry-based army"],"weaknesses":["Toxins do very little to vehicles and nothing at all to aircraft","A fully mechanised enemy ignores most of his damage output","Light armour, like all GLA sides","No aircraft"],"opening":["Worker -> Supply Stash, extra Workers mining","Barracks -> Toxin Rebels for the early raid","Arms Dealer -> Toxin Tractors","Tunnel Network forward, Black Market for income"],"signatureTactics":["Toxin Tractor pairs erasing garrisons and infantry screens","Poison the enemy supply pile so workers cannot mine it","Anthrax Bomb onto any massed infantry formation"],"quirks":["Toxin damage lingers on the ground after the attack stops","Against vehicles his damage profile collapses — he must catch infantry"],"wikiPage":"Toxin_General","source":"curated"},{"id":"gla_stealth","name":"GLA Stealth General","general":"Prince Kassad","side":"gla","tagline":"The army was always there. You simply could not see it.","threat":{"air":0,"armor":1,"infantry_swarm":2,"artillery":2,"stealth":3,"superweapon":1,"economy":2,"base_defense":2,"early_rush":2,"chemical":1},"vulnerability":{"air":3,"armor":3,"artillery":2},"strengths":["Nearly the entire army is stealthed by default","Camo Netting hides buildings, so his base is hard to even find","Hijackers steal vehicles outright, turning your army into his","Booby Traps and Demo Traps punish careless expansion"],"weaknesses":["One detector unravels the entire strategy","Straight firepower is below average once he is visible","Light armour and no aircraft","Loses badly to area damage swept across suspected positions"],"opening":["Worker -> Supply Stash, extra Workers mining","Barracks -> stealthed Rebels to scout and hold ground unseen","Camo Netting on the base as early as possible","Tunnel Network forward, Arms Dealer for Rocket Buggies"],"signatureTactics":["Park stealthed units on the enemy's expansion path and wait","Hijack the first vehicles that walk past unescorted","GPS Scrambler and Sneak Attack to open a second front inside the base"],"quirks":["Assume every empty-looking piece of ground is occupied","Stealth breaks when he fires — the window to punish is short"],"wikiPage":"Stealth_General","source":"curated"},{"id":"gla_demo","name":"GLA Demolition General","general":"Gen. Rodall \"Demo\" Juhziz","side":"gla","tagline":"Every single thing he owns is a delivery system for explosives.","threat":{"air":0,"armor":2,"infantry_swarm":3,"artillery":2,"stealth":2,"superweapon":3,"economy":2,"base_defense":2,"early_rush":3,"chemical":1},"vulnerability":{"air":3,"armor":2,"artillery":3},"strengths":["Terrorists are the cheapest way in the game to delete a tank","Demo Traps turn any piece of ground into a minefield","Bomb Trucks can disguise themselves and drive into anything important","Units detonate on death, so killing them is still a cost"],"weaknesses":["Almost everything he has must physically touch you to work","Long-range units and aircraft are close to immune","Very light armour — he dies on the approach if you see him coming","No aircraft"],"opening":["Worker -> Supply Stash, extra Workers mining","Barracks -> Terrorists and Rebels for the first raid","Demo Traps on your own chokepoints and expansions","Arms Dealer -> Bomb Trucks, Tunnel Network forward"],"signatureTactics":["Terrorist packs onto any tank ball that lost its infantry screen","Bomb Truck disguised as an enemy vehicle, aimed at a superweapon","Demo Trap every supply pile the enemy is about to expand onto"],"quirks":["Death explosions mean melee range is never safe near him","Cheap suicide units mean his army value is always lower than it looks"],"wikiPage":"Demolition_General","source":"curated"}],"units":[{"id":"ranger","name":"Ranger","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"infantry","roles":["anti_infantry","garrison_clear","scout"],"cost":225,"tier":"early","answers":{"infantry_swarm":1,"early_rush":1},"note":"Cheap bodies that clear garrisons and hold ground until real units arrive.","source":"curated","wikiPage":"Ranger"},{"id":"missile_defender","name":"Missile Defender","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"infantry","roles":["anti_vehicle","anti_air"],"cost":300,"tier":"early","answers":{"armor":2,"air":2,"early_rush":2},"note":"The USA answer to an early tank push and to low-flying aircraft, especially garrisoned.","source":"curated","wikiPage":"Missile_Defender"},{"id":"pathfinder","name":"Pathfinder","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"infantry","roles":["anti_infantry","stealth","scout"],"cost":400,"tier":"mid","answers":{"infantry_swarm":3},"note":"One-shots infantry from outside their range; the cleanest answer to a horde.","source":"curated","wikiPage":"Pathfinder"},{"id":"colonel_burton","name":"Colonel Burton","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"infantry","roles":["hero","anti_structure","stealth"],"cost":1500,"tier":"mid","answers":{"base_defense":3,"superweapon":3,"economy":2},"note":"Walks in unseen and demolishes superweapons, power grids and defence lines.","source":"curated","wikiPage":"Colonel_Burton"},{"id":"humvee","name":"Humvee","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"ground","roles":["anti_infantry","transport","scout"],"cost":700,"tier":"early","answers":{"infantry_swarm":2,"early_rush":2},"note":"Fast, carries infantry that fire from inside, and is the USA's early map presence.","source":"curated","wikiPage":"Humvee"},{"id":"sentry_drone","name":"Sentry Drone","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"ground","roles":["scout","detector","anti_infantry"],"cost":800,"tier":"early","answers":{"stealth":3,"infantry_swarm":1},"note":"The USA stealth detector. Nothing else you own reliably sees a stealthed army.","source":"curated","wikiPage":"Sentry_drone"},{"id":"crusader","name":"Crusader Tank","factions":["usa","usa_super"],"domain":"ground","roles":["anti_vehicle"],"cost":900,"tier":"mid","answers":{"armor":2},"note":"The standard USA main battle tank; good in numbers with drone support.","source":"curated","wikiPage":"Crusader_Tank"},{"id":"paladin","name":"Paladin Tank","factions":["usa","usa_super"],"domain":"ground","roles":["anti_vehicle","defense"],"cost":1200,"tier":"late","answers":{"armor":3},"note":"Crusader with a point defence laser that eats incoming rockets and missiles.","source":"curated","wikiPage":"Paladin_Tank"},{"id":"laser_crusader","name":"Laser Crusader","factions":["usa_laser"],"domain":"ground","roles":["anti_vehicle"],"cost":900,"tier":"mid","answers":{"armor":3},"note":"Hitscan damage with no shell travel time — it does not miss moving targets.","source":"curated","wikiPage":"Laser_Crusader"},{"id":"tomahawk","name":"Tomahawk Launcher","factions":["usa","usa_laser","usa_super"],"domain":"ground","roles":["artillery","anti_structure"],"cost":1200,"tier":"mid","answers":{"base_defense":3,"artillery":2,"stealth":1},"note":"Out-ranges essentially every static defence in the game. Siege from outside the envelope.","source":"curated","wikiPage":"Tomahawk_Launcher"},{"id":"microwave_tank","name":"Microwave Tank","factions":["usa","usa_laser","usa_super"],"domain":"ground","roles":["support","garrison_clear","anti_structure"],"cost":1200,"tier":"mid","answers":{"base_defense":2,"infantry_swarm":3},"note":"Disables buildings and cooks garrisoned infantry without damaging the structure.","source":"curated","wikiPage":"Microwave_Tank"},{"id":"avenger","name":"Avenger","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"ground","roles":["anti_air","support"],"cost":1800,"tier":"late","answers":{"air":3},"note":"Mobile anti-air that also blanks enemy missiles aimed at the units around it.","source":"curated","wikiPage":"Avenger"},{"id":"raptor","name":"Raptor","factions":["usa","usa_laser","usa_super"],"domain":"air","roles":["aircraft","anti_vehicle"],"cost":1200,"tier":"mid","answers":{"armor":3,"artillery":3},"note":"Fast strike aircraft; the fastest way to kill artillery and a tank ball.","source":"curated","wikiPage":"Raptor"},{"id":"king_raptor","name":"King Raptor","factions":["usa_air"],"domain":"air","roles":["aircraft","anti_vehicle"],"cost":1400,"tier":"mid","answers":{"armor":3,"artillery":3,"air":2},"note":"Granger's upgraded Raptor: tougher, harder hitting, and able to contest other aircraft.","source":"curated","wikiPage":"King_Raptor"},{"id":"comanche","name":"Comanche","factions":["usa","usa_laser","usa_super"],"domain":"air","roles":["aircraft","anti_infantry","anti_vehicle"],"cost":1500,"tier":"mid","answers":{"infantry_swarm":3,"armor":2,"economy":3},"note":"Hovers over supply lines and deletes workers, dozers and infantry. Never trade it into AA.","source":"curated","wikiPage":"Comanche"},{"id":"stealth_comanche","name":"Stealth Comanche","factions":["usa_air"],"domain":"air","roles":["aircraft","anti_infantry","anti_vehicle","stealth"],"cost":1500,"tier":"mid","answers":{"infantry_swarm":3,"armor":2,"economy":3},"note":"Arrives over the economy without ever appearing on radar.","source":"curated","wikiPage":"Comanche"},{"id":"stealth_fighter","name":"Stealth Fighter","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"air","roles":["aircraft","anti_structure","stealth"],"cost":1600,"tier":"late","answers":{"base_defense":3,"superweapon":2},"note":"Flies through an air defence net that cannot see it and removes a key building.","source":"curated","wikiPage":"Stealth_Fighter"},{"id":"aurora","name":"Aurora Bomber","factions":["usa","usa_laser","usa_super"],"domain":"air","roles":["aircraft","anti_structure"],"cost":2000,"tier":"late","answers":{"base_defense":3,"superweapon":3,"infantry_swarm":2},"note":"Invulnerable on the approach; it will land its bomb on whatever you point it at.","source":"curated","wikiPage":"Aurora_Bomber"},{"id":"aurora_alpha","name":"Aurora Alpha","factions":["usa_air"],"domain":"air","roles":["aircraft","anti_structure"],"cost":2400,"tier":"late","answers":{"base_defense":3,"superweapon":3,"infantry_swarm":3},"note":"Aurora with a bigger blast — deletes a superweapon or a production cluster per run.","source":"curated","wikiPage":"Aurora_Alpha"},{"id":"patriot","name":"Patriot Battery","factions":["usa","usa_laser","usa_super"],"domain":"ground","roles":["defense","anti_air","anti_vehicle"],"cost":1000,"tier":"early","answers":{"air":2,"armor":1,"early_rush":2},"note":"The base-defence backbone: cheap, covers both air and ground approaches.","source":"curated","wikiPage":"Patriot_Battery"},{"id":"emp_patriot","name":"EMP Patriot","factions":["usa_super"],"domain":"ground","roles":["defense","anti_vehicle"],"cost":1000,"tier":"early","answers":{"armor":3,"early_rush":2},"note":"Strands enemy vehicles motionless inside your defensive envelope.","source":"curated","wikiPage":"EMP_Patriot"},{"id":"laser_turret","name":"Laser Turret","factions":["usa_laser"],"domain":"ground","roles":["defense","anti_air","anti_vehicle"],"cost":1000,"tier":"early","answers":{"air":2,"armor":2,"early_rush":2},"note":"Best damage per credit of any static defence — as long as the power stays on.","source":"curated","wikiPage":"Laser_Turret"},{"id":"firebase","name":"Firebase","factions":["usa","usa_laser","usa_super"],"domain":"ground","roles":["defense","anti_infantry"],"cost":800,"tier":"early","answers":{"infantry_swarm":2,"early_rush":2},"note":"Garrison it with Missile Defenders and it covers armour and air at once.","source":"curated","wikiPage":"Firebase"},{"id":"red_guard","name":"Red Guard","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"infantry","roles":["anti_infantry","garrison_clear"],"cost":300,"tier":"early","answers":{"infantry_swarm":2,"early_rush":1},"note":"Comes in pairs and benefits from the horde bonus; the cheapest ground you can hold.","source":"curated","wikiPage":"Red_Guard"},{"id":"tank_hunter","name":"Tank Hunter","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"infantry","roles":["anti_vehicle","anti_air"],"cost":300,"tier":"early","answers":{"armor":3,"air":1,"early_rush":2},"note":"Garrisoned Tank Hunters break any early armour push at a fraction of its cost.","source":"curated","wikiPage":"Tank_Hunter"},{"id":"minigunner","name":"Minigunner","factions":["china_infantry"],"domain":"infantry","roles":["anti_infantry","garrison_clear"],"cost":400,"tier":"early","answers":{"infantry_swarm":3},"note":"Shin Fai's dedicated infantry killer, veteran from the moment it is built.","source":"curated","wikiPage":"Minigunner"},{"id":"hacker","name":"Hacker","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"infantry","roles":["economy","support"],"cost":625,"tier":"early","answers":{"economy":3},"note":"Generates credits from inside the base and can disable enemy buildings.","source":"curated","wikiPage":"Hacker"},{"id":"black_lotus","name":"Black Lotus","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"infantry","roles":["hero","capture","stealth","support"],"cost":1500,"tier":"mid","answers":{"economy":3,"base_defense":2,"armor":2},"note":"Captures buildings, steals credits outright and disables vehicles from range.","source":"curated","wikiPage":"Black_Lotus"},{"id":"battlemaster","name":"Battlemaster","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"ground","roles":["anti_vehicle"],"cost":700,"tier":"early","answers":{"armor":2,"early_rush":2},"note":"Cheap enough to mass; five together trigger the horde bonus and punch well above cost.","source":"curated","wikiPage":"Battlemaster_Tank"},{"id":"overlord","name":"Overlord","factions":["china","china_infantry","china_nuke"],"domain":"ground","roles":["anti_vehicle","anti_infantry","defense"],"cost":2000,"tier":"late","answers":{"armor":3,"infantry_swarm":2,"early_rush":3},"note":"The toughest ground unit in the game, and it carries a Gattling or Propaganda tower on top.","source":"curated","wikiPage":"Overlord_Tank"},{"id":"emperor_overlord","name":"Emperor Overlord","factions":["china_tank"],"domain":"ground","roles":["anti_vehicle","anti_infantry","defense","support"],"cost":2400,"tier":"late","answers":{"armor":3,"infantry_swarm":2,"early_rush":3},"note":"Overlord with a built-in propaganda aura that heals everything around it.","source":"curated","wikiPage":"Emperor_Overlord"},{"id":"gattling_tank","name":"Gattling Tank","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"ground","roles":["anti_air","anti_infantry"],"cost":800,"tier":"early","answers":{"air":3,"infantry_swarm":3},"note":"The single best answer China has to aircraft and to infantry hordes.","source":"curated","wikiPage":"Gattling_Tank"},{"id":"dragon_tank","name":"Dragon Tank","factions":["china","china_infantry","china_nuke"],"domain":"ground","roles":["garrison_clear","anti_infantry"],"cost":800,"tier":"mid","answers":{"infantry_swarm":3,"stealth":1,"base_defense":1},"note":"Flame clears garrisons, erases infantry, and burns stealthed units out of cover.","source":"curated","wikiPage":"Dragon_Tank"},{"id":"inferno_cannon","name":"Inferno Cannon","factions":["china","china_infantry","china_nuke"],"domain":"ground","roles":["artillery","anti_infantry"],"cost":1200,"tier":"mid","answers":{"infantry_swarm":3,"base_defense":2},"note":"Incendiary artillery; a line of them removes an infantry army before it closes.","source":"curated","wikiPage":"Inferno_Cannon"},{"id":"nuke_cannon","name":"Nuke Cannon","factions":["china","china_nuke"],"domain":"ground","roles":["artillery","anti_structure"],"cost":1600,"tier":"late","answers":{"base_defense":3,"infantry_swarm":3,"artillery":2},"note":"Siege artillery that out-ranges base defences and flattens clustered armies.","source":"curated","wikiPage":"Nuke_Cannon"},{"id":"troop_crawler","name":"Troop Crawler","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"ground","roles":["transport","detector","support"],"cost":900,"tier":"early","answers":{"stealth":2,"infantry_swarm":1},"note":"Moves a horde safely and sees stealthed units while it does.","source":"curated","wikiPage":"Troop_Crawler"},{"id":"listening_outpost","name":"Listening Outpost","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"ground","roles":["scout","detector","stealth"],"cost":500,"tier":"early","answers":{"stealth":3},"note":"China's proper stealth detector: cheap, stealthed itself, wide detection radius.","source":"curated","wikiPage":"Listening_Outpost"},{"id":"mig","name":"MiG","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"air","roles":["aircraft","anti_vehicle","anti_structure"],"cost":1200,"tier":"mid","answers":{"armor":3,"artillery":3,"base_defense":2},"note":"Napalm strike aircraft; the Chinese answer to artillery and massed armour.","source":"curated","wikiPage":"MiG"},{"id":"helix","name":"Helix","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"air","roles":["aircraft","transport","anti_infantry","anti_structure"],"cost":2000,"tier":"late","answers":{"infantry_swarm":3,"base_defense":2},"note":"Flying gunship and transport in one; upgrades bolt guns, napalm or a bunker onto it.","source":"curated","wikiPage":"Helix"},{"id":"gattling_cannon","name":"Gattling Cannon","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"ground","roles":["defense","anti_air","anti_infantry"],"cost":1000,"tier":"early","answers":{"air":3,"infantry_swarm":3,"early_rush":2},"note":"One building that answers both aircraft and infantry; put it on the approach early.","source":"curated","wikiPage":"Gattling_Cannon"},{"id":"bunker","name":"Bunker","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"ground","roles":["defense","anti_infantry"],"cost":400,"tier":"early","answers":{"early_rush":2,"infantry_swarm":1,"armor":1},"note":"Fill it with Tank Hunters and it stops an early armour push cold.","source":"curated","wikiPage":"Bunker"},{"id":"rebel","name":"Rebel","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"infantry","roles":["anti_infantry","scout","capture"],"cost":225,"tier":"early","answers":{"infantry_swarm":1,"early_rush":1,"economy":1},"note":"Dirt cheap, can capture buildings, and with Camo Netting it scouts unseen.","source":"curated","wikiPage":"Rebel"},{"id":"rpg_trooper","name":"RPG Trooper","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"infantry","roles":["anti_vehicle","anti_air"],"cost":300,"tier":"early","answers":{"armor":3,"air":1,"early_rush":2},"note":"The GLA answer to armour. In numbers, and in garrisons, it beats tanks on cost.","source":"curated","wikiPage":"RPG_Trooper"},{"id":"terrorist","name":"Terrorist","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"infantry","roles":["suicide","anti_vehicle","anti_structure"],"cost":200,"tier":"early","answers":{"armor":3,"base_defense":1},"note":"The cheapest tank kill in the game. It only has to reach the target once.","source":"curated","wikiPage":"Terrorist"},{"id":"hijacker","name":"Hijacker","factions":["gla","gla_stealth","gla_demo"],"domain":"infantry","roles":["capture","stealth"],"cost":800,"tier":"mid","answers":{"armor":3},"note":"Takes an enemy vehicle intact. Against an expensive army this is pure profit.","source":"curated","wikiPage":"Hijacker"},{"id":"saboteur","name":"Saboteur","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"infantry","roles":["capture","stealth","support"],"cost":300,"tier":"mid","answers":{"economy":2,"base_defense":2,"superweapon":2},"note":"Sneaks into a building to steal credits, reset a superweapon timer or cut power.","source":"curated","wikiPage":"Saboteur"},{"id":"jarmen_kell","name":"Jarmen Kell","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"infantry","roles":["hero","anti_infantry","stealth"],"cost":1500,"tier":"mid","answers":{"armor":3,"infantry_swarm":2},"note":"Snipes vehicle crews from stealth; your infantry then walk into the empty tanks.","source":"curated","wikiPage":"Jarmen_Kell"},{"id":"angry_mob","name":"Angry Mob","factions":["gla","gla_toxin","gla_demo"],"domain":"infantry","roles":["anti_infantry","garrison_clear"],"cost":600,"tier":"mid","answers":{"infantry_swarm":2,"base_defense":1},"note":"A crowd that keeps replacing itself; good at swamping a position cheaply.","source":"curated","wikiPage":"Angry_Mob"},{"id":"technical","name":"Technical","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["anti_infantry","scout","transport"],"cost":500,"tier":"early","answers":{"infantry_swarm":2,"early_rush":2},"note":"The GLA's early map control; fast, disposable, and upgrades itself off salvage.","source":"curated","wikiPage":"Technical"},{"id":"scorpion","name":"Scorpion Tank","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["anti_vehicle"],"cost":600,"tier":"early","answers":{"armor":2,"early_rush":2},"note":"Cheap armour that wins on numbers rather than on any single engagement.","source":"curated","wikiPage":"Scorpion_Tank"},{"id":"marauder","name":"Marauder Tank","factions":["gla","gla_stealth","gla_demo"],"domain":"ground","roles":["anti_vehicle"],"cost":900,"tier":"mid","answers":{"armor":3},"note":"Salvage upgrades turn it into a genuine main battle tank as the game runs on.","source":"curated","wikiPage":"Marauder_Tank"},{"id":"quad_cannon","name":"Quad Cannon","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["anti_air","anti_infantry"],"cost":700,"tier":"early","answers":{"air":3,"infantry_swarm":3},"note":"The only real anti-air the GLA has. Build it before you think you need it.","source":"curated","wikiPage":"Quad_Cannon"},{"id":"rocket_buggy","name":"Rocket Buggy","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["artillery","anti_vehicle"],"cost":900,"tier":"mid","answers":{"armor":2,"base_defense":2,"artillery":2},"note":"Fast artillery that fires and withdraws before anything slow can answer it.","source":"curated","wikiPage":"Rocket_Buggy"},{"id":"toxin_tractor","name":"Toxin Tractor","factions":["gla","gla_toxin"],"domain":"ground","roles":["garrison_clear","anti_infantry"],"cost":700,"tier":"early","answers":{"infantry_swarm":3,"base_defense":1},"note":"Clears garrisons and infantry instantly, and poisons the ground they stood on.","source":"curated","wikiPage":"Toxin_Tractor"},{"id":"battle_bus","name":"Battle Bus","factions":["gla","gla_stealth","gla_demo"],"domain":"ground","roles":["transport","anti_infantry","defense"],"cost":800,"tier":"mid","answers":{"infantry_swarm":2,"early_rush":2},"note":"Rolling bunker: infantry fire from inside, and it becomes a wreck that keeps fighting.","source":"curated","wikiPage":"Combat_Bus"},{"id":"scud_launcher","name":"SCUD Launcher","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["artillery","anti_structure"],"cost":1200,"tier":"mid","answers":{"base_defense":3,"infantry_swarm":2,"artillery":2},"note":"Long-range siege that out-ranges most defences; toxin warheads deny the ground after.","source":"curated","wikiPage":"SCUD_Launcher"},{"id":"bomb_truck","name":"Bomb Truck","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["suicide","anti_structure","stealth"],"cost":1200,"tier":"mid","answers":{"base_defense":3,"superweapon":3},"note":"Disguises itself as an enemy vehicle and drives into whatever matters most.","source":"curated","wikiPage":"Bomb_Truck"},{"id":"radar_van","name":"Radar Van","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["scout","detector","support"],"cost":800,"tier":"mid","answers":{"stealth":3},"note":"The GLA detector, and its radar scan reveals what the enemy is actually building.","source":"curated","wikiPage":"Radar_Van"},{"id":"stinger_site","name":"Stinger Site","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["defense","anti_air","anti_vehicle"],"cost":800,"tier":"early","answers":{"air":3,"armor":1,"early_rush":1},"note":"Three-man anti-air nest; the GLA's only serious answer to sustained air pressure.","source":"curated","wikiPage":"Stinger_Site"},{"id":"tunnel_network","name":"Tunnel Network","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["transport","defense","support"],"cost":800,"tier":"early","answers":{"early_rush":2,"base_defense":1},"note":"Moves the army across the map instantly and heals whatever sits inside it.","source":"curated","wikiPage":"Tunnel_Network"},{"id":"demo_trap","name":"Demolition Trap","factions":["gla","gla_demo"],"domain":"ground","roles":["defense","suicide"],"cost":600,"tier":"early","answers":{"early_rush":3,"armor":2},"note":"Buried charge on a chokepoint or a supply pile; it pays for itself the first time.","source":"curated","wikiPage":"Demo_Trap"}],"maps":[{"id":"tournament_desert","name":"Tournament Desert","players":2,"size":"2p","terrain":"desert","chokepoints":1,"supplyDensity":2,"openness":3,"features":["Open central basin","Symmetrical supply docks","Minimal cover"],"notes":["Almost no terrain to hide behind — whoever wins the open-field engagement wins the map.","Expansion supply is exposed; raiding workers pays better here than anywhere."],"source":"curated","wikiPage":"Tournament_Desert"},{"id":"tournament_plains","name":"Tournament Plains","players":2,"size":"2p","terrain":"temperate","chokepoints":1,"supplyDensity":2,"openness":3,"features":["Flat approaches","Twin supply centres","Long sight lines"],"notes":["Long sight lines favour artillery and air; short-ranged armies must force the distance closed.","There is no chokepoint to turtle behind — mobile defence beats static defence."],"source":"curated","wikiPage":"Tournament_Plains"},{"id":"alpine_assault","name":"Alpine Assault","players":2,"size":"2p","terrain":"snow","chokepoints":3,"supplyDensity":1,"openness":1,"features":["Narrow mountain pass","Cliff-locked approaches","Sparse supply"],"notes":["One real land route: static defence and artillery are disproportionately strong.","Thin supply rewards early expansion and punishes greedy tech."],"source":"curated","wikiPage":"Alpine_Assault"},{"id":"bitter_winter","name":"Bitter Winter","players":2,"size":"2p","terrain":"snow","chokepoints":2,"supplyDensity":2,"openness":2,"features":["Frozen river crossing","Garrisonable structures","Central high ground"],"notes":["The crossings are the whole game — hold one and the map halves.","Garrisonable buildings near the middle make early infantry unusually valuable."],"source":"curated","wikiPage":"Bitter_Winter"},{"id":"winding_river","name":"Winding River","players":2,"size":"2p","terrain":"temperate","chokepoints":3,"supplyDensity":2,"openness":1,"features":["River splits the map","Few bridges","Defensible banks"],"notes":["Bridges are hard chokepoints: mine them, defend them, or bypass them by air or tunnel.","Artillery across the river hits with impunity if you do not contest the bank."],"source":"curated","wikiPage":"Winding_River"},{"id":"barren_badlands","name":"Barren Badlands","players":4,"size":"4p","terrain":"desert","chokepoints":2,"supplyDensity":2,"openness":2,"features":["Rocky outcrops","Scattered supply piles","Multiple approach lanes"],"notes":["Several approach lanes mean a single defensive line does not cover you.","Scattered supply favours whoever can protect two piles at once."],"source":"curated","wikiPage":"Barren_Badlands"},{"id":"mountain_path","name":"Mountain Path","players":4,"size":"4p","terrain":"temperate","chokepoints":3,"supplyDensity":1,"openness":1,"features":["Cliff-lined paths","Choked centre","Limited expansion"],"notes":["Heavily choked: siege units and base defences dominate over manoeuvre.","With supply this thin, an early expansion denial usually decides it."],"source":"curated","wikiPage":"Mountain_Path"},{"id":"tournament_island","name":"Tournament Island","players":4,"size":"4p","terrain":"temperate","chokepoints":2,"supplyDensity":3,"openness":2,"features":["Water separates quadrants","Rich supply","Oil derricks"],"notes":["Water breaks up ground pushes — air and long-range units cross freely, armour does not.","Oil derricks are worth capturing early and worth raiding all game."],"source":"curated","wikiPage":"Tournament_Island"},{"id":"silent_woods","name":"Silent Woods","players":4,"size":"4p","terrain":"temperate","chokepoints":2,"supplyDensity":2,"openness":2,"features":["Tree cover","Garrisonable cabins","Winding approaches"],"notes":["Tree cover and winding lanes make ambushes and stealth armies much stronger here.","Scout constantly — an army can sit fifteen seconds from your base unseen."],"source":"curated","wikiPage":"Silent_Woods"},{"id":"flash_fire","name":"Flash Fire","players":4,"size":"4p","terrain":"desert","chokepoints":1,"supplyDensity":2,"openness":3,"features":["Wide open flats","Central supply contest","Exposed expansions"],"notes":["Open flats: the fight is decided by army composition, not by position.","Central supply is a permanent contest — plan to fight for it, not to own it."],"source":"curated","wikiPage":"Flash_Fire"},{"id":"killing_fields","name":"Killing Fields","players":4,"size":"4p","terrain":"temperate","chokepoints":2,"supplyDensity":3,"openness":2,"features":["Dense supply","Multiple bridges","Garrisonable farms"],"notes":["Rich supply lets both sides tech fast — expect superweapons and late-game armies.","Garrisonable farms along the lanes reward keeping infantry in the army all game."],"source":"curated","wikiPage":"Killing_Fields"},{"id":"forgotten_forest","name":"Forgotten Forest","players":4,"size":"4p","terrain":"jungle","chokepoints":3,"supplyDensity":2,"openness":1,"features":["Heavy tree cover","Narrow trails","Hidden flanks"],"notes":["Narrow trails and heavy cover: this is the best stealth map in the stock rotation.","Detection is not optional here, whatever you are playing against."],"source":"curated","wikiPage":"Forgotten_Forest"},{"id":"dark_mountain","name":"Dark Mountain","players":4,"size":"4p","terrain":"snow","chokepoints":3,"supplyDensity":1,"openness":1,"features":["Mountain chokepoints","Sparse supply","High ground positions"],"notes":["Sparse supply and hard chokes reward a fast expansion followed by a turtle.","High ground positions give artillery a commanding field of fire."],"source":"curated","wikiPage":"Dark_Mountain"},{"id":"leipzig_lowlands","name":"Leipzig Lowlands","players":4,"size":"4p","terrain":"urban","chokepoints":2,"supplyDensity":2,"openness":2,"features":["Urban blocks","Dense garrisons","Street chokepoints"],"notes":["Urban garrisons make infantry and garrison-clearing units decisive.","Streets funnel armour — bring something that clears buildings or you will stall."],"source":"curated","wikiPage":"Leipzig_Lowlands"},{"id":"scorched_earth","name":"Scorched Earth","players":6,"size":"6p","terrain":"desert","chokepoints":1,"supplyDensity":2,"openness":3,"features":["Sprawling open ground","Many expansions","Long travel times"],"notes":["Long travel times mean reinforcements arrive late — forward production matters.","With six players, the diplomatic and positional read matters as much as the build."],"source":"curated","wikiPage":"Scorched_Earth"},{"id":"homeland_alliance","name":"Homeland Alliance","players":8,"size":"8p","terrain":"mixed","chokepoints":2,"supplyDensity":3,"openness":2,"features":["Eight starting positions","Abundant supply","Mixed terrain"],"notes":["Eight players and rich supply means the game goes long — build for the late game.","Expect superweapons; spread your base from the first dozer."],"source":"curated","wikiPage":"Homeland_Alliance"}],"matchups":[{"you":"*","enemy":"gla","advice":["The GLA has no aircraft whatsoever. Any air investment you make is unanswerable except by Quad Cannons and Stinger Sites — scout for those, then fly.","Destroyed GLA buildings leave holes that rebuild cheaply. Killing a structure is a delay, not a removal: kill the workers too.","Watch for Tunnel Networks near your base. A tunnel is a teleport pad for an army you never saw cross the map."]},{"you":"*","enemy":"usa","advice":["USA units cost more than yours. Trading evenly is winning — force engagements you can afford to lose.","Airfields are large and fragile. A raid that kills parked aircraft costs them far more than it costs you.","They are weakest before the first Airfield lands. Apply pressure early or accept a late-game air war."]},{"you":"*","enemy":"china","advice":["Do not let five identical Chinese units sit together — the horde bonus makes that ball much stronger than its cost.","China has almost no stealth and poor detection. A stealthed or flanking force will get behind them.","Their units are slow. Kiting, artillery and air all beat the Chinese ground ball if you refuse a head-on fight."]},{"you":"*","enemy":"usa_laser","advice":["Everything Townes owns runs on power. Kill Cold Fusion Reactors and the Laser Turrets go dark, the lasers stop, and his base opens up.","His Point Defence Lasers shoot down rockets and missiles — bring shells, bullets and flame instead of a missile-only army.","Artillery out-ranges his defensive line. Siege him from outside the turret envelope rather than walking into it."]},{"you":"*","enemy":"usa_super","advice":["Alexander wins if the game goes long. Pressure her before the first Particle Cannon comes online — her opening is deliberately greedy.","Spread your base out. Clustered production is exactly what a Particle Cannon is priced for.","Kill the uplinks, not the army. Every destroyed Particle Cannon resets minutes of her plan."]},{"you":"*","enemy":"usa_air","advice":["Granger has no real tank line. A committed early ground push arrives before his second Airfield and he cannot answer it.","Mass anti-air rather than spreading it. Overlapping AA turns his aircraft from a threat into a donation.","His base defence is thin. Once you are inside it, you stay inside it."]},{"you":"*","enemy":"china_tank","advice":["Ta Hun Kwai has almost nothing that shoots upward. Aircraft are close to a free win if you get them out.","Rocket infantry in garrisons trade brutally well against his armour — a garrisoned building costs him tanks.","His tanks arrive veteran and early. Do not plan on winning the first ground engagement; plan on not taking it."]},{"you":"*","enemy":"china_infantry","advice":["Flame, toxin and area damage delete his hordes. Dragon Tanks, Inferno Cannons, Toxin Tractors, napalm and carpet bombing all convert his army into nothing.","Never fight his infantry with your own infantry — his start veteran and there are more of them.","Artillery is the cleanest answer. He has to close the distance and artillery does not let him."]},{"you":"*","enemy":"china_nuke","advice":["His tanks detonate when they die. Keep your army spread out or you will lose the fight you just won.","His nuclear reactors explode when destroyed — inside his own base. A single raid on his power does structural damage.","Engage at range. Every mechanic he has rewards you standing close to his units."]},{"you":"*","enemy":"gla_stealth","advice":["Bring detectors or you are not playing the game. USA: Sentry Drone. China: Listening Outpost, and Troop Crawlers in the army. GLA: Radar Van.","Assume any empty ground is occupied. Sweep suspected positions with area damage before you move through them.","Escort your vehicles. Kassad's Hijackers turn an unescorted tank into one of his tanks."]},{"you":"*","enemy":"gla_toxin","advice":["Go mechanised. Toxins do very little to vehicles and nothing at all to aircraft — an infantry army is a gift to Dr. Thrax.","Do not garrison buildings against him. Toxin Tractors clear a garrison faster than you can refill it.","Expect poisoned supply piles. Lingering toxin can stop your workers mining a pile you thought was safe."]},{"you":"*","enemy":"gla_demo","advice":["Nearly everything Juhziz owns has to touch you. Kill it on the approach and it never functions.","Long-range units and aircraft are close to immune to his whole arsenal.","Sweep for Demolition Traps before expanding. He buries them on exactly the supply pile you were about to take."]},{"you":"gla","enemy":"*","advice":["You have no aircraft. Quad Cannons and Stinger Sites are not optional — build them before the enemy shows you why.","Your buildings leave holes. Rebuilding is cheap: fight like your base is expendable, because it partly is."]},{"you":"usa","enemy":"*","advice":["Your units cost more than theirs. Every engagement you take should be one you chose.","Do not lose parked aircraft. An Airfield raid costs you more than any ground trade will."]},{"you":"china","enemy":"*","advice":["Keep five or more identical units together for the horde bonus — it is a free damage upgrade you are otherwise refusing.","Build a Listening Outpost early. It is the only cheap detection you have and stealth armies are common."]}],"provenance":{"curatedAt":"2026-09-16"}};
+const DATA = {"factions":[{"id":"usa","name":"United States of America","side":"usa","tagline":"Expensive, precise, and lethal once the airfields are humming.","threat":{"air":3,"armor":2,"infantry_swarm":1,"artillery":2,"stealth":1,"superweapon":2,"economy":2,"base_defense":2,"early_rush":1,"chemical":0},"vulnerability":{"early_rush":3,"infantry_swarm":2,"stealth":2,"artillery":2},"strengths":["Best air force in the game once Airfields are up","Tomahawk Launchers out-range almost every base defence","Drones bolt onto vehicles for free repair, scouting and extra guns","Strategy Center stances swing a fight without spending credits"],"weaknesses":["Units cost more than anything they will trade with early on","Very soft for the first five minutes — a committed rush ends the game","Airfields are large, fragile, and worth raiding","Infantry hordes overwhelm small numbers of expensive units"],"opening":["Dozer -> Supply Center, pull both Chinooks onto the nearest supply pile","Barracks -> two Rangers for scouting and garrison clearing","Supply Drop Zone as soon as credits allow — it pays passively all game","War Factory -> Humvees, then Crusaders","Strategy Center (unlocks stances and the Paladin), then Airfield"],"signatureTactics":["Garrison a central building with Rangers and Missile Defenders early","Comanche pairs hunting supply lines and dozers, never trading with AA","Tomahawk line behind a Crusader screen to peel base defences apart","Colonel Burton to silently demolish a superweapon or power grid"],"quirks":["Drones attach to vehicles: Battle Drone repairs, Scout Drone spots, Hellfire adds damage","Strategy Center stance: Bombardment (range), Hold the Line (armour), Search and Destroy (damage/vision)","Supply Drop Zone gives income with no chinook risk"],"wikiPage":"United_States_of_America_(Generals)","source":"merged","description":"The United States of America (USA), commonly known as the United States (US) or America, was a country primarily located in North America.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/1/16/USAFlag.png/revision/latest?cb=20180801163814"},{"id":"usa_air","name":"USA Air Force General","general":"Gen. Malcolm \"Ace\" Granger","side":"usa","tagline":"Owns the sky, rents the ground.","threat":{"air":3,"armor":1,"infantry_swarm":1,"artillery":1,"stealth":2,"superweapon":2,"economy":2,"base_defense":1,"early_rush":1,"chemical":0},"vulnerability":{"early_rush":3,"armor":3,"base_defense":3,"infantry_swarm":2},"strengths":["King Raptor and Aurora Alpha hit harder and survive more than stock aircraft","Stealth Comanches arrive unseen over supply lines","Carpet bombing erases infantry hordes and clustered production","Aircraft rearm and recover faster than anyone can replace ground losses"],"weaknesses":["No Crusader or Paladin line — his ground army is thin and improvised","A fast ground rush kills him before the second Airfield finishes","Massed anti-air (Quad Cannons, Gattlings, Avengers) shuts the whole army off","Base defence is an afterthought"],"opening":["Dozer -> Supply Center, both Chinooks mining immediately","Barracks -> Rangers, then a Patriot Battery on the main approach","Airfield as the first real investment","Second Airfield before any ground tech"],"signatureTactics":["Raptor pairs sniping dozers and supply trucks from minute four","Aurora Alpha runs on superweapons, Command Centers and War Factories","Chinook-lift a Humvee ball behind the enemy economy","Keep a Patriot screen at home so he never has to land to defend"],"quirks":["Aircraft are the army — losing air superiority loses the game","Countermeasures upgrade makes aircraft shrug off missile defences"],"wikiPage":"Malcolm_Granger","source":"merged","description":"General Malcolm 'Ace' Granger is a 4-star general in the US Air Force during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/d/db/GenZH_Granger_Victory.png/revision/latest?cb=20180801164730"},{"id":"usa_laser","name":"USA Laser General","general":"Gen. \"Pinpoint\" Townes","side":"usa","tagline":"Immaculate defence, wired to a fuse box.","threat":{"air":2,"armor":2,"infantry_swarm":1,"artillery":1,"stealth":1,"superweapon":2,"economy":2,"base_defense":3,"early_rush":1,"chemical":0},"vulnerability":{"early_rush":2,"artillery":3,"infantry_swarm":2,"economy":3},"strengths":["Laser Turrets out-damage any other static defence for the price","Laser Crusaders cut through armour with no travel time to dodge","Point Defence Lasers shoot incoming rockets and missiles out of the air","Cold Fusion Reactors are cheaper and produce more power than standard"],"weaknesses":["Everything is power-gated — dark reactors mean dark turrets","Artillery out-ranges his defensive line and he cannot answer in kind","Missile-only armies do badly, but shell and gun armies walk through","Thin early game like all USA sides"],"opening":["Dozer -> Supply Center, Chinooks onto supply","Cold Fusion Reactor early — the whole army keys off power","Barracks -> Rangers, Laser Turret on the main approach","War Factory -> Laser Crusaders","Strategy Center, then Airfield"],"signatureTactics":["Turtle a chokepoint with Laser Turrets and push out with Laser Crusaders","Use Point Defence Laser coverage to walk into missile-heavy armies","Avenger units to blank enemy missiles over the army ball"],"quirks":["Power is the single point of failure — protect and over-build reactors","Point Defence Laser intercepts rockets and missiles but not shells or bullets"],"wikiPage":"Townes","source":"merged","description":"General \"Pinpoint\" Townes is a 4-Star US Army General around the time of the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/9/92/GenZH_Townes_Victory_Mugshot.png/revision/latest?cb=20180801163730"},{"id":"usa_super","name":"USA Superweapon General","general":"Gen. Alexis Alexander","side":"usa","tagline":"Survive her opening and you still have to survive the sky falling.","threat":{"air":2,"armor":2,"infantry_swarm":1,"artillery":2,"stealth":1,"superweapon":3,"economy":2,"base_defense":3,"early_rush":1,"chemical":0},"vulnerability":{"early_rush":3,"stealth":2,"armor":2},"strengths":["Particle Cannons are cheaper and recharge faster, and she fields more of them","EMP Patriots freeze vehicles in place inside her defensive envelope","Advanced Control Rods push more power out of every reactor","Late game is effectively unwinnable if she is allowed to reach it"],"weaknesses":["Slow, greedy opening — she is at her weakest for the first eight minutes","A spread-out enemy base blunts every Particle Cannon shot","Killing the Particle Cannon uplinks resets her entire plan","Raids on dozers delay superweapons disproportionately"],"opening":["Dozer -> Supply Center, Chinooks mining","Barracks and a Patriot Battery, because she must survive to tech","Cold Fusion Reactor -> Strategy Center","Particle Cannon uplink the moment it is affordable"],"signatureTactics":["Hold a tight defensive perimeter and win on superweapon uptime","EMP Patriot line to strand armour inside Particle Cannon range","Chain Particle Cannon shots onto production rather than armies"],"quirks":["Her clock is the real opponent — every minute favours her","Superweapon timers are public information: count them"],"wikiPage":"Alexis_Alexander","source":"merged","description":"General Alexis Alexander is a 4-star general in the US Marine Corps during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/2/2d/GenZH_Alexander_Victory_Mugshot.png/revision/latest?cb=20180801164925"},{"id":"china","name":"People's Republic of China","side":"china","tagline":"Bring more of everything and let the horde bonus do the maths.","threat":{"air":2,"armor":3,"infantry_swarm":2,"artillery":2,"stealth":0,"superweapon":2,"economy":2,"base_defense":2,"early_rush":2,"chemical":1},"vulnerability":{"air":2,"stealth":2,"artillery":2,"chemical":1},"strengths":["Overlords are the toughest thing on the field and carry upgrades on their back","Horde bonus makes massed identical units hit far above their cost","Gattling Cannons answer air and infantry from the same building","Hackers print credits without ever leaving the base"],"weaknesses":["Slow ground units get kited by anything faster","No stealth and poor stealth detection outside the Listening Outpost","Long-range artillery picks the horde apart before it arrives","Nuclear reactors detonate when destroyed, inside your own base"],"opening":["Dozer -> Supply Center, both Supply Trucks mining","Barracks -> Red Guard pairs to hold ground and scout","War Factory -> Battlemasters, keep five together for the horde bonus","Nuclear Reactor -> Internet Center for hackers, or Propaganda Center for upgrades","Gattling Cannon on the approach before the first air scout arrives"],"signatureTactics":["Five-Battlemaster horde with a Dragon Tank behind to clear garrisons","Overlord with a Gattling Cannon on top as a mobile no-fly zone","Nuke Cannon or Inferno Cannon line to crack a turtled base","Black Lotus to capture a building or drain an enemy supply centre"],"quirks":["Horde bonus: five or more of the same unit near each other gain attack","Propaganda Towers and Overlord speakers passively heal nearby units","Nationalism and Patriotism stack the horde bonus higher"],"wikiPage":"China_(Generals)","source":"merged","description":"The People's Republic of China, commonly known as China or the PRC, was a East Asian nation.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/4/4c/Chinaflag.png/revision/latest?cb=20180801163943"},{"id":"china_tank","name":"China Tank General","general":"Gen. Ta Hun Kwai","side":"china","tagline":"A wall of armour that arrives early and never stops.","threat":{"air":1,"armor":3,"infantry_swarm":1,"artillery":1,"stealth":0,"superweapon":2,"economy":2,"base_defense":2,"early_rush":3,"chemical":0},"vulnerability":{"air":3,"artillery":2,"stealth":2},"strengths":["Tanks are cheaper, faster and roll off the line already veteran","Emperor Overlord carries its own propaganda aura and shrugs off massed fire","Can contest the map earlier than any other Chinese side","Armour count snowballs if the first push is not punished"],"weaknesses":["Almost nothing in his arsenal answers massed air","Rocket infantry in garrisons trade brutally well against him","Artillery kills the ball before it closes","Committed to the ground: no flexibility if you deny the ground"],"opening":["Dozer -> Supply Center, trucks mining","War Factory immediately — his tanks are the opening","Battlemaster pressure on the enemy supply line before minute five","Gattling Cannon at home only after the first push"],"signatureTactics":["Early Battlemaster raid on dozers and supply trucks","Emperor Overlord spearhead with Battlemasters filling the horde bonus","Overrun infantry with tank treads rather than shooting them"],"quirks":["Veterancy on delivery means his first tanks beat your first tanks","Overlords can mount Gattling, Propaganda or Bunker upgrades"],"wikiPage":"Ta_Hun_Kwai","source":"merged","description":"General Ta Hun Kwai was a Chinese General (Class AAA), serving in the People's Liberation Army during GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/5/58/GenZH_Kwai_Mugshot_3.png/revision/latest?cb=20180801164836"},{"id":"china_infantry","name":"China Infantry General","general":"Gen. \"Anvil\" Shin Fai","side":"china","tagline":"Bodies, endlessly, all of them already veterans.","threat":{"air":1,"armor":1,"infantry_swarm":3,"artillery":2,"stealth":0,"superweapon":2,"economy":2,"base_defense":2,"early_rush":3,"chemical":0},"vulnerability":{"chemical":3,"artillery":3,"air":2,"armor":2},"strengths":["Infantry arrive as veterans and scale into enormous hordes","Minigunners and Tank Hunters cover infantry and armour from one Barracks","Attack Outposts push the horde forward with healing and detection","Cheapest map control in the game"],"weaknesses":["Flame and toxin delete whole hordes in seconds","Artillery and carpet bombing are equally catastrophic","Very little answer to heavy armour in open ground","Garrisons become death traps once the building burns"],"opening":["Dozer -> Supply Center, trucks mining","Barracks first, then a second Barracks — production width is the strategy","Red Guard and Tank Hunter mix, pushed out to claim ground early","Troop Crawler to move the horde and detect stealth"],"signatureTactics":["Early veteran Red Guard flood onto the enemy's supply line","Garrison every building on the approach with Tank Hunters","Troop Crawler drops behind the enemy line and unloads a full horde"],"quirks":["All infantry start veteran, which changes every early trade","Horde bonus applies to infantry, so bigger really is better"],"wikiPage":"Shin_Fai","source":"merged","description":"General 'Anvil' Shin Fai was a Chinese Class AAA general serving in the People's Liberation Army (PLA) during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/4/42/GenZH_Fai_Victory.png/revision/latest?cb=20180801164231"},{"id":"china_nuke","name":"China Nuclear General","general":"Gen. Tsing Shi Tao","side":"china","tagline":"Everything he owns is also a bomb, including his power plants.","threat":{"air":2,"armor":3,"infantry_swarm":2,"artillery":3,"stealth":0,"superweapon":3,"economy":3,"base_defense":2,"early_rush":2,"chemical":2},"vulnerability":{"early_rush":2,"air":2,"artillery":2},"strengths":["Tanks leave a radioactive detonation behind when they die","Tactical Nuke Cannon flattens clustered armies and static defences","Nuclear reactors produce more power, so he techs faster","Nuke MiGs turn a bombing run into an area denial weapon"],"weaknesses":["His own reactors detonate inside his base when destroyed","Clumped defenders are exactly what his whole arsenal wants","Long-range engagements deny his death-explosion value","Early aggression arrives before the nuclear tech does"],"opening":["Dozer -> Supply Center, trucks mining","Nuclear Reactor early — power is his economy advantage","War Factory -> Battlemasters with the nuclear upgrades","Nuke Cannon once the front stabilises"],"signatureTactics":["Trade tanks aggressively — his die better than yours","Tactical Nuke Cannon onto any static defensive line","Nuke MiG runs to make ground permanently uncomfortable"],"quirks":["Death explosions mean you lose units even when you win the fight","His reactors are a liability you can exploit with a single raid"],"wikiPage":"Tsing_Shi_Tao","source":"merged","description":"General Tsing Shi Tao is a Chinese Class AAA General serving in the People's Liberation Army during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/d/d9/GenZH_Tao_Victory.png/revision/latest?cb=20180801165057"},{"id":"gla","name":"Global Liberation Army","side":"gla","tagline":"Cheap, fast, everywhere, and impossible to finish off.","threat":{"air":0,"armor":2,"infantry_swarm":2,"artillery":2,"stealth":2,"superweapon":2,"economy":3,"base_defense":1,"early_rush":3,"chemical":2},"vulnerability":{"air":3,"armor":2,"base_defense":2},"strengths":["Fastest, cheapest army on the field — trades on volume and tempo","Tunnel Networks teleport the army across the map and heal it","Destroyed buildings leave holes that rebuild for a fraction of the cost","Black Market and salvage give income and free veterancy"],"weaknesses":["No aircraft at all — the sky belongs to the enemy by default","Light armour everywhere; anything heavy wins a straight fight","Static defence is weak outside Stinger Sites and tunnels","Falls off badly if the early tempo is neutralised"],"opening":["Worker -> Supply Stash, extra Workers onto supply immediately","Barracks -> Rebels for scouting, RPG Troopers for the first raid","Arms Dealer -> Technicals, then Scorpions","Tunnel Network toward the middle of the map to project the army","Black Market for income and upgrades"],"signatureTactics":["Rebel and RPG raid on the enemy dozer line before minute four","Tunnel Network forward so reinforcements arrive already at the front","Jarmen Kell snipes vehicle crews, then infantry walk into free tanks","Bomb Truck disguised in an enemy column, driven into a superweapon"],"quirks":["Buildings leave rebuildable holes — killing GLA structures is never permanent","Salvage crates from destroyed vehicles upgrade units on the spot","GPS Scrambler and Sneak Attack put an army where it should not be"],"wikiPage":"Global_Liberation_Army","source":"merged","description":"The Global Liberation Army (GLA) was a violent non-state actor in opposition to the United States of America and the People's Republic of China.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/d/d2/GLA_flag.svg/revision/latest?cb=20231222002806"},{"id":"gla_toxin","name":"GLA Toxin General","general":"Dr. Thrax","side":"gla","tagline":"Poisons the ground you were going to stand on.","threat":{"air":0,"armor":1,"infantry_swarm":2,"artillery":2,"stealth":1,"superweapon":2,"economy":2,"base_defense":2,"early_rush":3,"chemical":3},"vulnerability":{"air":3,"armor":3},"strengths":["Starts with Anthrax Beta and can upgrade to Gamma — toxins never wear off","Toxin Tractors and Toxin Rebels clear infantry and garrisons instantly","Toxin Scuds leave lingering clouds that deny ground for free","Anthrax Bomb is a cheap answer to any infantry-based army"],"weaknesses":["Toxins do very little to vehicles and nothing at all to aircraft","A fully mechanised enemy ignores most of his damage output","Light armour, like all GLA sides","No aircraft"],"opening":["Worker -> Supply Stash, extra Workers mining","Barracks -> Toxin Rebels for the early raid","Arms Dealer -> Toxin Tractors","Tunnel Network forward, Black Market for income"],"signatureTactics":["Toxin Tractor pairs erasing garrisons and infantry screens","Poison the enemy supply pile so workers cannot mine it","Anthrax Bomb onto any massed infantry formation"],"quirks":["Toxin damage lingers on the ground after the attack stops","Against vehicles his damage profile collapses — he must catch infantry"],"wikiPage":"Dr._Thrax","source":"merged","description":"'Dr. Thrax' is the pseudonym of a key leader and scientist of the terrorist group known as the Global Liberation Army.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/5/5a/GenZH_Thrax_Victorious.png/revision/latest?cb=20180801164736"},{"id":"gla_stealth","name":"GLA Stealth General","general":"Prince Kassad","side":"gla","tagline":"The army was always there. You simply could not see it.","threat":{"air":0,"armor":1,"infantry_swarm":2,"artillery":2,"stealth":3,"superweapon":1,"economy":2,"base_defense":2,"early_rush":2,"chemical":1},"vulnerability":{"air":3,"armor":3,"artillery":2},"strengths":["Nearly the entire army is stealthed by default","Camo Netting hides buildings, so his base is hard to even find","Hijackers steal vehicles outright, turning your army into his","Booby Traps and Demo Traps punish careless expansion"],"weaknesses":["One detector unravels the entire strategy","Straight firepower is below average once he is visible","Light armour and no aircraft","Loses badly to area damage swept across suspected positions"],"opening":["Worker -> Supply Stash, extra Workers mining","Barracks -> stealthed Rebels to scout and hold ground unseen","Camo Netting on the base as early as possible","Tunnel Network forward, Arms Dealer for Rocket Buggies"],"signatureTactics":["Park stealthed units on the enemy's expansion path and wait","Hijack the first vehicles that walk past unescorted","GPS Scrambler and Sneak Attack to open a second front inside the base"],"quirks":["Assume every empty-looking piece of ground is occupied","Stealth breaks when he fires — the window to punish is short"],"wikiPage":"Prince_Kassad","source":"merged","description":"Prince Kassad is a GLA General during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/1/15/GenZH_Kassad_1.png/revision/latest?cb=20180801163921"},{"id":"gla_demo","name":"GLA Demolition General","general":"Gen. Rodall \"Demo\" Juhziz","side":"gla","tagline":"Every single thing he owns is a delivery system for explosives.","threat":{"air":0,"armor":2,"infantry_swarm":3,"artillery":2,"stealth":2,"superweapon":3,"economy":2,"base_defense":2,"early_rush":3,"chemical":1},"vulnerability":{"air":3,"armor":2,"artillery":3},"strengths":["Terrorists are the cheapest way in the game to delete a tank","Demo Traps turn any piece of ground into a minefield","Bomb Trucks can disguise themselves and drive into anything important","Units detonate on death, so killing them is still a cost"],"weaknesses":["Almost everything he has must physically touch you to work","Long-range units and aircraft are close to immune","Very light armour — he dies on the approach if you see him coming","No aircraft"],"opening":["Worker -> Supply Stash, extra Workers mining","Barracks -> Terrorists and Rebels for the first raid","Demo Traps on your own chokepoints and expansions","Arms Dealer -> Bomb Trucks, Tunnel Network forward"],"signatureTactics":["Terrorist packs onto any tank ball that lost its infantry screen","Bomb Truck disguised as an enemy vehicle, aimed at a superweapon","Demo Trap every supply pile the enemy is about to expand onto"],"quirks":["Death explosions mean melee range is never safe near him","Cheap suicide units mean his army value is always lower than it looks"],"wikiPage":"Rodall_Juhziz","source":"merged","description":"General Rodall 'Demo' Juhziz was a GLA commander who specializes in explosives.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/7/70/GenZH_Rodall_Mugshot.png/revision/latest?cb=20180801163820"}],"units":[{"id":"ranger","name":"Ranger","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"infantry","roles":["anti_infantry","garrison_clear","scout"],"cost":225,"tier":"early","answers":{"infantry_swarm":1,"early_rush":1},"note":"Cheap bodies that clear garrisons and hold ground until real units arrive.","source":"merged","wikiPage":"Ranger","description":"Rangers are USA's basic infantry in Generals.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/7/70/Generals_Ranger.jpg/revision/latest?cb=20180801163718"},{"id":"missile_defender","name":"Missile Defender","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"infantry","roles":["anti_vehicle","anti_air"],"cost":300,"tier":"early","answers":{"armor":2,"air":2,"early_rush":2},"note":"The USA answer to an early tank push and to low-flying aircraft, especially garrisoned.","source":"merged","wikiPage":"Missile_Defender","description":"Missile defenders are the American anti-armor infantry in Generals and Zero Hour.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/3/31/Generals_Missile_Defender.jpg/revision/latest?cb=20180801165223"},{"id":"pathfinder","name":"Pathfinder","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"infantry","roles":["anti_infantry","stealth","scout"],"cost":600,"tier":"mid","answers":{"infantry_swarm":3},"note":"One-shots infantry from outside their range; the cleanest answer to a horde.","source":"merged","wikiPage":"Pathfinder","description":"Pathfinders are USA's elite snipers.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/9/92/Generals_Path_Finder.jpg/revision/latest?cb=20180801163727"},{"id":"colonel_burton","name":"Colonel Burton","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"infantry","roles":["hero","anti_structure","stealth"],"cost":1500,"tier":"mid","answers":{"base_defense":3,"superweapon":3,"economy":2},"note":"Walks in unseen and demolishes superweapons, power grids and defence lines.","source":"merged","wikiPage":"Colonel_Burton","description":"Colonel Burton is the USA Commando unit in Generals and Zero Hour.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/c/c7/Generals_Colonel_Burton.jpg/revision/latest?cb=20180801163856"},{"id":"humvee","name":"Humvee","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"ground","roles":["anti_infantry","transport","scout"],"cost":700,"tier":"early","answers":{"infantry_swarm":2,"early_rush":2},"note":"Fast, carries infantry that fire from inside, and is the USA's early map presence.","source":"merged","wikiPage":"Humvee","description":"The High Mobility Multipurpose Wheeled Vehicle, known colloquially as the Humvee, was an American light utility vehicle.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8b/ZH_Humvee.jpg/revision/latest?cb=20240910125557"},{"id":"sentry_drone","name":"Sentry Drone","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"ground","roles":["scout","detector","anti_infantry"],"cost":800,"tier":"early","answers":{"stealth":3,"infantry_swarm":1},"note":"The USA stealth detector. Nothing else you own reliably sees a stealthed army.","source":"merged","wikiPage":"Sentry_drone","description":"Sentry drones were American unmanned ground vehicles with scanning equipment, deployed during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/4/4e/ZH_Sentry_Drone.jpg/revision/latest?cb=20231209013533"},{"id":"crusader","name":"Crusader Tank","factions":["usa","usa_super"],"domain":"ground","roles":["anti_vehicle"],"cost":900,"tier":"mid","answers":{"armor":2},"note":"The standard USA main battle tank; good in numbers with drone support.","source":"merged","wikiPage":"Crusader_Tank","description":"The Crusader tank was the American main battle tank during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/d/df/Generals_Crusader.jpg/revision/latest?cb=20180801164552"},{"id":"paladin","name":"Paladin Tank","factions":["usa","usa_super"],"domain":"ground","roles":["anti_vehicle","defense"],"cost":1100,"tier":"late","answers":{"armor":3},"note":"Crusader with a point defence laser that eats incoming rockets and missiles.","source":"merged","wikiPage":"Paladin_Tank","description":"The Paladin Tank was an advanced American main battle tank during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/2/29/ZH_Paladin.png/revision/latest?cb=20231209002402"},{"id":"laser_crusader","name":"Laser Crusader","factions":["usa_laser"],"domain":"ground","roles":["anti_vehicle"],"cost":900,"tier":"mid","answers":{"armor":3},"note":"Hitscan damage with no shell travel time — it does not miss moving targets.","source":"merged","wikiPage":"Laser_Crusader","description":"The Laser Tank (also known as the Laser Crusader) was a futuristic replacement for standard US armour pioneered by Townes and his main battle tank (MBT).","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/6/60/ZH_Laser_Tank.jpg/revision/latest?cb=20231209034634"},{"id":"tomahawk","name":"Tomahawk Launcher","factions":["usa","usa_laser","usa_super"],"domain":"ground","roles":["artillery","anti_structure"],"cost":1200,"tier":"mid","answers":{"base_defense":3,"artillery":2,"stealth":1},"note":"Out-ranges essentially every static defence in the game. Siege from outside the envelope.","source":"merged","wikiPage":"Tomahawk_Launcher","description":"The Tomahawk launcher was an American mobile cruise missile system fielded during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/c/c3/ZH_Tomohawk_Launcher.jpg/revision/latest?cb=20231215092715"},{"id":"microwave_tank","name":"Microwave Tank","factions":["usa","usa_laser","usa_super"],"domain":"ground","roles":["support","garrison_clear","anti_structure"],"cost":800,"tier":"mid","answers":{"base_defense":2,"infantry_swarm":3},"note":"Disables buildings and cooks garrisoned infantry without damaging the structure.","source":"merged","wikiPage":"Microwave_Tank","description":"The Microwave tank is an advanced support tank introduced by the USA in the latter stages of the conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/d/d7/ZH_Microwave_Tank.jpg/revision/latest?cb=20240910132028"},{"id":"avenger","name":"Avenger","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"ground","roles":["anti_air","support"],"cost":2000,"tier":"late","answers":{"air":3},"note":"Mobile anti-air that also blanks enemy missiles aimed at the units around it.","source":"merged","wikiPage":"Avenger","description":"The Avenger was an American laser-based self-propelled anti-aircraft gun and support vehicle based on the Humvee's chassis and introduced later in the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/3/39/Generals_Avenger.jpg/revision/latest?cb=20180801164036"},{"id":"raptor","name":"Raptor","factions":["usa","usa_laser","usa_super"],"domain":"air","roles":["aircraft","anti_vehicle"],"cost":1400,"tier":"mid","answers":{"armor":3,"artillery":3},"note":"Fast strike aircraft; the fastest way to kill artillery and a tank ball.","source":"merged","wikiPage":"Raptor","description":"The Raptor is the USA's primary all-purpose fighter aircraft during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/f/f0/Gen1_Raptor.jpg/revision/latest?cb=20180801165232"},{"id":"king_raptor","name":"King Raptor","factions":["usa_air"],"domain":"air","roles":["aircraft","anti_vehicle"],"cost":1100,"tier":"mid","answers":{"armor":3,"artillery":3,"air":2},"note":"Granger's upgraded Raptor: tougher, harder hitting, and able to contest other aircraft.","source":"merged","wikiPage":"King_Raptor","description":"The King Raptor is an advanced variant of the standard Raptor multirole combat aircraft used by the USA during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/83/Generals_King_Raptor.jpg/revision/latest?cb=20180801165231"},{"id":"comanche","name":"Comanche","factions":["usa","usa_laser","usa_super"],"domain":"air","roles":["aircraft","anti_infantry","anti_vehicle"],"cost":1500,"tier":"mid","answers":{"infantry_swarm":3,"armor":2,"economy":3},"note":"Hovers over supply lines and deletes workers, dozers and infantry. Never trade it into AA.","source":"curated","wikiPage":"Comanche"},{"id":"stealth_comanche","name":"Stealth Comanche","factions":["usa_air"],"domain":"air","roles":["aircraft","anti_infantry","anti_vehicle","stealth"],"cost":1500,"tier":"mid","answers":{"infantry_swarm":3,"armor":2,"economy":3},"note":"Arrives over the economy without ever appearing on radar.","source":"merged","wikiPage":"Comanche","description":"The Comanche is the attack helicopter of the USA in Generals and its expansion, Zero Hour.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/6/6d/CNCG_Comanche_R.png/revision/latest?cb=20180801163752"},{"id":"stealth_fighter","name":"Stealth Fighter","factions":["usa","usa_air","usa_laser","usa_super"],"domain":"air","roles":["aircraft","anti_structure","stealth"],"cost":1600,"tier":"late","answers":{"base_defense":3,"superweapon":2},"note":"Flies through an air defence net that cannot see it and removes a key building.","source":"merged","wikiPage":"Stealth_Fighter","description":"The Stealth Fighter, or F-117A Nighthawk, although a fairly antiquated aircraft by the time of the GLA Conflict, was still put to good use by certain USA generals.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/0/0e/Gen1_Stealth_Fighter.jpg/revision/latest?cb=20180801164700"},{"id":"aurora","name":"Aurora Bomber","factions":["usa","usa_laser","usa_super"],"domain":"air","roles":["aircraft","anti_structure"],"cost":2500,"tier":"late","answers":{"base_defense":3,"superweapon":3,"infantry_swarm":2},"note":"Invulnerable on the approach; it will land its bomb on whatever you point it at.","source":"merged","wikiPage":"Aurora","description":"The Aurora was an American supersonic tactical bomber used during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8d/Generals_Aurora.jpg/revision/latest?cb=20180801165217"},{"id":"aurora_alpha","name":"Aurora Alpha","factions":["usa_air"],"domain":"air","roles":["aircraft","anti_structure"],"cost":2000,"tier":"late","answers":{"base_defense":3,"superweapon":3,"infantry_swarm":3},"note":"Aurora with a bigger blast — deletes a superweapon or a production cluster per run.","source":"merged","wikiPage":"Aurora_Alpha","description":"The Aurora Alpha is a supersonic tactical bomber utilized by the USA General Alexis Alexander as an improvement to the Aurora, carrying a destructive Fuel Air Bomb in Zero Hour.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/9/9f/Generals_Aurora_Alpha.jpg/revision/latest?cb=20180801163931"},{"id":"patriot","name":"Patriot Battery","factions":["usa","usa_laser","usa_super"],"domain":"ground","roles":["defense","anti_air","anti_vehicle"],"cost":1000,"tier":"early","answers":{"air":2,"armor":1,"early_rush":2},"note":"The base-defence backbone: cheap, covers both air and ground approaches.","source":"curated","wikiPage":"Patriot_Battery"},{"id":"emp_patriot","name":"EMP Patriot","factions":["usa_super"],"domain":"ground","roles":["defense","anti_vehicle"],"cost":900,"tier":"early","answers":{"armor":3,"early_rush":2},"note":"Strands enemy vehicles motionless inside your defensive envelope.","source":"merged","wikiPage":"EMP_Patriot","description":"The EMP Patriot system was a variant of the Patriot missile system developed by General Alexis Alexander.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/c/c4/Generals_EMP_Patriot.jpg/revision/latest?cb=20180801164657"},{"id":"laser_turret","name":"Laser Turret","factions":["usa_laser"],"domain":"ground","roles":["defense","anti_air","anti_vehicle"],"cost":1000,"tier":"early","answers":{"air":2,"armor":2,"early_rush":2},"note":"Best damage per credit of any static defence — as long as the power stays on.","source":"curated","wikiPage":"Laser_Turret"},{"id":"firebase","name":"Firebase","factions":["usa","usa_laser","usa_super"],"domain":"ground","roles":["defense","anti_infantry"],"cost":1000,"tier":"early","answers":{"infantry_swarm":2,"early_rush":2},"note":"Garrison it with Missile Defenders and it covers armour and air at once.","source":"merged","wikiPage":"Firebase","description":"The Firebase was a USA base defense structure developed midway through the conflict with the GLA, in order to cover shortcomings that had become apparent in the Patriot Missile System.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/b/b6/Generals_Fire_Base.jpg/revision/latest?cb=20180801164824"},{"id":"red_guard","name":"Red Guard","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"infantry","roles":["anti_infantry","garrison_clear"],"cost":300,"tier":"early","answers":{"infantry_swarm":2,"early_rush":1},"note":"Comes in pairs and benefits from the horde bonus; the cheapest ground you can hold.","source":"merged","wikiPage":"Red_Guard","description":"The Red Guards were the basic infantry of the Chinese Army during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/2/2f/Generals_ZH_-_Red_Guards.png/revision/latest?cb=20211026125450"},{"id":"tank_hunter","name":"Tank Hunter","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"infantry","roles":["anti_vehicle","anti_air"],"cost":300,"tier":"early","answers":{"armor":3,"air":1,"early_rush":2},"note":"Garrisoned Tank Hunters break any early armour push at a fraction of its cost.","source":"merged","wikiPage":"Tank_Hunter","description":"Tank Hunters were China's main anti-tank/air infantry during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/3/3f/Generals_Tank_Hunter.jpg/revision/latest?cb=20180801164653"},{"id":"minigunner","name":"Minigunner","factions":["china_infantry"],"domain":"infantry","roles":["anti_infantry","garrison_clear"],"cost":400,"tier":"early","answers":{"infantry_swarm":3},"note":"Shin Fai's dedicated infantry killer, veteran from the moment it is built.","source":"curated","wikiPage":"Minigunner"},{"id":"hacker","name":"Hacker","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"infantry","roles":["economy","support"],"cost":625,"tier":"early","answers":{"economy":3},"note":"Generates credits from inside the base and can disable enemy buildings.","source":"merged","wikiPage":"Hacker","description":"The Hacker is a Chinese infantry unit in Generals and Zero Hour.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/5/5b/Generals_Hacker.jpg/revision/latest?cb=20180801165133"},{"id":"black_lotus","name":"Black Lotus","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"infantry","roles":["hero","capture","stealth","support"],"cost":1500,"tier":"mid","answers":{"economy":3,"base_defense":2,"armor":2},"note":"Captures buildings, steals credits outright and disables vehicles from range.","source":"merged","wikiPage":"Black_Lotus","description":"Black Lotus is China's hero unit in Command & Conquer: Generals and its expansion, Zero Hour.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/2/2f/Generals_Black_Lotus.jpg/revision/latest?cb=20180801163908"},{"id":"battlemaster","name":"Battlemaster","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"ground","roles":["anti_vehicle"],"cost":800,"tier":"early","answers":{"armor":2,"early_rush":2},"note":"Cheap enough to mass; five together trigger the horde bonus and punch well above cost.","source":"merged","wikiPage":"Battlemaster_Tank","description":"The Battlemaster tank is China's basic tank in Generals and Zero Hour.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/d/d6/ZH_Battlemaster_Tank.jpg/revision/latest?cb=20231211112116"},{"id":"overlord","name":"Overlord","factions":["china","china_infantry","china_nuke"],"domain":"ground","roles":["anti_vehicle","anti_infantry","defense"],"cost":2000,"tier":"late","answers":{"armor":3,"infantry_swarm":2,"early_rush":3},"note":"The toughest ground unit in the game, and it carries a Gattling or Propaganda tower on top.","source":"merged","wikiPage":"Overlord_Tank","description":"Overlord Tank is China's advanced main battle tank in Command & Conquer: Generals and its expansion, Zero Hour.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/a/ab/Gen_Overlord.png/revision/latest?cb=20200302143303"},{"id":"emperor_overlord","name":"Emperor Overlord","factions":["china_tank"],"domain":"ground","roles":["anti_vehicle","anti_infantry","defense","support"],"cost":1900,"tier":"late","answers":{"armor":3,"infantry_swarm":2,"early_rush":3},"note":"Overlord with a built-in propaganda aura that heals everything around it.","source":"merged","wikiPage":"Emperor_Overlord","description":"The Emperor Overlord Tank was an improved model of the Overlord tank developed and used exclusively by Chinese General Ta Hun Kwai.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/6/63/ZH_Emperor_Overlord.jpg/revision/latest?cb=20231209010558"},{"id":"gattling_tank","name":"Gattling Tank","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"ground","roles":["anti_air","anti_infantry"],"cost":800,"tier":"early","answers":{"air":3,"infantry_swarm":3},"note":"The single best answer China has to aircraft and to infantry hordes.","source":"merged","wikiPage":"Gattling_Tank","description":"Gattling tanks are self-propelled anti-aircraft guns deployed by China, armed with a single large Gatling cannon.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/7/79/ZH_Gattling_Tank.jpg/revision/latest?cb=20231209003230"},{"id":"dragon_tank","name":"Dragon Tank","factions":["china","china_infantry","china_nuke"],"domain":"ground","roles":["garrison_clear","anti_infantry"],"cost":800,"tier":"mid","answers":{"infantry_swarm":3,"stealth":1,"base_defense":1},"note":"Flame clears garrisons, erases infantry, and burns stealthed units out of cover.","source":"merged","wikiPage":"Dragon_Tank","description":"The Dragon tank is a specialized flamethrower tank that was used by the Chinese during the war against the GLA.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/c/c7/ZH_Dragon_Tank.jpg/revision/latest?cb=20231209012139"},{"id":"inferno_cannon","name":"Inferno Cannon","factions":["china","china_infantry","china_nuke"],"domain":"ground","roles":["artillery","anti_infantry"],"cost":900,"tier":"mid","answers":{"infantry_swarm":3,"base_defense":2},"note":"Incendiary artillery; a line of them removes an infantry army before it closes.","source":"merged","wikiPage":"Inferno_Cannon","description":"Inferno Cannons are China's basic self-propelled howitzers that fire incendiary shells.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/d/d1/ZH_Inferno_Cannon.jpg/revision/latest?cb=20240119102625"},{"id":"nuke_cannon","name":"Nuke Cannon","factions":["china","china_nuke"],"domain":"ground","roles":["artillery","anti_structure"],"cost":1600,"tier":"late","answers":{"base_defense":3,"infantry_swarm":3,"artillery":2},"note":"Siege artillery that out-ranges base defences and flattens clustered armies.","source":"merged","wikiPage":"Nuke_Cannon","description":"The Nuke Cannon is a heavy deployable self-propelled howitzer of China in Generals and Zero Hour.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/7/7f/ZH_Nuke_Cannon.jpg/revision/latest?cb=20231215092926"},{"id":"troop_crawler","name":"Troop Crawler","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"ground","roles":["transport","detector","support"],"cost":1400,"tier":"early","answers":{"stealth":2,"infantry_swarm":1},"note":"Moves a horde safely and sees stealthed units while it does.","source":"merged","wikiPage":"Troop_Crawler","description":"Troop crawlers are armored personnel carriers (APCs), patterned after the BTR-80, that China uses to rapidly deploy squads of infantry.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/6/65/ZH_Troop_Crawler.jpg/revision/latest?cb=20231209011501"},{"id":"listening_outpost","name":"Listening Outpost","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"ground","roles":["scout","detector","stealth"],"cost":800,"tier":"early","answers":{"stealth":3},"note":"China's proper stealth detector: cheap, stealthed itself, wide detection radius.","source":"merged","wikiPage":"Listening_Outpost","description":"The Listening Outpost represented China's increased commitment to developing surveillance technologies following the driving of the GLA from the Chinese homeland and surrounding regions.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/2/2e/Generals_Listening_Outpost.jpg/revision/latest?cb=20180801164936"},{"id":"mig","name":"MiG","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"air","roles":["aircraft","anti_vehicle","anti_structure"],"cost":1200,"tier":"mid","answers":{"armor":3,"artillery":3,"base_defense":2},"note":"Napalm strike aircraft; the Chinese answer to artillery and massed armour.","source":"merged","wikiPage":"MiG","description":"The MiG was China's multirole fighter for the 21st century, armed with two napalm missiles that could be used effectively against ground targets or locked onto air targets.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/3/3a/Generals_MiG.jpg/revision/latest?cb=20180801165202"},{"id":"helix","name":"Helix","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"air","roles":["aircraft","transport","anti_infantry","anti_structure"],"cost":1500,"tier":"late","answers":{"infantry_swarm":3,"base_defense":2},"note":"Flying gunship and transport in one; upgrades bolt guns, napalm or a bunker onto it.","source":"merged","wikiPage":"Helix","description":"The Helix, also called the Overlord of the sky, is a heavy transport helicopter used by China, introduced in Command & Conquer: Generals - Zero Hour.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/9/94/ZH_Helix.jpg/revision/latest?cb=20231211105705"},{"id":"gattling_cannon","name":"Gattling Cannon","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"ground","roles":["defense","anti_air","anti_infantry"],"cost":1000,"tier":"early","answers":{"air":3,"infantry_swarm":3,"early_rush":2},"note":"One building that answers both aircraft and infantry; put it on the approach early.","source":"curated","wikiPage":"Gattling_Cannon"},{"id":"bunker","name":"Bunker","factions":["china","china_tank","china_infantry","china_nuke"],"domain":"ground","roles":["defense","anti_infantry"],"cost":500,"tier":"early","answers":{"early_rush":2,"infantry_swarm":1,"armor":1},"note":"Fill it with Tank Hunters and it stops an early armour push cold.","source":"merged","wikiPage":"Bunker","description":"Bunkers were basic but effective defensive structures deployed by Chinese generals during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/2/25/ZH_Bunker.jpg/revision/latest?cb=20231213143457"},{"id":"rebel","name":"Rebel","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"infantry","roles":["anti_infantry","scout","capture"],"cost":150,"tier":"early","answers":{"infantry_swarm":1,"early_rush":1,"economy":1},"note":"Dirt cheap, can capture buildings, and with Camo Netting it scouts unseen.","source":"merged","wikiPage":"Rebel","description":"Rebels were the GLA's basic soldiers during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/a/ab/Generals_Rebel.jpg/revision/latest?cb=20180801164856"},{"id":"rpg_trooper","name":"RPG Trooper","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"infantry","roles":["anti_vehicle","anti_air"],"cost":300,"tier":"early","answers":{"armor":3,"air":1,"early_rush":2},"note":"The GLA answer to armour. In numbers, and in garrisons, it beats tanks on cost.","source":"merged","wikiPage":"RPG_Trooper","description":"The RPG Trooper was the basic anti-armor/air infantry unit of the GLA during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/0/05/ZH_RPG_Trooper.jpg/revision/latest?cb=20240121133733"},{"id":"terrorist","name":"Terrorist","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"infantry","roles":["suicide","anti_vehicle","anti_structure"],"cost":200,"tier":"early","answers":{"armor":3,"base_defense":1},"note":"The cheapest tank kill in the game. It only has to reach the target once.","source":"merged","wikiPage":"Terrorist","description":"The Terrorist is GLA suicide infantry in Generals.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/1/1a/Generals_Terrorist.jpg/revision/latest?cb=20180801164038"},{"id":"hijacker","name":"Hijacker","factions":["gla","gla_stealth","gla_demo"],"domain":"infantry","roles":["capture","stealth"],"cost":400,"tier":"mid","answers":{"armor":3},"note":"Takes an enemy vehicle intact. Against an expensive army this is pure profit.","source":"merged","wikiPage":"Hijacker","description":"Hijackers were GLA-affiliated thieves capable of commandeering vehicles, seen during the GLA Conflict."},{"id":"saboteur","name":"Saboteur","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"infantry","roles":["capture","stealth","support"],"cost":800,"tier":"mid","answers":{"economy":2,"base_defense":2,"superweapon":2},"note":"Sneaks into a building to steal credits, reset a superweapon timer or cut power.","source":"merged","wikiPage":"Saboteur","description":"Saboteurs were stealthed GLA infiltration infantry units, seen in the late stages of the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/e/e1/Generals_Saboteur.jpg/revision/latest?cb=20180801164255"},{"id":"jarmen_kell","name":"Jarmen Kell","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"infantry","roles":["hero","anti_infantry","stealth"],"cost":1500,"tier":"mid","answers":{"armor":3,"infantry_swarm":2},"note":"Snipes vehicle crews from stealth; your infantry then walk into the empty tanks.","source":"merged","wikiPage":"Jarmen_Kell","description":"Jarmen Kell (Arabic: جارمين كيل) was a highly skilled Arabian sharpshooter in the employ of the GLA during the events of Generals and Zero Hour.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/4/47/G2_Storyboard_The_Dam_Kell.jpg/revision/latest?cb=20180801164707"},{"id":"angry_mob","name":"Angry Mob","factions":["gla","gla_toxin","gla_demo"],"domain":"infantry","roles":["anti_infantry","garrison_clear"],"cost":800,"tier":"mid","answers":{"infantry_swarm":2,"base_defense":1},"note":"A crowd that keeps replacing itself; good at swamping a position cheaply.","source":"merged","wikiPage":"Angry_Mob","description":"Angry mobs were GLA-affiliated groups of enraged common folk, seen during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8f/Generals_Angry_Mob.jpg/revision/latest?cb=20180801163721"},{"id":"technical","name":"Technical","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["anti_infantry","scout","transport"],"cost":500,"tier":"early","answers":{"infantry_swarm":2,"early_rush":2},"note":"The GLA's early map control; fast, disposable, and upgrades itself off salvage.","source":"merged","wikiPage":"Technical","description":"The Technical is a GLA armed pickup truck Generals and Zero Hour.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/7/77/CNCG_Technicals.jpg/revision/latest?cb=20180801165214"},{"id":"scorpion","name":"Scorpion Tank","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["anti_vehicle"],"cost":600,"tier":"early","answers":{"armor":2,"early_rush":2},"note":"Cheap armour that wins on numbers rather than on any single engagement.","source":"merged","wikiPage":"Scorpion_Tank","description":"The Scorpion tank was the GLA's light tank during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/0/0b/ZH_Scorpion.jpg/revision/latest?cb=20231218055211"},{"id":"marauder","name":"Marauder Tank","factions":["gla","gla_stealth","gla_demo"],"domain":"ground","roles":["anti_vehicle"],"cost":800,"tier":"mid","answers":{"armor":3},"note":"Salvage upgrades turn it into a genuine main battle tank as the game runs on.","source":"merged","wikiPage":"Marauder_Tank","description":"The Marauder tank was a medium tank used by the Global Liberation Army during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/c/cd/ZH_Marauder_tank.jpg/revision/latest?cb=20231218064927"},{"id":"quad_cannon","name":"Quad Cannon","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["anti_air","anti_infantry"],"cost":700,"tier":"early","answers":{"air":3,"infantry_swarm":3},"note":"The only real anti-air the GLA has. Build it before you think you need it.","source":"merged","wikiPage":"Quad_Cannon","description":"The Quad Cannon was a Soviet-era weapon (the ZSU-23-4 Shilka's modified AZP-23 Amur mounted on the back of a half-track) recycled by the GLA by the time of the GLA Conflict as their self-propelled anti-aircraft gun.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/8/8e/ZH_Quad_Cannon.jpg/revision/latest?cb=20231218070330"},{"id":"rocket_buggy","name":"Rocket Buggy","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["artillery","anti_vehicle"],"cost":900,"tier":"mid","answers":{"armor":2,"base_defense":2,"artillery":2},"note":"Fast artillery that fires and withdraws before anything slow can answer it.","source":"merged","wikiPage":"Rocket_Buggy","description":"The Rockey Buggy is a GLA improvised multiple rocket launcher in Generals and Zero Hour.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/a/ad/ZH_Rocket_Buggy.jpg/revision/latest?cb=20231229165900"},{"id":"toxin_tractor","name":"Toxin Tractor","factions":["gla","gla_toxin"],"domain":"ground","roles":["garrison_clear","anti_infantry"],"cost":600,"tier":"early","answers":{"infantry_swarm":3,"base_defense":1},"note":"Clears garrisons and infantry instantly, and poisons the ground they stood on.","source":"merged","wikiPage":"Toxin_Tractor","description":"The toxin tractor was the GLA's dedicated anti-infantry and anti-garrison vehicle during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/4/49/ZH_Toxin_Tractor.jpg/revision/latest?cb=20231218074409"},{"id":"battle_bus","name":"Battle Bus","factions":["gla","gla_stealth","gla_demo"],"domain":"ground","roles":["transport","anti_infantry","defense"],"cost":800,"tier":"mid","answers":{"infantry_swarm":2,"early_rush":2},"note":"Rolling bunker: infantry fire from inside, and it becomes a wreck that keeps fighting.","source":"curated","wikiPage":"Combat_Bus"},{"id":"scud_launcher","name":"SCUD Launcher","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["artillery","anti_structure"],"cost":1200,"tier":"mid","answers":{"base_defense":3,"infantry_swarm":2,"artillery":2},"note":"Long-range siege that out-ranges most defences; toxin warheads deny the ground after.","source":"merged","wikiPage":"SCUD_Launcher","description":"The SCUD Launcher is GLA's mobile ballistic missile system during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/c/c0/ZH_SCUD_Launcher.jpg/revision/latest?cb=20231219055916"},{"id":"bomb_truck","name":"Bomb Truck","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["suicide","anti_structure","stealth"],"cost":1200,"tier":"mid","answers":{"base_defense":3,"superweapon":3},"note":"Disguises itself as an enemy vehicle and drives into whatever matters most.","source":"merged","wikiPage":"Bomb_Truck","description":"The Bomb Truck is a GLA suicide vehicle in Generals and Zero Hour.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/9/9b/ZH_Bomb_Truck.jpg/revision/latest?cb=20231218071339"},{"id":"radar_van","name":"Radar Van","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["scout","detector","support"],"cost":500,"tier":"mid","answers":{"stealth":3},"note":"The GLA detector, and its radar scan reveals what the enemy is actually building.","source":"merged","wikiPage":"Radar_Van","description":"The radar van was a GLA vehicle with a mobile radar uplink used during the GLA Conflict.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/c/c2/Generals_Radar_Van.jpg/revision/latest?cb=20180801164956"},{"id":"stinger_site","name":"Stinger Site","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["defense","anti_air","anti_vehicle"],"cost":900,"tier":"early","answers":{"air":3,"armor":1,"early_rush":1},"note":"Three-man anti-air nest; the GLA's only serious answer to sustained air pressure.","source":"merged","wikiPage":"Stinger_Site","description":"The Stinger Site was a simple defense that served as the basic anti-air and anti-tank defense of the GLA.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/e/e2/Generals_Stinger_Site.jpg/revision/latest?cb=20180801163707"},{"id":"tunnel_network","name":"Tunnel Network","factions":["gla","gla_toxin","gla_stealth","gla_demo"],"domain":"ground","roles":["transport","defense","support"],"cost":800,"tier":"early","answers":{"early_rush":2,"base_defense":1},"note":"Moves the army across the map instantly and heals whatever sits inside it.","source":"merged","wikiPage":"Tunnel_Network","description":"The Tunnel Network was a unique structure used by the Global Liberation Army in Command & Conquer: Generals and its expansion, Zero Hour.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/6/61/ZH_Tunnel_Network.jpg/revision/latest?cb=20240918130034"},{"id":"demo_trap","name":"Demolition Trap","factions":["gla","gla_demo"],"domain":"ground","roles":["defense","suicide"],"cost":400,"tier":"early","answers":{"early_rush":3,"armor":2},"note":"Buried charge on a chokepoint or a supply pile; it pays for itself the first time.","source":"merged","wikiPage":"Demo_Trap","description":"Demo traps were GLA explosive devices.","image":"https://static.wikia.nocookie.net/cnc_gamepedia_en/images/f/fa/Generals_Demo_Trap.jpg/revision/latest?cb=20180801163739"}],"maps":[{"id":"tournament_desert","name":"Tournament Desert","players":2,"size":"2p","terrain":"desert","chokepoints":1,"supplyDensity":2,"openness":3,"features":["Open central basin","Symmetrical supply docks","Minimal cover"],"notes":["Almost no terrain to hide behind — whoever wins the open-field engagement wins the map.","Expansion supply is exposed; raiding workers pays better here than anywhere."],"source":"merged","wikiPage":"Tournament_Desert","description":"A list of skirmish maps available in Generals 1."},{"id":"tournament_plains","name":"Tournament Plains","players":2,"size":"2p","terrain":"temperate","chokepoints":1,"supplyDensity":2,"openness":3,"features":["Flat approaches","Twin supply centres","Long sight lines"],"notes":["Long sight lines favour artillery and air; short-ranged armies must force the distance closed.","There is no chokepoint to turtle behind — mobile defence beats static defence."],"source":"curated","wikiPage":"Tournament_Plains"},{"id":"alpine_assault","name":"Alpine Assault","players":2,"size":"2p","terrain":"snow","chokepoints":3,"supplyDensity":1,"openness":1,"features":["Narrow mountain pass","Cliff-locked approaches","Sparse supply"],"notes":["One real land route: static defence and artillery are disproportionately strong.","Thin supply rewards early expansion and punishes greedy tech."],"source":"curated","wikiPage":"Alpine_Assault"},{"id":"bitter_winter","name":"Bitter Winter","players":2,"size":"2p","terrain":"snow","chokepoints":2,"supplyDensity":2,"openness":2,"features":["Frozen river crossing","Garrisonable structures","Central high ground"],"notes":["The crossings are the whole game — hold one and the map halves.","Garrisonable buildings near the middle make early infantry unusually valuable."],"source":"curated","wikiPage":"Bitter_Winter"},{"id":"winding_river","name":"Winding River","players":2,"size":"2p","terrain":"temperate","chokepoints":3,"supplyDensity":2,"openness":1,"features":["River splits the map","Few bridges","Defensible banks"],"notes":["Bridges are hard chokepoints: mine them, defend them, or bypass them by air or tunnel.","Artillery across the river hits with impunity if you do not contest the bank."],"source":"curated","wikiPage":"Winding_River"},{"id":"barren_badlands","name":"Barren Badlands","players":4,"size":"4p","terrain":"desert","chokepoints":2,"supplyDensity":2,"openness":2,"features":["Rocky outcrops","Scattered supply piles","Multiple approach lanes"],"notes":["Several approach lanes mean a single defensive line does not cover you.","Scattered supply favours whoever can protect two piles at once."],"source":"curated","wikiPage":"Barren_Badlands"},{"id":"mountain_path","name":"Mountain Path","players":4,"size":"4p","terrain":"temperate","chokepoints":3,"supplyDensity":1,"openness":1,"features":["Cliff-lined paths","Choked centre","Limited expansion"],"notes":["Heavily choked: siege units and base defences dominate over manoeuvre.","With supply this thin, an early expansion denial usually decides it."],"source":"curated","wikiPage":"Mountain_Path"},{"id":"tournament_island","name":"Tournament Island","players":4,"size":"4p","terrain":"temperate","chokepoints":2,"supplyDensity":3,"openness":2,"features":["Water separates quadrants","Rich supply","Oil derricks"],"notes":["Water breaks up ground pushes — air and long-range units cross freely, armour does not.","Oil derricks are worth capturing early and worth raiding all game."],"source":"curated","wikiPage":"Tournament_Island"},{"id":"silent_woods","name":"Silent Woods","players":4,"size":"4p","terrain":"temperate","chokepoints":2,"supplyDensity":2,"openness":2,"features":["Tree cover","Garrisonable cabins","Winding approaches"],"notes":["Tree cover and winding lanes make ambushes and stealth armies much stronger here.","Scout constantly — an army can sit fifteen seconds from your base unseen."],"source":"curated","wikiPage":"Silent_Woods"},{"id":"flash_fire","name":"Flash Fire","players":4,"size":"4p","terrain":"desert","chokepoints":1,"supplyDensity":2,"openness":3,"features":["Wide open flats","Central supply contest","Exposed expansions"],"notes":["Open flats: the fight is decided by army composition, not by position.","Central supply is a permanent contest — plan to fight for it, not to own it."],"source":"curated","wikiPage":"Flash_Fire"},{"id":"killing_fields","name":"Killing Fields","players":4,"size":"4p","terrain":"temperate","chokepoints":2,"supplyDensity":3,"openness":2,"features":["Dense supply","Multiple bridges","Garrisonable farms"],"notes":["Rich supply lets both sides tech fast — expect superweapons and late-game armies.","Garrisonable farms along the lanes reward keeping infantry in the army all game."],"source":"curated","wikiPage":"Killing_Fields"},{"id":"forgotten_forest","name":"Forgotten Forest","players":4,"size":"4p","terrain":"jungle","chokepoints":3,"supplyDensity":2,"openness":1,"features":["Heavy tree cover","Narrow trails","Hidden flanks"],"notes":["Narrow trails and heavy cover: this is the best stealth map in the stock rotation.","Detection is not optional here, whatever you are playing against."],"source":"curated","wikiPage":"Forgotten_Forest"},{"id":"dark_mountain","name":"Dark Mountain","players":4,"size":"4p","terrain":"snow","chokepoints":3,"supplyDensity":1,"openness":1,"features":["Mountain chokepoints","Sparse supply","High ground positions"],"notes":["Sparse supply and hard chokes reward a fast expansion followed by a turtle.","High ground positions give artillery a commanding field of fire."],"source":"curated","wikiPage":"Dark_Mountain"},{"id":"leipzig_lowlands","name":"Leipzig Lowlands","players":4,"size":"4p","terrain":"urban","chokepoints":2,"supplyDensity":2,"openness":2,"features":["Urban blocks","Dense garrisons","Street chokepoints"],"notes":["Urban garrisons make infantry and garrison-clearing units decisive.","Streets funnel armour — bring something that clears buildings or you will stall."],"source":"curated","wikiPage":"Leipzig_Lowlands"},{"id":"scorched_earth","name":"Scorched Earth","players":6,"size":"6p","terrain":"desert","chokepoints":1,"supplyDensity":2,"openness":3,"features":["Sprawling open ground","Many expansions","Long travel times"],"notes":["Long travel times mean reinforcements arrive late — forward production matters.","With six players, the diplomatic and positional read matters as much as the build."],"source":"curated","wikiPage":"Scorched_Earth"},{"id":"homeland_alliance","name":"Homeland Alliance","players":8,"size":"8p","terrain":"mixed","chokepoints":2,"supplyDensity":3,"openness":2,"features":["Eight starting positions","Abundant supply","Mixed terrain"],"notes":["Eight players and rich supply means the game goes long — build for the late game.","Expect superweapons; spread your base from the first dozer."],"source":"curated","wikiPage":"Homeland_Alliance"}],"matchups":[{"you":"*","enemy":"gla","advice":["The GLA has no aircraft whatsoever. Any air investment you make is unanswerable except by Quad Cannons and Stinger Sites — scout for those, then fly.","Destroyed GLA buildings leave holes that rebuild cheaply. Killing a structure is a delay, not a removal: kill the workers too.","Watch for Tunnel Networks near your base. A tunnel is a teleport pad for an army you never saw cross the map."]},{"you":"*","enemy":"usa","advice":["USA units cost more than yours. Trading evenly is winning — force engagements you can afford to lose.","Airfields are large and fragile. A raid that kills parked aircraft costs them far more than it costs you.","They are weakest before the first Airfield lands. Apply pressure early or accept a late-game air war."]},{"you":"*","enemy":"china","advice":["Do not let five identical Chinese units sit together — the horde bonus makes that ball much stronger than its cost.","China has almost no stealth and poor detection. A stealthed or flanking force will get behind them.","Their units are slow. Kiting, artillery and air all beat the Chinese ground ball if you refuse a head-on fight."]},{"you":"*","enemy":"usa_laser","advice":["Everything Townes owns runs on power. Kill Cold Fusion Reactors and the Laser Turrets go dark, the lasers stop, and his base opens up.","His Point Defence Lasers shoot down rockets and missiles — bring shells, bullets and flame instead of a missile-only army.","Artillery out-ranges his defensive line. Siege him from outside the turret envelope rather than walking into it."]},{"you":"*","enemy":"usa_super","advice":["Alexander wins if the game goes long. Pressure her before the first Particle Cannon comes online — her opening is deliberately greedy.","Spread your base out. Clustered production is exactly what a Particle Cannon is priced for.","Kill the uplinks, not the army. Every destroyed Particle Cannon resets minutes of her plan."]},{"you":"*","enemy":"usa_air","advice":["Granger has no real tank line. A committed early ground push arrives before his second Airfield and he cannot answer it.","Mass anti-air rather than spreading it. Overlapping AA turns his aircraft from a threat into a donation.","His base defence is thin. Once you are inside it, you stay inside it."]},{"you":"*","enemy":"china_tank","advice":["Ta Hun Kwai has almost nothing that shoots upward. Aircraft are close to a free win if you get them out.","Rocket infantry in garrisons trade brutally well against his armour — a garrisoned building costs him tanks.","His tanks arrive veteran and early. Do not plan on winning the first ground engagement; plan on not taking it."]},{"you":"*","enemy":"china_infantry","advice":["Flame, toxin and area damage delete his hordes. Dragon Tanks, Inferno Cannons, Toxin Tractors, napalm and carpet bombing all convert his army into nothing.","Never fight his infantry with your own infantry — his start veteran and there are more of them.","Artillery is the cleanest answer. He has to close the distance and artillery does not let him."]},{"you":"*","enemy":"china_nuke","advice":["His tanks detonate when they die. Keep your army spread out or you will lose the fight you just won.","His nuclear reactors explode when destroyed — inside his own base. A single raid on his power does structural damage.","Engage at range. Every mechanic he has rewards you standing close to his units."]},{"you":"*","enemy":"gla_stealth","advice":["Bring detectors or you are not playing the game. USA: Sentry Drone. China: Listening Outpost, and Troop Crawlers in the army. GLA: Radar Van.","Assume any empty ground is occupied. Sweep suspected positions with area damage before you move through them.","Escort your vehicles. Kassad's Hijackers turn an unescorted tank into one of his tanks."]},{"you":"*","enemy":"gla_toxin","advice":["Go mechanised. Toxins do very little to vehicles and nothing at all to aircraft — an infantry army is a gift to Dr. Thrax.","Do not garrison buildings against him. Toxin Tractors clear a garrison faster than you can refill it.","Expect poisoned supply piles. Lingering toxin can stop your workers mining a pile you thought was safe."]},{"you":"*","enemy":"gla_demo","advice":["Nearly everything Juhziz owns has to touch you. Kill it on the approach and it never functions.","Long-range units and aircraft are close to immune to his whole arsenal.","Sweep for Demolition Traps before expanding. He buries them on exactly the supply pile you were about to take."]},{"you":"gla","enemy":"*","advice":["You have no aircraft. Quad Cannons and Stinger Sites are not optional — build them before the enemy shows you why.","Your buildings leave holes. Rebuilding is cheap: fight like your base is expendable, because it partly is."]},{"you":"usa","enemy":"*","advice":["Your units cost more than theirs. Every engagement you take should be one you chose.","Do not lose parked aircraft. An Airfield raid costs you more than any ground trade will."]},{"you":"china","enemy":"*","advice":["Keep five or more identical units together for the horde bonus — it is a free damage upgrade you are otherwise refusing.","Build a Listening Outpost early. It is the only cheap detection you have and stealth armies are common."]}],"provenance":{"curatedAt":"2026-09-16","wikiCache":{"fetchedAt":"2026-09-16T18:49:12.275Z","pages":283,"source":"cnc.fandom.com"},"lastIngest":{"attemptedAt":"2026-09-16T18:49:12.278Z","ok":true,"source":"cnc.fandom.com","pages":283,"matched":54,"curatedTotal":61,"costCorrections":25},"overlay":{"enriched":68,"rejected":201}}};
 
 const SIDES = ['usa', 'china', 'gla'];
 const SIDE_COLOR = { usa: 'var(--usa)', china: 'var(--china)', gla: 'var(--gla)' };
 const SIDE_LABEL = { usa: 'USA', china: 'China', gla: 'GLA' };
 
-/* Abstract faction marks — geometry, not insignia. */
+/* Abstract faction marks — geometry, not insignia. Used wherever the wiki crawl
+   has no photograph, so an absent image degrades to a symbol, never a gap. */
 const MARKS = {
   usa: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.2 6.6.9-4.8 4.7 1.2 6.7L12 17.3 6.1 20.5l1.2-6.7L2.5 9.1l6.6-.9z" fill="currentColor"/></svg>',
   china: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8.7 5v10L12 22 3.3 17V7z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3.4" fill="currentColor"/></svg>',
@@ -1134,6 +1293,39 @@ const mark = (side, size) => {
   return svg;
 };
 
+/* The engine's counter list carries only name/cost/tier/why, so art is looked
+   up from the dataset by name rather than threaded through the engine — the
+   engine has no business knowing about pictures. */
+const UNIT_ART = new Map(DATA.units.map((u) => [u.name.toLowerCase(), u]));
+
+/**
+ * An image frame that degrades instead of breaking.
+ *
+ * The art is hotlinked from the wiki, so any given URL can fail at load time —
+ * a renamed file, a blocked host, an offline viewer. On error the <img> is
+ * discarded and the faction mark takes its place, which is also what happens
+ * for the seven units and the maps the crawl has no art for.
+ */
+function frame(className, src, side, alt) {
+  const box = el('div', className);
+  const fallback = () => {
+    box.replaceChildren(mark(side));
+    box.dataset.art = 'mark';
+  };
+  if (!src) { fallback(); return box; }
+
+  const img = el('img');
+  img.src = src;
+  img.alt = alt ?? '';
+  img.loading = 'lazy';
+  img.decoding = 'async';
+  img.referrerPolicy = 'no-referrer';
+  img.addEventListener('error', fallback, { once: true });
+  box.append(img);
+  box.dataset.art = 'photo';
+  return box;
+}
+
 /** "USA Air Force General" -> "Air Force"; base factions get their short name. */
 const SHORT = {
   usa: 'USA', china: 'China', gla: 'GLA',
@@ -1145,6 +1337,130 @@ function armyName(f) {
 function commander(f) {
   if (!f.general) return 'Standard doctrine';
   return f.general.replace(/^(Gen\.|Dr\.|Prince)\s+/, '');
+}
+
+/* ------------------------------------------------- generated map art ---- */
+
+/* Deterministic per-map layout: the same theatre always draws the same
+   diagram. mulberry32 comes from the engine bundle. */
+function seedOf(text) {
+  let h = 2166136261;
+  for (let i = 0; i < text.length; i++) {
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+const TERRAIN_INK = {
+  desert:    { base: '#3E3524', ridge: '#5A4A2C' },
+  snow:      { base: '#333B42', ridge: '#4B565E' },
+  urban:     { base: '#2F3335', ridge: '#454B4E' },
+  temperate: { base: '#28331F', ridge: '#3C4B2E' },
+  jungle:    { base: '#1F2E1B', ridge: '#314727' },
+  mixed:     { base: '#2C3327', ridge: '#424C3A' },
+};
+
+const svgEl = (name, attrs) => {
+  const n = document.createElementNS('http://www.w3.org/2000/svg', name);
+  for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, String(v));
+  return n;
+};
+
+/**
+ * Draw a theatre as a tactical diagram.
+ *
+ * cnc.fandom.com has no per-map article — every map title redirects to one
+ * shared list page, and the wiki holds three map previews in total. Rather than
+ * show a photograph for one map and nothing for the other fifteen, each map is
+ * drawn from the ratings the planner actually reasons about: chokepoints,
+ * supply density, openness and the start count.
+ */
+function mapDiagram(map) {
+  const W = 300, H = 190;
+  const ink = TERRAIN_INK[map.terrain] ?? TERRAIN_INK.mixed;
+  const rand = mulberry32(seedOf(map.id));
+
+  const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img' });
+  const title = svgEl('title', {});
+  title.textContent = `${map.name}: ${map.players} starts, ${map.terrain} terrain`;
+  svg.append(title);
+
+  svg.append(svgEl('rect', { x: 0, y: 0, width: W, height: H, fill: ink.base }));
+
+  // Terrain relief: soft blobs, denser where the map is less open.
+  const blobs = 5 + Math.round((3 - map.openness) * 3);
+  for (let i = 0; i < blobs; i++) {
+    svg.append(svgEl('ellipse', {
+      cx: rand() * W, cy: rand() * H,
+      rx: 18 + rand() * 46, ry: 12 + rand() * 30,
+      fill: ink.ridge, opacity: (0.22 + rand() * 0.28).toFixed(2),
+    }));
+  }
+
+  // Tactical grid.
+  for (let x = 30; x < W; x += 30) {
+    svg.append(svgEl('line', { x1: x, y1: 0, x2: x, y2: H, stroke: '#7E8F76', 'stroke-width': 0.4, opacity: 0.16 }));
+  }
+  for (let y = 30; y < H; y += 30) {
+    svg.append(svgEl('line', { x1: 0, y1: y, x2: W, y2: y, stroke: '#7E8F76', 'stroke-width': 0.4, opacity: 0.16 }));
+  }
+
+  // Chokepoints: opposing wedges pinching a lane. One pair per rating point.
+  for (let i = 0; i < map.chokepoints; i++) {
+    const y = H * ((i + 1) / (map.chokepoints + 1));
+    const x = 60 + rand() * (W - 140);
+    const gap = 16 + rand() * 10;
+    svg.append(svgEl('path', {
+      d: `M${x - 26} ${y - 46} L${x + 26} ${y - 46} L${x} ${y - gap} Z`,
+      fill: ink.ridge, opacity: 0.85, stroke: '#8FA083', 'stroke-width': 0.6,
+    }));
+    svg.append(svgEl('path', {
+      d: `M${x - 26} ${y + 46} L${x + 26} ${y + 46} L${x} ${y + gap} Z`,
+      fill: ink.ridge, opacity: 0.85, stroke: '#8FA083', 'stroke-width': 0.6,
+    }));
+  }
+
+  // Supply: one cluster per density point, each a few crates.
+  for (let i = 0; i < map.supplyDensity * 2 + 1; i++) {
+    const cx = 24 + rand() * (W - 48);
+    const cy = 24 + rand() * (H - 48);
+    for (let c = 0; c < 3; c++) {
+      svg.append(svgEl('rect', {
+        x: cx + (c % 2) * 7 - 3, y: cy + Math.floor(c / 2) * 7 - 3,
+        width: 5.5, height: 5.5, fill: '#E3C558', opacity: 0.9,
+      }));
+    }
+  }
+
+  // Start positions, ringed around the playable area.
+  for (let i = 0; i < map.players; i++) {
+    const a = (i / map.players) * Math.PI * 2 - Math.PI / 2;
+    const cx = W / 2 + Math.cos(a) * (W * 0.34);
+    const cy = H / 2 + Math.sin(a) * (H * 0.33);
+    svg.append(svgEl('circle', { cx, cy, r: 9, fill: 'none', stroke: '#F5B145', 'stroke-width': 1.6, opacity: 0.95 }));
+    svg.append(svgEl('circle', { cx, cy, r: 3, fill: '#F5B145' }));
+  }
+
+  svg.append(svgEl('rect', { x: 0.5, y: 0.5, width: W - 1, height: H - 1, fill: 'none', stroke: '#46552F', 'stroke-width': 1 }));
+  return svg;
+}
+
+function terrainCard(map) {
+  const box = el('div', 'terrain-art');
+  box.append(mapDiagram(map));
+  const legend = el('div', 'terrain-legend');
+  for (const [k, v] of [
+    ['Starts', map.players], ['Choke', `${map.chokepoints}/3`],
+    ['Supply', `${map.supplyDensity}/3`], ['Open', `${map.openness}/3`],
+  ]) {
+    const span = el('span');
+    span.append(document.createTextNode(k + ' '));
+    span.append(el('b', null, String(v)));
+    legend.append(span);
+  }
+  box.append(legend);
+  return box;
 }
 
 /* ---------------------------------------------------------- controls --- */
@@ -1168,12 +1484,14 @@ function armyCards(container, side, selected, onPick, anyLabel, anyHint) {
   container.classList.toggle('is-wide', side === null);
 
   if (side === null) {
-    const btn = el('button', 'army');
+    const btn = el('button', 'army is-any');
     btn.type = 'button';
     btn.style.setProperty('--mark', 'var(--amber)');
     btn.setAttribute('aria-pressed', String(selected === null));
-    btn.append(el('span', 'army-name', anyLabel));
-    btn.append(el('span', 'army-who', anyHint));
+    const body = el('span', 'army-text');
+    body.append(el('span', 'army-name', anyLabel));
+    body.append(el('span', 'army-who', anyHint));
+    btn.append(body);
     btn.addEventListener('click', () => onPick(null));
     container.append(btn);
     return;
@@ -1185,8 +1503,11 @@ function armyCards(container, side, selected, onPick, anyLabel, anyHint) {
     btn.style.setProperty('--mark', SIDE_COLOR[side]);
     btn.setAttribute('aria-pressed', String(selected === f.id));
     btn.title = f.tagline;
-    btn.append(el('span', 'army-name', armyName(f)));
-    btn.append(el('span', 'army-who', commander(f)));
+    btn.append(frame('portrait', f.image, f.side, ''));
+    const body = el('span', 'army-text');
+    body.append(el('span', 'army-name', armyName(f)));
+    body.append(el('span', 'army-who', commander(f)));
+    btn.append(body);
     btn.addEventListener('click', () => onPick(f.id));
     container.append(btn);
   }
@@ -1223,6 +1544,14 @@ function mapSelect() {
   sel.addEventListener('change', () => { state.mapId = sel.value || null; render(); });
 }
 
+/** Live diagram under the theatre picker, so the choice has a face. */
+function theatrePreview() {
+  const box = $('theatre-preview');
+  const map = DATA.maps.find((m) => m.id === state.mapId);
+  if (!map) { box.replaceChildren(); return; }
+  box.replaceChildren(mapDiagram(map), el('div', 'theatre-caption', `${map.name} · ${map.terrain}`));
+}
+
 /* ---------------------------------------------------------- briefing --- */
 
 const toneOf = (v) => (v >= 2.4 ? 'crit' : v >= 1.6 ? 'warn' : '');
@@ -1244,11 +1573,11 @@ function advice(items, variant) {
 
 function combatant(faction, role) {
   const box = el('div', 'combatant ' + role);
-  box.append(mark(faction.side, 30));
+  box.style.setProperty('--mark', SIDE_COLOR[faction.side] ?? 'var(--amber)');
+  box.append(frame('mugshot', faction.image, faction.side, faction.general ?? faction.name));
   const who = el('div', 'who');
-  const title = el('div', 'army-title', faction.name);
-  title.style.color = SIDE_COLOR[faction.side];
-  who.append(title);
+  who.append(el('div', 'role', role === 'you' ? 'Your command' : 'Hostile force'));
+  who.append(el('div', 'army-title', faction.name));
   who.append(el('div', 'cmdr', faction.general ?? 'Standard doctrine'));
   box.append(who);
   return box;
@@ -1295,6 +1624,7 @@ function renderRoster(plan) {
   for (const r of top) {
     const row = el('div', 'roster-row' + (r.faction.id === plan.you.id ? ' is-pick' : ''));
     row.append(el('div', 'roster-score', String(r.score)));
+    row.append(frame('roster-face', r.faction.image, r.faction.side, ''));
     const bar = el('div', 'roster-bar');
     const fill = el('i');
     fill.style.width = `${(r.score / max) * 100}%`;
@@ -1350,13 +1680,17 @@ function renderCounters(plan) {
 
     const ul = el('ul', 'units');
     for (const u of c.units) {
+      const record = UNIT_ART.get(u.name.toLowerCase());
       const li = el('li', 'unit');
+      li.append(frame('shot', record && record.image, plan.you.side, u.name));
+      const body = el('div', 'unit-body');
       const line = el('div', 'unit-line');
       line.append(el('span', 'unit-name', u.name));
       line.append(el('span', 'unit-cost', `$${u.cost.toLocaleString()}`));
       line.append(el('span', 'unit-tier', u.tier === 'early' ? 'Tier 1' : u.tier === 'mid' ? 'Tier 2' : 'Tier 3'));
-      li.append(line);
-      li.append(el('div', 'unit-why', u.why));
+      body.append(line);
+      body.append(el('div', 'unit-why', u.why));
+      li.append(body);
       ul.append(li);
     }
     card.append(ul);
@@ -1383,6 +1717,23 @@ function renderTimeline(plan) {
   return s;
 }
 
+function renderTerrain(plan) {
+  const s = panel(plan.map ? `${SECTION.terrain} — ${plan.map.name}` : SECTION.terrain);
+  const split = el('div', 'terrain-split');
+  if (plan.map) split.append(terrainCard(plan.map));
+
+  const right = el('div');
+  right.append(advice(plan.mapNotes));
+  if (plan.map && plan.map.features.length) {
+    const tags = el('div', 'conditions');
+    for (const f of plan.map.features) tags.append(el('span', 'cond', f));
+    right.append(tags);
+  }
+  split.append(right);
+  s.append(split);
+  return s;
+}
+
 /* -------------------------------------------------------------- render --- */
 
 function renderControls() {
@@ -1404,6 +1755,7 @@ function renderControls() {
 
   rankButtons();
   $('map-select').value = state.mapId ?? '';
+  theatrePreview();
 }
 
 function render() {
@@ -1447,14 +1799,7 @@ function render() {
     parts.push(notes);
   }
 
-  const terrain = panel(plan.map ? `${SECTION.terrain} — ${plan.map.name}` : SECTION.terrain);
-  terrain.append(advice(plan.mapNotes));
-  if (plan.map?.features.length) {
-    const tags = el('div', 'conditions');
-    for (const f of plan.map.features) tags.append(el('span', 'cond', f));
-    terrain.append(tags);
-  }
-  parts.push(terrain);
+  parts.push(renderTerrain(plan));
 
   $('briefing').replaceChildren(...parts);
 }
@@ -1469,36 +1814,37 @@ function dataSource() {
   const p = DATA.provenance;
   const ing = p.lastIngest;
   if (p.wikiCache) {
-    const recon = ing && ing.matched != null ? ` \u00b7 ${ing.matched}/${ing.curatedTotal} units reconciled` : '';
+    const recon = ing && ing.matched != null ? ` · ${ing.matched}/${ing.curatedTotal} units reconciled` : '';
     // A crawl that ignored far more than it merged is scoped wrong, and that
     // should be visible on the page rather than buried in a build log.
     const ov = p.overlay;
-    const ignored = ov && ov.rejected ? ` \u00b7 ${ov.enriched} enriched, ${ov.rejected} ignored (not Generals)` : '';
+    const ignored = ov && ov.rejected ? ` · ${ov.enriched} enriched, ${ov.rejected} ignored (not Generals)` : '';
     const poor = ov && ov.rejected > ov.enriched * 4;
     return {
-      chip: poor ? 'Wiki \u26a0' : 'Wiki \u2713',
+      chip: poor ? 'Wiki ⚠' : 'Wiki ✓',
       tone: poor ? 'var(--warn)' : 'var(--ok)',
-      line: `Wiki overlay \u00b7 ${p.wikiCache.pages} pages from ${p.wikiCache.source} \u00b7 ${p.wikiCache.fetchedAt.slice(0, 10)}${recon}${ignored}`,
+      line: `Wiki overlay · ${p.wikiCache.pages} pages from ${p.wikiCache.source} · ${p.wikiCache.fetchedAt.slice(0, 10)}${recon}${ignored}`,
     };
   }
   if (ing && !ing.ok) {
     return {
       chip: 'Curated',
       tone: 'var(--warn)',
-      line: `Wiki crawl ${ing.attemptedAt.slice(0, 10)} failed \u2014 ${ing.error} \u00b7 serving curated data`,
+      line: `Wiki crawl ${ing.attemptedAt.slice(0, 10)} failed — ${ing.error} · serving curated data`,
     };
   }
   return {
     chip: 'Curated',
     tone: 'var(--ink-soft)',
-    line: 'No wiki crawl recorded \u00b7 serving curated data',
+    line: 'No wiki crawl recorded · serving curated data',
   };
 }
 
 const src = dataSource();
+const withArt = DATA.units.filter((u) => u.image).length;
 const readiness = $('readiness');
 readiness.replaceChildren(
-  ...[['Armies', DATA.factions.length], ['Units', DATA.units.length], ['Theatres', DATA.maps.length]]
+  ...[['Armies', DATA.factions.length], ['Units', DATA.units.length], ['Theatres', DATA.maps.length], ['Art', withArt]]
     .map(([label, n]) => {
       const box = el('span', 'readout');
       box.append(document.createTextNode(label + ' '));
@@ -1523,6 +1869,7 @@ $('reroll').addEventListener('click', () => {
 $('colophon').replaceChildren(
   el('span', null, `Curated dossier ${DATA.provenance.curatedAt} · strategy engine runs in this page`),
   el('span', null, src.line),
+  el('span', null, 'Unit and commander art is hotlinked from the Command & Conquer Wiki; map diagrams are drawn from the authored ratings'),
   el('span', null, 'Fan-made planning tool · not affiliated with Electronic Arts'),
 );
 
