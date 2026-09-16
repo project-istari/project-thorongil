@@ -213,11 +213,31 @@ export interface TimelinePhase {
   objectives: string[];
 }
 
+/**
+ * The strategic approach a plan is built around.
+ *
+ * A matchup usually has several defensible approaches. The plan commits to one
+ * and names the rest, so the advice reads as a choice with a cost rather than
+ * the only thing that could possibly be done.
+ */
+export interface PlanDoctrine {
+  id: string;
+  name: string;
+  /** What this approach is, in one line. */
+  premise: string;
+  /** How well it fits this matchup. Higher is better; comparable within a plan. */
+  fit: number;
+}
+
 export interface BattlePlan {
   you: Faction;
   enemy: Faction;
   difficulty: Difficulty;
   map?: GameMap;
+  /** The approach this plan commits to, and the thing that makes it fail. */
+  doctrine: PlanDoctrine & { risk: string };
+  /** Other approaches that hold up here, best fit first. May be empty. */
+  alternatives: PlanDoctrine[];
   /** Populated when the engine, not the user, chose a side. */
   lineupRationale?: string[];
   /** All twelve armies scored against the enemy, best first. */

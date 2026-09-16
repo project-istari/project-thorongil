@@ -75,6 +75,19 @@ export function renderPlan(plan: BattlePlan, ds: Dataset): string {
   out.push(wrap(plan.headline, 2).join('\n'));
   out.push('');
 
+  out.push(rule('APPROACH'));
+  out.push(`  ${bold(plan.doctrine.name)}`);
+  out.push(wrap(plan.doctrine.premise, 2).join('\n'));
+  out.push(wrap(dim(`Fails if: ${plan.doctrine.risk}`), 2).join('\n'));
+  if (plan.alternatives.length) {
+    out.push('');
+    // Naming the roads not taken is the point: a matchup has several defensible
+    // answers, and a plan that hides them reads as the only possible one.
+    out.push(dim('  Also defensible here:'));
+    for (const alt of plan.alternatives) out.push(dim(`    · ${alt.name} — ${alt.premise}`));
+  }
+  out.push('');
+
   if (plan.lineupRationale?.length) {
     out.push(rule('WHY THIS LINEUP'));
     for (const r of plan.lineupRationale) out.push(bullet(r));

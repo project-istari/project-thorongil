@@ -17,7 +17,7 @@ const ROOT = join(HERE, '..');
 const ENGINE_DIR = join(ROOT, 'dist', 'src', 'engine');
 
 /** Dependency order matters: each file may only use names defined above it. */
-const ENGINE_FILES = ['rng.js', 'threat.js', 'counters.js', 'lineup.js', 'plan.js'];
+const ENGINE_FILES = ['rng.js', 'threat.js', 'counters.js', 'doctrine.js', 'lineup.js', 'plan.js'];
 
 /**
  * Flatten ES modules into one script scope.
@@ -53,12 +53,53 @@ const html = template
   .replace('/*__ENGINE__*/', () => engine)
   .replace('/*__DATASET__*/', () => datasetLiteral);
 
-// Smoke check: the flattened bundle must still define the entry points the page calls.
-for (const symbol of ['function planFrom', 'const AXIS_LABEL', 'function mulberry32']) {
-  if (!engine.includes(symbol)) {
-    throw new Error(`Engine bundle is missing "${symbol}" — the flatten step needs updating.`);
+/*
+ * Smoke check: actually run the bundle.
+ *
+ * This used to grep the bundle for three symbol names. That passed happily
+ * while shipping a page whose first action threw `rankDoctrines is not
+ * defined`, because a new engine module had been added to the source but not to
+ * ENGINE_FILES — and no symbol on the list was the missing one. A name check
+ * can only catch the breakage you already thought of, so instead we execute the
+ * flattened engine against the real dataset and require a usable plan out of
+ * it. A missing module, a broken flatten, or a runtime error in any engine file
+ * now fails the build rather than the visitor's browser.
+ */
+function smokeTest(bundle, data) {
+  const run = new Function(`${bundle}\nreturn { planFrom, AXIS_LABEL, mulberry32 };`);
+  const api = run();
+  for (const name of ['planFrom', 'AXIS_LABEL', 'mulberry32']) {
+    if (!api[name]) throw new Error(`Engine bundle does not export ${name} — the flatten step needs updating.`);
   }
+
+  // Exercise the paths the page actually takes: a pinned matchup, an
+  // engine-chosen lineup, and a reroll of the same matchup.
+  const cases = [
+    { you: 'usa', enemy: 'china_tank', difficulty: 'hard', mapId: data.maps[0]?.id, seed: 1 },
+    { enemy: 'gla_stealth', difficulty: 'brutal', seed: 2 },
+    { difficulty: 'easy', seed: 3 },
+  ];
+  const seen = new Set();
+  for (const input of cases) {
+    const plan = api.planFrom(data, input);
+    if (!plan?.buildOrder?.length) throw new Error(`Engine produced no build order for ${JSON.stringify(input)}`);
+    if (!plan.counters?.length) throw new Error(`Engine produced no counters for ${JSON.stringify(input)}`);
+    if (!plan.doctrine?.name) throw new Error(`Engine produced no approach for ${JSON.stringify(input)}`);
+    seen.add(plan.doctrine.id);
+  }
+
+  // And that the seed still moves the plan, so a dead reroll cannot ship.
+  const fixed = { you: 'china', enemy: 'usa_air', difficulty: 'hard' };
+  const rolled = new Set();
+  for (let seed = 0; seed < 24; seed++) {
+    rolled.add(JSON.stringify(api.planFrom(data, { ...fixed, seed }).buildOrder));
+  }
+  if (rolled.size < 2) throw new Error('Reroll is inert: 24 seeds produced one build order.');
+
+  return { approaches: seen.size, rerollVariants: rolled.size };
 }
+
+const smoke = smokeTest(engine, dataset);
 if (html.includes('__ENGINE__') || html.includes('__DATASET__')) {
   throw new Error('Template placeholders were not substituted.');
 }
@@ -72,6 +113,7 @@ writeFileSync(out, html);
 const kb = (Buffer.byteLength(html) / 1024).toFixed(0);
 console.log(`Wrote ${out} (${kb} KB)`);
 console.log(`  ${dataset.factions.length} armies, ${dataset.units.length} units, ${dataset.maps.length} maps`);
+console.log(`  engine smoke: ${smoke.approaches} approaches across 3 plans, ${smoke.rerollVariants} build orders across 24 seeds`);
 console.log(dataset.provenance.wikiCache
   ? `  wiki overlay: ${dataset.provenance.wikiCache.pages} pages from ${dataset.provenance.wikiCache.source}`
   : '  no wiki overlay baked in (run `npm run ingest` first to include one)');

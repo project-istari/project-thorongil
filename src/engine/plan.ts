@@ -6,6 +6,10 @@ import { AXIS_LABEL, DIFFICULTY_NOTE, enemyThreatProfile, rankedAxes } from './t
 import { recommendCounters } from './counters.js';
 import { rankLineups } from './lineup.js';
 import { mulberry32 } from './rng.js';
+import {
+  chooseDoctrine, rankDoctrines,
+  type Doctrine, type DoctrineContext, type RankedDoctrine,
+} from './doctrine.js';
 
 const DO_NOT: Record<ThreatAxis, string> = {
   air: 'Do not move your army without anti-air inside it. Their aircraft will take it apart one unit at a time.',
@@ -31,86 +35,155 @@ function hasRole(u: Unit, role: RoleTag): boolean {
   return u.roles.includes(role);
 }
 
-/** Cheapest, earliest unit in the roster that satisfies a predicate. */
-function pickUnit(roster: Unit[], pred: (u: Unit) => boolean): Unit | undefined {
-  const tierRank = { early: 0, mid: 1, late: 2 } as const;
-  return roster
-    .filter(pred)
-    .sort((a, b) => tierRank[a.tier] - tierRank[b.tier] || a.cost - b.cost)[0];
+/**
+ * Choose among options that are genuinely close, rather than always the single
+ * best one.
+ *
+ * Every selection in this file used to be a sort followed by `[0]`, which is
+ * why one matchup produced exactly one plan. Where two units are near enough in
+ * merit that a good player would take either, the seed decides — so a reroll
+ * changes the advice without ever degrading it. `band` is how much worse than
+ * the leader a candidate may be and still be offered.
+ */
+function amongBest<T>(
+  items: readonly T[],
+  score: (item: T) => number,
+  rand: () => number,
+  band: number,
+): T | undefined {
+  if (!items.length) return undefined;
+  const scored = items.map((item) => ({ item, s: score(item) })).sort((a, b) => b.s - a.s);
+  const top = scored[0]!.s;
+  const close = scored.filter((x) => x.s >= top - band);
+  return close[Math.floor(rand() * close.length)]!.item;
 }
 
-function bestAgainst(roster: Unit[], axis: ThreatAxis): Unit | undefined {
-  return roster
-    .filter((u) => (u.answers[axis] ?? 0) >= 2)
-    .sort((a, b) => (b.answers[axis] ?? 0) - (a.answers[axis] ?? 0) || a.cost - b.cost)[0];
+/** One of several equivalent phrasings, so two plans never read identically. */
+function variant(rand: () => number, options: readonly string[]): string {
+  return options[Math.floor(rand() * options.length)]!;
+}
+
+const TIER_RANK = { early: 0, mid: 1, late: 2 } as const;
+
+/** An early, cheap unit satisfying a predicate — no longer always the same one. */
+function pickUnit(roster: Unit[], pred: (u: Unit) => boolean, rand: () => number): Unit | undefined {
+  // Negated so higher is better: earlier tier and lower cost win.
+  return amongBest(
+    roster.filter(pred),
+    (u) => -TIER_RANK[u.tier] * 1000 - u.cost,
+    rand,
+    250,
+  );
+}
+
+function bestAgainst(roster: Unit[], axis: ThreatAxis, rand: () => number): Unit | undefined {
+  return amongBest(
+    roster.filter((u) => (u.answers[axis] ?? 0) >= 2),
+    (u) => (u.answers[axis] ?? 0) * 1000 - u.cost,
+    rand,
+    300,
+  );
 }
 
 /**
- * Start from the faction's stock opening, then splice in the things this
- * particular enemy forces you to build.
+ * Start from the faction's stock opening, splice in what this enemy forces, and
+ * let the chosen approach add the steps that make it that approach.
  */
-function buildOrder(you: Faction, roster: Unit[], profile: ThreatProfile, enemy: Faction): string[] {
+function buildOrder(
+  you: Faction,
+  roster: Unit[],
+  profile: ThreatProfile,
+  enemy: Faction,
+  doctrine: Doctrine,
+  ctx: DoctrineContext,
+  rand: () => number,
+): string[] {
   const steps = [...you.opening];
   const insertions: Array<{ at: number; text: string }> = [];
 
+  // Forced by the matchup: these are answers to what the enemy actually does,
+  // and hold whatever approach you take.
   if (profile.early_rush >= 2.2) {
-    const def = pickUnit(roster, (u) => hasRole(u, 'defense'));
+    const def = pickUnit(roster, (u) => hasRole(u, 'defense'), rand);
     insertions.push({
       at: 1,
       text: `PRIORITY — ${enemy.name} attacks early: get ${def ? `a ${def.name}` : 'a defensive structure'} and a few cheap units up before anything else`,
     });
   }
   if (profile.air >= 2.2) {
-    const aa = bestAgainst(roster, 'air');
+    const aa = bestAgainst(roster, 'air', rand);
     insertions.push({
       at: 2,
       text: `Anti-air early — ${aa ? aa.name : 'your best AA'} before their first air wave, and keep it moving with the army`,
     });
   }
   if (profile.stealth >= 2.2) {
-    const det = pickUnit(roster, (u) => hasRole(u, 'detector'));
+    const det = pickUnit(roster, (u) => hasRole(u, 'detector'), rand);
     insertions.push({
       at: 3,
       text: `Detection is mandatory here — build ${det ? `a ${det.name}` : 'a detector'} and attach it to every push`,
     });
   }
   if (profile.infantry_swarm >= 2.2) {
-    const clear = bestAgainst(roster, 'infantry_swarm');
+    const clear = bestAgainst(roster, 'infantry_swarm', rand);
     insertions.push({
       at: 4,
       text: `Area damage for their hordes — ${clear ? clear.name : 'your best area-damage unit'} rather than more single-target fire`,
     });
   }
   if (profile.armor >= 2.5) {
-    const at = bestAgainst(roster, 'armor');
+    const at = bestAgainst(roster, 'armor', rand);
     insertions.push({
       at: 4,
       text: `Anti-armour core — ${at ? at.name : 'your best anti-tank unit'}, in numbers, before their tank ball arrives`,
     });
   }
 
+  // Chosen, not forced: what this approach does differently.
+  insertions.push(...doctrine.build(ctx));
+
   for (const ins of insertions.sort((a, b) => b.at - a.at)) {
     steps.splice(Math.min(ins.at, steps.length), 0, ins.text);
   }
 
   if (profile.base_defense >= 2.2) {
-    const arty = pickUnit(roster, (u) => hasRole(u, 'artillery'));
+    const arty = pickUnit(roster, (u) => hasRole(u, 'artillery'), rand);
     steps.push(`Tech toward ${arty ? arty.name : 'siege units'} — their defensive line has to be out-ranged, not charged`);
   }
   if (profile.superweapon >= 2.2) {
-    steps.push('Spread your production buildings apart now, and plan a raid on the superweapon rather than racing its timer');
+    steps.push(variant(rand, [
+      'Spread your production buildings apart now, and plan a raid on the superweapon rather than racing its timer',
+      'Superweapon is coming: separate your production, and put a raid on the launcher in the plan rather than hoping to out-build it',
+    ]));
   }
 
   return steps;
 }
 
-function timeline(you: Faction, profile: ThreatProfile, difficulty: Difficulty, enemy: Faction, map?: GameMap): TimelinePhase[] {
+function timeline(
+  you: Faction,
+  profile: ThreatProfile,
+  difficulty: Difficulty,
+  enemy: Faction,
+  doctrine: Doctrine,
+  ctx: DoctrineContext,
+  rand: () => number,
+  map?: GameMap,
+): TimelinePhase[] {
   const [w1, w2, w3] = PHASE_WINDOWS[difficulty];
   const top = rankedAxes(profile).slice(0, 2);
+  const fromDoctrine = doctrine.phases(ctx);
 
   const early: string[] = [
-    'Get every worker or supply unit mining before you build anything else',
-    'Scout with your first cheap unit — you need to see their opening, not guess it',
+    variant(rand, [
+      'Get every worker or supply unit mining before you build anything else',
+      'Everything that can gather should be gathering before the first structure goes down',
+      'Income first: no build decision matters until every worker is on supply',
+    ]),
+    variant(rand, [
+      'Scout with your first cheap unit — you need to see their opening, not guess it',
+      'Send the first cheap unit out to look; playing blind against a known army list is a choice, not bad luck',
+    ]),
   ];
   if (profile.early_rush >= 2.2) early.push(`Expect contact inside this window — ${enemy.name} does not wait`);
   else early.push('No early pressure expected: take the greedy expansion while it is free');
@@ -118,20 +191,26 @@ function timeline(you: Faction, profile: ThreatProfile, difficulty: Difficulty, 
 
   const mid: string[] = [
     `Build the counter core: ${top.map((a) => AXIS_LABEL[a].toLowerCase()).join(' and ')} are what they will actually apply`,
-    'Raid their supply line at least once — economy damage compounds, army damage does not',
   ];
-  if (map && map.chokepoints >= 2) mid.push('Hold the chokepoint rather than the map; it is worth more than territory here');
-  else mid.push('There is no chokepoint to hold — keep the army mobile and pick your engagements');
+  // Only assert something about the terrain when a theatre was actually chosen.
+  // Without one the planner used to state "there is no chokepoint to hold",
+  // which is a claim about a map the user never picked.
+  if (map) {
+    mid.push(map.chokepoints >= 2
+      ? 'Hold the chokepoint rather than the map; it is worth more than territory here'
+      : 'Nothing on this map funnels them — keep the army mobile and pick your engagements');
+  } else {
+    mid.push('Pick a theatre for terrain-specific timing; without one, assume open ground and stay mobile');
+  }
 
   const late: string[] = [];
   if (profile.superweapon >= 2) late.push('Their superweapon comes online in this window — kill the launcher or be somewhere else');
   late.push(`Commit with ${you.name}'s late-game units once you have map control, not before`);
-  late.push('Push when their army is dead, not when yours is full — the window is after a won engagement');
 
   return [
-    { label: 'Opening', window: w1, objectives: early },
-    { label: 'Midgame', window: w2, objectives: mid },
-    { label: 'Late game', window: w3, objectives: late },
+    { label: 'Opening', window: w1, objectives: [...early, ...(fromDoctrine.early ?? [])] },
+    { label: 'Midgame', window: w2, objectives: [...mid, ...(fromDoctrine.mid ?? [])] },
+    { label: 'Late game', window: w3, objectives: [...late, ...(fromDoctrine.late ?? [])] },
   ];
 }
 
@@ -219,13 +298,28 @@ export function planFrom(ds: Dataset, input: PlanInput): BattlePlan {
   const counters = recommendCounters(you, roster, profile);
   const top = rankedAxes(profile);
 
+  // Which approaches hold up here, and which one this plan commits to. The
+  // choice is weighted by fit and driven by the seed, so rerolling a pinned
+  // matchup produces a different but equally defensible plan.
+  const ctx: DoctrineContext = {
+    you, enemy, roster, profile,
+    difficulty: input.difficulty,
+    ...(map ? { map } : {}),
+  };
+  const ranked = rankDoctrines(ctx);
+  const chosen: RankedDoctrine = chooseDoctrine(ranked, rand);
+  const alternatives = ranked
+    .filter((d) => d.doctrine.id !== chosen.doctrine.id)
+    .slice(0, 3)
+    .map((d) => ({ id: d.doctrine.id, name: d.doctrine.name, premise: d.doctrine.premise, fit: d.fit }));
+
   const headline =
     `${you.name} vs ${enemy.name}` +
     (map ? ` on ${map.name}` : '') +
     ` — ${input.difficulty.toUpperCase()}. ` +
     (top[0]
-      ? `Their game is ${AXIS_LABEL[top[0]].toLowerCase()}; answer that first and the rest follows.`
-      : 'A soft matchup — play your standard opening and take the map.');
+      ? `Their game is ${AXIS_LABEL[top[0]].toLowerCase()}; this plan answers it with ${chosen.doctrine.tag}.`
+      : `A soft matchup — this plan takes it with ${chosen.doctrine.tag}.`);
 
   const watchFor = [
     ...enemy.signatureTactics,
@@ -245,9 +339,17 @@ export function planFrom(ds: Dataset, input: PlanInput): BattlePlan {
     ...(rationale ? { lineupRationale: rationale } : {}),
     ...(ranking ? { lineupRanking: ranking } : {}),
     headline,
-    buildOrder: buildOrder(you, roster, profile, enemy),
+    doctrine: {
+      id: chosen.doctrine.id,
+      name: chosen.doctrine.name,
+      premise: chosen.doctrine.premise,
+      fit: chosen.fit,
+      risk: chosen.doctrine.risk(ctx),
+    },
+    alternatives,
+    buildOrder: buildOrder(you, roster, profile, enemy, chosen.doctrine, ctx, rand),
     counters,
-    timeline: timeline(you, profile, input.difficulty, enemy, map),
+    timeline: timeline(you, profile, input.difficulty, enemy, chosen.doctrine, ctx, rand, map),
     watchFor,
     doNot: doNotList(you, profile),
     mapNotes,

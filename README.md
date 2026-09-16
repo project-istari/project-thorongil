@@ -13,7 +13,7 @@ enemy and picks the one with the best answers.
 
 ```bash
 npm install
-npm test            # 52 tests
+npm test            # 58 tests
 npm run plan        # interactive
 ```
 
@@ -83,9 +83,25 @@ Everything hangs off ten **threat axes**: `air`, `armor`, `infantry_swarm`,
    Scores are calibrated against the observed range across all 144 matchups at all
    four difficulties, so they spread out instead of saturating.
 
-4. **Build order.** The army's stock opening, with matchup-driven steps spliced in:
+4. **Approach.** A matchup usually has several defensible answers, so the engine
+   does not pretend there is one. Seven doctrines — early pressure, hold and tech,
+   expand, raid the economy, take the air, out-range the line, combined arms —
+   each score their own fit against the threat profile, your roster and the map.
+   Anything that does not clear the viability floor is withheld entirely, so an
+   army with no aircraft is never offered an air plan. The plan commits to one of
+   the survivors, states what would make it fail, and names the rest.
+
+5. **Build order.** The army's stock opening, with matchup-driven steps spliced in:
    anti-air moves earlier against an air army, a detector becomes mandatory against
-   Kassad, area damage replaces single-target fire against a horde.
+   Kassad, area damage replaces single-target fire against a horde. The chosen
+   approach then adds the steps that make it that approach.
+
+The seed is what chooses among the viable approaches, and it is weighted rather
+than top-scoring: a clearly better approach still wins most of the time, but a
+close second genuinely comes up. That is what makes the reroll worth pressing —
+on a pinned matchup the same seven seeds used to produce one plan and now produce
+seven. The same seed always reproduces the same plan exactly, which the tests
+enforce in both directions.
 
 The engine lives in `src/engine/` and imports nothing from Node, which is why the
 browser build can run the identical code rather than a second implementation of it.
@@ -173,12 +189,12 @@ data/curated/       authored dataset: factions, units, maps, matchup notes
 data/wiki-cache/    ingest output, overlaid automatically (gitignored)
 src/types.ts        the domain model
 src/data/           loader and the curated/wiki merge
-src/engine/         threat profiling, counters, lineup scoring, plan assembly
+src/engine/         threat profiling, counters, doctrines, lineup scoring, plan assembly
 src/ingest/         MediaWiki client, wikitext parser, crawl runner
 src/cli/            terminal interface and renderer
 web/                page template and the bundler that inlines engine + data
 public/             the baked single-file site (Vercel's static root)
-test/               52 tests
+test/               58 tests
 ```
 
 ## Development
